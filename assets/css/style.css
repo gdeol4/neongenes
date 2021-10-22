@@ -180,9 +180,9 @@ pre > code { border: 0; padding-right: 0; padding-left: 0; }
 .highlighter-rouge .highlight { background: #eeeeff; }
 
 /** Wrapper */
-.wrapper { max-width: calc(1000px - (30px)); margin-right: auto; margin-left: auto; padding-right: 15px; padding-left: 15px; }
+.wrapper { max-width: calc(1400px - (30px)); margin-right: auto; margin-left: auto; padding-right: 15px; padding-left: 15px; }
 
-@media screen and (min-width: 1200px) { .wrapper { max-width: calc(1000px - (30px * 2)); padding-right: 30px; padding-left: 30px; } }
+@media screen and (min-width: 1400px) { .wrapper { max-width: calc(1400px - (30px * 2)); padding-right: 30px; padding-left: 30px; } }
 
 /** Clearfix */
 .wrapper:after { content: ""; display: table; clear: both; }
@@ -253,7 +253,7 @@ table td { border: 1px solid #e8e8e8; }
 
 .footer-col-3 { width: calc(100% - (30px / 2)); }
 
-@media screen and (min-width: 1200px) { .footer-col-1 { width: calc(35% - (30px / 2)); } .footer-col-2 { width: calc(20% - (30px / 2)); } .footer-col-3 { width: calc(45% - (30px / 2)); } }
+@media screen and (min-width: 1400px) { .footer-col-1 { width: calc(35% - (30px / 2)); } .footer-col-2 { width: calc(20% - (30px / 2)); } .footer-col-3 { width: calc(45% - (30px / 2)); } }
 
 @media screen and (min-width: 1000px) { .footer-col-wrapper { display: flex; } .footer-col { width: calc(100% - (30px / 2)); padding: 0 15px; } .footer-col:first-child { padding-right: 15px; padding-left: 0; } .footer-col:last-child { padding-right: 0; padding-left: 15px; } }
 
@@ -277,7 +277,7 @@ table td { border: 1px solid #e8e8e8; }
 
 .post-title, .post-content h1 { font-size: 2.625rem; letter-spacing: -1px; line-height: 1.15; }
 
-@media screen and (min-width: 1200px) { .post-title, .post-content h1 { font-size: 2.625rem; } }
+@media screen and (min-width: 1400px) { .post-title, .post-content h1 { font-size: 2.625rem; } }
 
 .post-content { margin-bottom: 30px; }
 
@@ -287,11 +287,11 @@ table td { border: 1px solid #e8e8e8; }
 
 .post-content h2 { font-size: 1.75rem; }
 
-@media screen and (min-width: 1200px) { .post-content h2 { font-size: 2rem; } }
+@media screen and (min-width: 1400px) { .post-content h2 { font-size: 2rem; } }
 
 .post-content h3 { font-size: 1.375rem; }
 
-@media screen and (min-width: 1200px) { .post-content h3 { font-size: 1.625rem; } }
+@media screen and (min-width: 1400px) { .post-content h3 { font-size: 1.625rem; } }
 
 .post-content h4 { font-size: 1.25rem; }
 
@@ -319,7 +319,7 @@ table td { border: 1px solid #e8e8e8; }
 .pagination li div.pager-edge { color: #e8e8e8; border: 1px dashed; }
 
 /** Grid helpers */
-@media screen and (min-width: 1200px) { .one-half { width: calc(50% - (30px / 2)); } }
+@media screen and (min-width: 1400px) { .one-half { width: calc(50% - (30px / 2)); } }
 
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
@@ -483,5 +483,41 @@ pre code { font-size: 15px !important; }
 .highlight .gd { color: #ff5555; }
 
 p code { font-size: 19px; }
+
+html, body, input, textarea, select, button { color: rgba(255, 255, 255, 0.87) !important; background-color: #121212 !important; }
+
+a { color: #4bbaff !important; }
+
+a:hover { color: rgba(255, 255, 255, 0.87) !important; }
+
+.site-title, .site-title:visited, .site-nav, .page-link { color: rgba(255, 255, 255, 0.87) !important; }
+
+.site-nav { background-color: #121212; border-color: #333333; }
+
+* { scrollbar-color: #121212 #333333; }
+
+pre, code { border-color: #333333; background-color: #1e1e1e; }
+
+.page-description { color: rgba(255, 255, 255, 0.69); }
+
+.post-meta { color: rgba(255, 255, 255, 0.38); }
+
+.post-content p, .post-content li { color: rgba(255, 255, 255, 0.69); }
+
+.btn { background-color: #1e1e1e !important; color: rgba(255, 255, 255, 0.87) !important; border-color: #333333 !important; }
+
+.btn:hover { background-color: #121212 !important; }
+
+table th { background-color: #1e1e1e; border-color: #333333; color: rgba(255, 255, 255, 0.87); }
+
+table td { background-color: #121212; border-color: #333333; color: rgba(255, 255, 255, 0.69); }
+
+.flash { color: #121212 !important; filter: brightness(80%); }
+
+canvas { filter: invert(100%); }
+
+.post-list > li > div { box-shadow: none !important; background-color: #1e1e1e; border: none !important; }
+
+li .post-meta-description { color: rgba(255, 255, 255, 0.69) !important; }
 
 /*# sourceMappingURL=style.css.map */
