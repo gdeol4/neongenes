@@ -300,7 +300,8 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">BBBP_df</span> <span class="o">=</span> <span class="n">BBBP_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"num"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># The name and number can be dropped</span>
+<span class="n">BBBP_df</span> <span class="o">=</span> <span class="n">BBBP_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"num"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Checking the data for null values</span>
 <span class="n">BBBP_df</span><span class="p">[</span><span class="s2">"smiles"</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
@@ -334,8 +335,7 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Mols and smiles need to be sanitized as it will leave us with SMILES that are complete nonesense, for example, errors resulting from kekulization.</p>
 <p><img src="/images/copied_from_nb/images/kekul.jpg" alt=""></p>
-<p>If you were to search for the left molecule in panel (1) using an image search or a SMILES string, you might miss the right molecule in that panel.</p>
-<p>According to the RDkit document cited in the question, the software routinely generates the alternate position of double bonds, and then (in a second step they call "aromatization") labels the ring as aromatic. In panel (2), there are three possible Lewis structures contributing to the actual structure (i.e. there is resonance), so the software would have to generate all three to be able to search for identical structures.</p>
+<p>RDkit generates the alternate position of double bonds, and then (in a second step they call "aromatization") labels the ring as aromatic. In panel (2), there are three possible Lewis structures contributing to the actual structure (i.e. there is resonance), so the software would have to generate all three to be able to search for identical structures. [1]</p>
 
 </div>
 </div>
@@ -541,6 +541,46 @@ window.onload = wrap_img;
 </div>
 </div>
 
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The data contains a 3:! ratio of positive to negeative labels, which creates a bias towards molecules with blood brain permeability properties. This may need to be addressed when training models.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">data_clean</span><span class="p">[</span><span class="s1">'p_np'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{1: 1560, 0: 479}
+</pre>
+</div>
 </div>
 
 </div>
