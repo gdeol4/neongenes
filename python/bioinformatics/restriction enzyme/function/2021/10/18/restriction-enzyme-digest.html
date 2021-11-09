@@ -94,7 +94,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      1 min read
     
 </span></p>
 
@@ -147,14 +147,7 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Creating-a-restriction-enzyme-dictionary">Creating a restriction enzyme dictionary<a class="anchor-link" href="#Creating-a-restriction-enzyme-dictionary"> </a></h1><p>The activity of a restriction enzyme can be defined by its recognition site on the DNA sequence and the position relative to the recognition site, at which it cuts the DNA. Let’s create a dictionary that we can use to define these restriction enzyme parameters:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Notice that the key for each entry in this dictionary is the name of the enzyme and the value is a list whose first element is the enzyme’s recognition site and second element is the position relative to the recognition site, at which the enzyme cuts the DNA. You could imagine adding a whole bunch of restriction enzymes to this dictionary, and even using as a kind of simple restriction enzyme database with which you could do digital DNA restriction experiments. One thing you would almost certainly need however is a way to keep track of which enzymes are present in the dictionary and to be able to query whether or not the dictionary has the enzyme you are interested in using. There are two very useful dictionary methods that you should know if you are going to use dictionaries in your code, and the best way to describe them is to see them in action:</p>
+<h1 id="Creating-a-restriction-enzyme-dictionary">Creating a restriction enzyme dictionary<a class="anchor-link" href="#Creating-a-restriction-enzyme-dictionary"> </a></h1><p>Restriction enzymes are proteins produced by bacteria that cleave DNA at specific sites along the molecule. The enzyme functions on a specific, short nucleotide sequence and cuts the DNA only at that specific site, which is known as restriction site or target sequence. In the bacterial cell, restriction enzymes cleave foreign DNA, thus eliminating infecting organisms. The activity of a restriction enzyme can be defined by its recognition site on the DNA sequence and the position relative to the recognition site, at which it cuts the DNA.</p>
 
 </div>
 </div>
@@ -166,33 +159,49 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># from the restriction enzyme dictionary</span>
-
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create enzyme dictionary</span>
 <span class="n">restrictionEnzymes</span> <span class="o">=</span> <span class="p">{}</span>
 
+<span class="c1"># add &quot;bamH1&quot; and &quot;sma1&quot; enzymes, their target sequence, and position releative to the recognition site</span>
 <span class="n">restrictionEnzymes</span><span class="p">[</span><span class="s1">&#39;bamH1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ggatcc&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">restrictionEnzymes</span><span class="p">[</span><span class="s1">&#39;sma1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cccggg&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="n">dnaMolecularWeight</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mf">313.2</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">:</span><span class="mf">289.2</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">:</span><span class="mf">304.2</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">:</span><span class="mf">329.2</span><span class="p">}</span>
-
+<span class="c1"># a function to calculate the molecular weight of dna sequences</span>
 <span class="k">def</span> <span class="nf">oligoMolecularWeight</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+
+    <span class="c1"># create a dictionairy of DNA basepair molecular weights</span>
     <span class="n">dnaMolecularWeight</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mf">313.2</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">:</span><span class="mf">289.2</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">:</span><span class="mf">304.2</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">:</span><span class="mf">329.2</span><span class="p">}</span>
+
+    <span class="c1"># initialize molecular weight</span>
     <span class="n">molecularWeight</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="c1"># iterate through DNA sequnce and update weight of sequence</span>
     <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">:</span>
         <span class="n">molecularWeight</span> <span class="o">+=</span> <span class="n">dnaMolecularWeight</span><span class="p">[</span><span class="n">base</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">molecularWeight</span>
 
-
+<span class="c1"># the primary function for restriction digest</span>
 <span class="k">def</span> <span class="nf">digest</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">):</span>
-    <span class="n">motif</span> <span class="o">=</span> <span class="n">restrictionEnzymes</span><span class="p">[</span><span class="n">enzyme</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># set target sequence</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">restrictionEnzymes</span><span class="p">[</span><span class="n">enzyme</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># enzyme cut position relative to recognition site</span>
     <span class="n">cutPosition</span> <span class="o">=</span> <span class="n">restrictionEnzymes</span><span class="p">[</span><span class="n">enzyme</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># a list to collect DNA fragments</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># </span>
+
+    <span class="c1"># counter for the position of the last restriction site; beginning of sequence</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># a variable to store the position of the last cut; end of sequence</span>
     <span class="n">lastCut</span> <span class="o">=</span> <span class="n">found</span>
+
+    <span class="c1"># variable to set where to search for the next site from</span>
     <span class="n">searchFrom</span> <span class="o">=</span> <span class="n">lastCut</span>
 
     <span class="k">while</span> <span class="n">found</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">found</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">motif</span><span class="p">,</span> <span class="n">searchFrom</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">searchFrom</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">found</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">fragment</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">lastCut</span><span class="p">:</span><span class="n">found</span><span class="o">+</span><span class="n">cutPosition</span><span class="p">]</span>
             <span class="n">mwt</span> <span class="o">=</span> <span class="n">oligoMolecularWeight</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
@@ -203,6 +212,8 @@ window.onload = wrap_img;
             <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fragment</span><span class="p">,</span><span class="n">mwt</span><span class="p">))</span>
         <span class="n">lastCut</span> <span class="o">=</span> <span class="n">found</span> <span class="o">+</span> <span class="n">cutPosition</span>
         <span class="n">searchFrom</span> <span class="o">=</span> <span class="n">lastCut</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">fragments</span>
 </pre></div>
 
     </div>
@@ -214,17 +225,76 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The variable found is the position of the last found restriction
-site, initialized to the start of the sequence to begin with. The variable lastCut stores the
-position at which we last cut the DNA (which may not be the same as the starting position
-of the restriction site). This is needed to define the starting position of the current
-fragment (and the end of the last one). The variable searchFrom (again, included to make
-the code more readable) tells us from where we need to start the next search step, which
-is always the next position after the one in which we previously cut the DNA strand.</p>
+<p>Running the function on a test sequence results in the following:</p>
 
 </div>
 </div>
 </div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">digestSequence</span> <span class="o">=</span> <span class="s2">&quot;gcgatgctaggatccgcgatcgcgtacgatcgtacgcggtacggacggatccttctc&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">digested_dna</span> <span class="o">=</span> <span class="n">digest</span><span class="p">(</span><span class="n">digestSequence</span><span class="p">,</span><span class="s1">&#39;bamH1&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">digested_dna</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[(&#39;gcgatgcta&#39;, 2800.7999999999997), (&#39;ggatccgcgatcgcgtacgatcgtacgcggtacggac&#39;, 11478.400000000005), (&#39;ggatccttctc&#39;, 3345.1999999999994)]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
 </div>
 
 
