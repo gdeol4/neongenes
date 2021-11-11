@@ -100,7 +100,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      3 min read
     
 </span></p>
 
@@ -305,6 +305,26 @@ window.onload = wrap_img;
 
 <span class="c1"># Checking the data for null values</span>
 <span class="n">BBBP_df</span><span class="p">[</span><span class="s2">"smiles"</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+<span class="c1"># Renaming the binary label to "BBB+/BBB-" for clarity</span>
+<span class="n">BBBP_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'BBB+/BBB-'</span><span class="p">,</span> <span class="s1">'SMILES'</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">BBBP_df</span>
 </pre></div>
 
     </div>
@@ -317,9 +337,89 @@ window.onload = wrap_img;
 <div class="output_area">
 
 
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<div class="output_text output_subarea output_execute_result">
-<pre>False</pre>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>BBB+/BBB-</th>
+      <th>SMILES</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>[Cl].CC(C)NCC(O)COc1cccc2ccccc12</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>C(=O)(OC(C)(C)C)CCCc1ccc(cc1)N(CCCl)CCCl</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>c12c3c(N4CCN(C)CC4)c(F)cc1c(c(C(O)=O)cn2C(C)CO...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>C1CCN(CC1)Cc1cccc(c1)OCCCNC(=O)C</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>Cc1onc(c2ccccc2Cl)c1C(=O)N[C@H]3[C@H]4SC(C)(C)...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2045</th>
+      <td>1</td>
+      <td>C1=C(Cl)C(=C(C2=C1NC(=O)C(N2)=O)[N+](=O)[O-])Cl</td>
+    </tr>
+    <tr>
+      <th>2046</th>
+      <td>1</td>
+      <td>[C@H]3([N]2C1=C(C(=NC=N1)N)N=C2)[C@@H]([C@@H](...</td>
+    </tr>
+    <tr>
+      <th>2047</th>
+      <td>1</td>
+      <td>[O+]1=N[N](C=C1[N-]C(NC2=CC=CC=C2)=O)C(CC3=CC=...</td>
+    </tr>
+    <tr>
+      <th>2048</th>
+      <td>1</td>
+      <td>C1=C(OC)C(=CC2=C1C(=[N+](C(=C2CC)C)[NH-])C3=CC...</td>
+    </tr>
+    <tr>
+      <th>2049</th>
+      <td>1</td>
+      <td>[N+](=NCC(=O)N[C@@H]([C@H](O)C1=CC=C([N+]([O-]...</td>
+    </tr>
+  </tbody>
+</table>
+<p>2050 rows × 2 columns</p>
+</div>
 </div>
 
 </div>
@@ -356,7 +456,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_smiles</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">to_mol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'smiles'</span><span class="p">]]</span> <span class="c1"># generating mols from SMILES</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">to_mol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'SMILES'</span><span class="p">]]</span> <span class="c1"># generating mols from SMILES</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">fix_mol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># Fixing mols</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="c1"># dropping NA values</span>
@@ -364,7 +464,7 @@ window.onload = wrap_img;
     <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">sanitize_mol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sanifix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charge_neutral</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># sanitize mol objects</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">standardize_mol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">disconnect_metals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reionize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">uncharge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stereo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># standardize mol objects</span>
 
-    <span class="n">df</span><span class="p">[</span><span class="s2">"standard_smiles"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">standardize_smiles</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'smiles'</span><span class="p">]]</span> <span class="c1"># standardize SMILES</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"standard_smiles"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">standardize_smiles</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'SMILES'</span><span class="p">]]</span> <span class="c1"># standardize SMILES</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">"selfies"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">to_selfies</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># generate SELFIES</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">"inchi"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">to_inchi</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># Generating InChi</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">"inchikey"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">to_inchikey</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># Generating InChIKey</span>
@@ -476,8 +576,8 @@ window.onload = wrap_img;
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>p_np</th>
-      <th>smiles</th>
+      <th>BBB+/BBB-</th>
+      <th>SMILES</th>
       <th>mol</th>
       <th>standard_smiles</th>
       <th>selfies</th>
@@ -552,7 +652,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The data contains a 3:1 ratio of positive to negeative labels, which creates a bias towards molecules with blood brain permeability properties. This may need to be addressed when training models.</p>
+<p>The data contains a 3:1 ratio of positive to negeative labels, which creates a bias towards molecules with blood brain permeability properties. This may need to be addressed when training models. The next steps are to save the cleaned data for further analysis.</p>
 
 </div>
 </div>
@@ -564,7 +664,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">data_clean</span><span class="p">[</span><span class="s1">'p_np'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">data_clean</span><span class="p">[</span><span class="s1">'BBB+/BBB-'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </pre></div>
 
@@ -583,6 +683,23 @@ window.onload = wrap_img;
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_clean</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'./data/MoleculeNet.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
