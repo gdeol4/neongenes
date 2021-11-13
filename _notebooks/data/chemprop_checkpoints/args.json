@@ -71,7 +71,7 @@
     "no_cache_mol": false,
     "no_cuda": false,
     "no_features_scaling": true,
-    "num_folds": 1,
+    "num_folds": 10,
     "num_lrs": 1,
     "num_tasks": 1,
     "num_workers": 8,
@@ -83,8 +83,8 @@
     "reaction": false,
     "reaction_mode": "reac_diff",
     "reproducibility": {
-        "command_line": "python 'C:\\Users\\gurka\\miniconda3\\envs\\chemprop\\lib\\site-packages\\ipykernel_launcher.py' --ip=127.0.0.1 --stdin=9008 --control=9006 --hb=9005 '--Session.signature_scheme=\"hmac-sha256\"' '--Session.key=b\"a0f851d0-52d6-44fb-9526-1a9a0aca924e\"' --shell=9007 '--transport=\"tcp\"' --iopub=9009 '--f=C:\\Users\\gurka\\AppData\\Local\\Temp\\tmp-90365wrP990Acsul.json'",
-        "time": "Fri Nov 12 18:22:39 2021"
+        "command_line": "python 'C:\\Users\\gurka\\miniconda3\\envs\\chemprop\\lib\\site-packages\\ipykernel_launcher.py' --ip=127.0.0.1 --stdin=9003 --control=9001 --hb=9000 '--Session.signature_scheme=\"hmac-sha256\"' '--Session.key=b\"78ce7e33-618d-4d70-bde9-935ab47d3a38\"' --shell=9002 '--transport=\"tcp\"' --iopub=9004 '--f=C:\\Users\\gurka\\AppData\\Local\\Temp\\tmp-9036WgdJUnZ0WKJ0.json'",
+        "time": "Fri Nov 12 19:25:28 2021"
     },
     "resume_experiment": false,
     "save_dir": "./data/chemprop_checkpoints/",
@@ -98,7 +98,7 @@
     "separate_val_atom_descriptors_path": null,
     "separate_val_bond_features_path": null,
     "separate_val_features_path": null,
-    "separate_val_path": "./data/chemprop_B3DB.csv",
+    "separate_val_path": null,
     "show_individual_scores": false,
     "smiles_columns": [
         "smiles"
