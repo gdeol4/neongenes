@@ -109,7 +109,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      4 min read
     
 </span></p>
 
@@ -194,6 +194,27 @@ window.onload = wrap_img;
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>WARNING:root:No normalization for BCUT2D_MWHI
+WARNING:root:No normalization for BCUT2D_MWLOW
+WARNING:root:No normalization for BCUT2D_CHGHI
+WARNING:root:No normalization for BCUT2D_CHGLO
+WARNING:root:No normalization for BCUT2D_LOGPHI
+WARNING:root:No normalization for BCUT2D_LOGPLOW
+WARNING:root:No normalization for BCUT2D_MRHI
+WARNING:root:No normalization for BCUT2D_MRLOW
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -571,8 +592,8 @@ window.onload = wrap_img;
     <span class="s1">&#39;--dataset_type&#39;</span><span class="p">,</span> <span class="s1">&#39;classification&#39;</span><span class="p">,</span>
     <span class="s1">&#39;--save_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;./data/chemprop_checkpoints/&#39;</span><span class="p">,</span>
     <span class="s1">&#39;--split_type&#39;</span><span class="p">,</span> <span class="s1">&#39;scaffold_balanced&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;--separate_val_path&#39;</span><span class="p">,</span> <span class="s1">&#39;./data/chemprop_B3DB.csv&#39;</span><span class="p">,</span>
-<span class="c1">#    &#39;--num_folds&#39;, &#39;10&#39;,</span>
+ <span class="c1">#   &#39;--separate_val_path&#39;, &#39;./data/chemprop_B3DB.csv&#39;,</span>
+    <span class="s1">&#39;--num_folds&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
     <span class="s1">&#39;--class_balance&#39;</span><span class="p">,</span>
     <span class="s1">&#39;--features_generator&#39;</span><span class="p">,</span> <span class="s1">&#39;rdkit_2d_normalized&#39;</span><span class="p">,</span>
     <span class="s1">&#39;--no_features_scaling&#39;</span><span class="p">,</span>
@@ -595,22 +616,82 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>2039it [00:00, 113167.56it/s]
-100%|██████████| 2039/2039 [02:38&lt;00:00, 12.90it/s]
-100%|██████████| 2039/2039 [00:00&lt;00:00, 65714.77it/s]
+<pre>2039it [00:00, 119828.86it/s]
+100%|██████████| 2039/2039 [02:20&lt;00:00, 14.53it/s]
+100%|██████████| 2039/2039 [00:00&lt;00:00, 67907.37it/s]
 Fold 0
-7807it [00:00, 105404.40it/s]
-100%|██████████| 7807/7807 [10:24&lt;00:00, 12.49it/s]
-100%|██████████| 7807/7807 [00:00&lt;00:00, 79591.00it/s]
-100%|██████████| 2039/2039 [00:00&lt;00:00, 3720.67it/s]
-100%|██████████| 30/30 [10:04&lt;00:00, 20.14s/it]
-Model 0 best validation auc = 0.900843 on epoch 29
-Model 0 test auc = 0.854985
-Ensemble test auc = 0.854985
-1-fold cross validation
-	Seed 0 ==&gt; test auc = 0.854985
-Overall test auc = 0.854985 +/- 0.000000
-Elapsed time = 0:23:09
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3649.46it/s]
+100%|██████████| 30/30 [01:51&lt;00:00,  3.73s/it]
+Model 0 best validation auc = 0.926059 on epoch 8
+Model 0 test auc = 0.928767
+Ensemble test auc = 0.928767
+Fold 1
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3489.41it/s]
+100%|██████████| 30/30 [01:51&lt;00:00,  3.72s/it]
+Model 0 best validation auc = 0.886265 on epoch 19
+Model 0 test auc = 0.903879
+Ensemble test auc = 0.903879
+Fold 2
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3452.67it/s]
+100%|██████████| 30/30 [01:46&lt;00:00,  3.55s/it]
+Model 0 best validation auc = 0.917212 on epoch 29
+Model 0 test auc = 0.955724
+Ensemble test auc = 0.955724
+Fold 3
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3602.29it/s]
+100%|██████████| 30/30 [01:56&lt;00:00,  3.88s/it]
+Model 0 best validation auc = 0.886939 on epoch 5
+Model 0 test auc = 0.862450
+Ensemble test auc = 0.862450
+Fold 4
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3449.09it/s]
+100%|██████████| 30/30 [01:47&lt;00:00,  3.59s/it]
+Model 0 best validation auc = 0.897674 on epoch 3
+Model 0 test auc = 0.890246
+Ensemble test auc = 0.890246
+Fold 5
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3590.55it/s]
+100%|██████████| 30/30 [01:42&lt;00:00,  3.43s/it]
+Model 0 best validation auc = 0.977661 on epoch 7
+Model 0 test auc = 0.892326
+Ensemble test auc = 0.892326
+Fold 6
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3417.71it/s]
+100%|██████████| 30/30 [01:48&lt;00:00,  3.61s/it]
+Model 0 best validation auc = 0.924837 on epoch 29
+Model 0 test auc = 0.886606
+Ensemble test auc = 0.886606
+Fold 7
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3561.41it/s]
+100%|██████████| 30/30 [01:54&lt;00:00,  3.82s/it]
+Model 0 best validation auc = 0.946760 on epoch 24
+Model 0 test auc = 0.951849
+Ensemble test auc = 0.951849
+Fold 8
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3527.51it/s]
+100%|██████████| 30/30 [01:52&lt;00:00,  3.75s/it]
+Model 0 best validation auc = 0.890004 on epoch 29
+Model 0 test auc = 0.906486
+Ensemble test auc = 0.906486
+Fold 9
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3542.86it/s]
+100%|██████████| 30/30 [01:46&lt;00:00,  3.56s/it]
+Model 0 best validation auc = 0.899198 on epoch 22
+Model 0 test auc = 0.937866
+Ensemble test auc = 0.937866
+10-fold cross validation
+	Seed 0 ==&gt; test auc = 0.928767
+	Seed 1 ==&gt; test auc = 0.903879
+	Seed 2 ==&gt; test auc = 0.955724
+	Seed 3 ==&gt; test auc = 0.862450
+	Seed 4 ==&gt; test auc = 0.890246
+	Seed 5 ==&gt; test auc = 0.892326
+	Seed 6 ==&gt; test auc = 0.886606
+	Seed 7 ==&gt; test auc = 0.951849
+	Seed 8 ==&gt; test auc = 0.906486
+	Seed 9 ==&gt; test auc = 0.937866
+Overall test auc = 0.911620 +/- 0.029164
+Elapsed time = 0:20:54
 </pre>
 </div>
 </div>
