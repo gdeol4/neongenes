@@ -109,7 +109,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      4 min read
+      7 min read
     
 </span></p>
 
@@ -692,6 +692,129 @@ Ensemble test auc = 0.937866
 	Seed 9 ==&gt; test auc = 0.937866
 Overall test auc = 0.911620 +/- 0.029164
 Elapsed time = 0:20:54
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;--data_path&#39;</span><span class="p">,</span> <span class="s1">&#39;./data/molnet_chemprop.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--dataset_type&#39;</span><span class="p">,</span> <span class="s1">&#39;classification&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--save_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;./data/chemprop_checkpoints/&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--split_type&#39;</span><span class="p">,</span> <span class="s1">&#39;scaffold_balanced&#39;</span><span class="p">,</span>
+ <span class="c1">#   &#39;--separate_val_path&#39;, &#39;./data/chemprop_B3DB.csv&#39;,</span>
+    <span class="s1">&#39;--num_folds&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--class_balance&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--features_generator&#39;</span><span class="p">,</span> <span class="s1">&#39;rdkit_2d_normalized&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--no_features_scaling&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--quiet&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;--epochs&#39;</span><span class="p">,</span> <span class="s1">&#39;100&#39;</span>
+    
+
+<span class="p">]</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">TrainArgs</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">mean_score</span><span class="p">,</span> <span class="n">std_score</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">train_func</span><span class="o">=</span><span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">run_training</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>2039it [00:00, 119820.47it/s]
+100%|██████████| 2039/2039 [02:19&lt;00:00, 14.63it/s]
+100%|██████████| 2039/2039 [00:00&lt;00:00, 72760.41it/s]
+Fold 0
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3660.57it/s]
+100%|██████████| 100/100 [05:48&lt;00:00,  3.48s/it]
+Model 0 best validation auc = 0.926682 on epoch 8
+Model 0 test auc = 0.929177
+Ensemble test auc = 0.929177
+Fold 1
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3486.36it/s]
+100%|██████████| 100/100 [05:56&lt;00:00,  3.57s/it]
+Model 0 best validation auc = 0.895276 on epoch 67
+Model 0 test auc = 0.852848
+Ensemble test auc = 0.852848
+Fold 2
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3494.12it/s]
+100%|██████████| 100/100 [05:50&lt;00:00,  3.50s/it]
+Model 0 best validation auc = 0.932624 on epoch 39
+Model 0 test auc = 0.944112
+Ensemble test auc = 0.944112
+Fold 3
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3524.44it/s]
+100%|██████████| 100/100 [06:18&lt;00:00,  3.78s/it]
+Model 0 best validation auc = 0.886531 on epoch 5
+Model 0 test auc = 0.862913
+Ensemble test auc = 0.862913
+Fold 4
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3468.74it/s]
+100%|██████████| 100/100 [05:39&lt;00:00,  3.40s/it]
+Model 0 best validation auc = 0.897674 on epoch 3
+Model 0 test auc = 0.890246
+Ensemble test auc = 0.890246
+Fold 5
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3527.38it/s]
+100%|██████████| 100/100 [05:06&lt;00:00,  3.07s/it]
+Model 0 best validation auc = 0.977892 on epoch 7
+Model 0 test auc = 0.893487
+Ensemble test auc = 0.893487
+Fold 6
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3832.74it/s]
+100%|██████████| 100/100 [05:23&lt;00:00,  3.23s/it]
+Model 0 best validation auc = 0.925359 on epoch 42
+Model 0 test auc = 0.881697
+Ensemble test auc = 0.881697
+Fold 7
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3797.06it/s]
+100%|██████████| 100/100 [15:55:05&lt;00:00, 573.05s/it]
+Model 0 best validation auc = 0.958971 on epoch 24
+Model 0 test auc = 0.941933
+Ensemble test auc = 0.941933
+Fold 8
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3446.91it/s]
+100%|██████████| 100/100 [05:52&lt;00:00,  3.53s/it]
+Model 0 best validation auc = 0.896662 on epoch 39
+Model 0 test auc = 0.920437
+Ensemble test auc = 0.920437
+Fold 9
+100%|██████████| 2039/2039 [00:00&lt;00:00, 3790.66it/s]
+100%|██████████| 100/100 [06:04&lt;00:00,  3.64s/it]
+Model 0 best validation auc = 0.906584 on epoch 73
+Model 0 test auc = 0.917494
+Ensemble test auc = 0.917494
+10-fold cross validation
+	Seed 0 ==&gt; test auc = 0.929177
+	Seed 1 ==&gt; test auc = 0.852848
+	Seed 2 ==&gt; test auc = 0.944112
+	Seed 3 ==&gt; test auc = 0.862913
+	Seed 4 ==&gt; test auc = 0.890246
+	Seed 5 ==&gt; test auc = 0.893487
+	Seed 6 ==&gt; test auc = 0.881697
+	Seed 7 ==&gt; test auc = 0.941933
+	Seed 8 ==&gt; test auc = 0.920437
+	Seed 9 ==&gt; test auc = 0.917494
+Overall test auc = 0.903435 +/- 0.030385
+Elapsed time = 16:49:39
 </pre>
 </div>
 </div>
