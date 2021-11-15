@@ -35,7 +35,7 @@
     "dropout": 0.0,
     "empty_cache": false,
     "ensemble_size": 1,
-    "epochs": 100,
+    "epochs": 20,
     "explicit_h": false,
     "extra_metrics": [],
     "features_generator": [
@@ -71,7 +71,7 @@
     "no_cache_mol": false,
     "no_cuda": false,
     "no_features_scaling": true,
-    "num_folds": 10,
+    "num_folds": 30,
     "num_lrs": 1,
     "num_tasks": 1,
     "num_workers": 8,
@@ -84,7 +84,7 @@
     "reaction_mode": "reac_diff",
     "reproducibility": {
         "command_line": "python 'C:\\Users\\gurka\\miniconda3\\envs\\chemprop\\lib\\site-packages\\ipykernel_launcher.py' --ip=127.0.0.1 --stdin=9003 --control=9001 --hb=9000 '--Session.signature_scheme=\"hmac-sha256\"' '--Session.key=b\"78ce7e33-618d-4d70-bde9-935ab47d3a38\"' --shell=9002 '--transport=\"tcp\"' --iopub=9004 '--f=C:\\Users\\gurka\\AppData\\Local\\Temp\\tmp-9036WgdJUnZ0WKJ0.json'",
-        "time": "Fri Nov 12 21:17:28 2021"
+        "time": "Sun Nov 14 10:26:33 2021"
     },
     "resume_experiment": false,
     "save_dir": "./data/chemprop_checkpoints/",
