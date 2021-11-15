@@ -109,7 +109,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      17 min read
+      20 min read
     
 </span></p>
 
@@ -200,7 +200,7 @@ window.onload = wrap_img;
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Molecular-compound-and-its-generic-Bemis-Murcko-scaffold">Molecular compound and its generic Bemis-Murcko scaffold<a class="anchor-link" href="#Molecular-compound-and-its-generic-Bemis-Murcko-scaffold"> </a></h2>
+<h3 id="Molecular-compound-and-its-generic-Bemis-Murcko-scaffold">Molecular compound and its generic Bemis-Murcko scaffold<a class="anchor-link" href="#Molecular-compound-and-its-generic-Bemis-Murcko-scaffold"> </a></h3>
 </div>
 </div>
 </div>
@@ -618,7 +618,23 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Model-training-with-chemprop">Model training with chemprop<a class="anchor-link" href="#Model-training-with-chemprop"> </a></h1>
+<h1 id="Model-training-with-chemprop">Model training with chemprop<a class="anchor-link" href="#Model-training-with-chemprop"> </a></h1><p>I ran three experiments with slight differences to just test out the predictive ability on the blood brain barrier molecules:</p>
+<ol>
+<li><p>The split type is set to scaffold balanced; number of folds is 10, class balanicing is set to true , 200 features are generated with RDKits 2d descriptor generator. The features are scaled when calculated and thus no further scaling is specified.</p>
+</li>
+<li><p>This run sets the number of trianing epochs withen each fold at 100.</p>
+</li>
+<li><p>The last run has the number of folds increased from 10 to 30 while epochs per fold are set to 20.</p>
+</li>
+</ol>
+<p>These models are trained using the MoleculeNet data (~2035 molecules), further tests will use the combined dataset with ~8100 molecules.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-1">Model training 1<a class="anchor-link" href="#Model-training-1"> </a></h2>
 </div>
 </div>
 </div>
@@ -744,6 +760,12 @@ Elapsed time = 0:20:54
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-2">Model training 2<a class="anchor-link" href="#Model-training-2"> </a></h2>
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -867,6 +889,12 @@ Elapsed time = 16:49:39
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-3">Model training 3<a class="anchor-link" href="#Model-training-3"> </a></h2>
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1130,6 +1158,90 @@ Elapsed time = 0:38:51
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Results">Results<a class="anchor-link" href="#Results"> </a></h1><h3 id="Experiment-1:">Experiment 1:<a class="anchor-link" href="#Experiment-1:"> </a></h3><p>10-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.928767
+Seed 1 ==&gt; test auc = 0.903879
+Seed 2 ==&gt; test auc = 0.955724
+Seed 3 ==&gt; test auc = 0.862450
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.892326
+Seed 6 ==&gt; test auc = 0.886606
+Seed 7 ==&gt; test auc = 0.951849
+Seed 8 ==&gt; test auc = 0.906486
+Seed 9 ==&gt; test auc = 0.937866
+
+</code></pre>
+<p>Overall test auc = 0.911620 +/- 0.029164
+Elapsed time = 0:20:54</p>
+<p>This run was the fastest and used the default number of epochs and fold. The overall AUC for the test data was 0.911620 +/- 0.029164.</p>
+<h3 id="Experiment-2:">Experiment 2:<a class="anchor-link" href="#Experiment-2:"> </a></h3><p>10-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.929177
+Seed 1 ==&gt; test auc = 0.852848
+Seed 2 ==&gt; test auc = 0.944112
+Seed 3 ==&gt; test auc = 0.862913
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.893487
+Seed 6 ==&gt; test auc = 0.881697
+Seed 7 ==&gt; test auc = 0.941933
+Seed 8 ==&gt; test auc = 0.920437
+Seed 9 ==&gt; test auc = 0.917494
+
+</code></pre>
+<p>Overall test auc = 0.903435 +/- 0.030385
+Elapsed time = 16:49:39</p>
+<p>This run took the most time, nearing almost 17 hours with 100 epochs for each fold. The overall AUC for the test data was 0.903435 +/- 0.030385 which underperfomed compared to model in the first experiment with default parameters.</p>
+<h3 id="Experiment-3:">Experiment 3:<a class="anchor-link" href="#Experiment-3:"> </a></h3><p>30-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.928630
+Seed 1 ==&gt; test auc = 0.907636
+Seed 2 ==&gt; test auc = 0.943526
+Seed 3 ==&gt; test auc = 0.882607
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.892559
+Seed 6 ==&gt; test auc = 0.870606
+Seed 7 ==&gt; test auc = 0.947479
+Seed 8 ==&gt; test auc = 0.903720
+Seed 9 ==&gt; test auc = 0.930991
+Seed 10 ==&gt; test auc = 0.795291
+Seed 11 ==&gt; test auc = 0.894284
+Seed 12 ==&gt; test auc = 0.936275
+Seed 13 ==&gt; test auc = 0.930272
+Seed 14 ==&gt; test auc = 0.950706
+Seed 15 ==&gt; test auc = 0.919849
+Seed 16 ==&gt; test auc = 0.877632
+Seed 17 ==&gt; test auc = 0.871467
+Seed 18 ==&gt; test auc = 0.888110
+Seed 19 ==&gt; test auc = 0.905920
+Seed 20 ==&gt; test auc = 0.921946
+Seed 21 ==&gt; test auc = 0.928851
+Seed 22 ==&gt; test auc = 0.870864
+Seed 23 ==&gt; test auc = 0.865779
+Seed 24 ==&gt; test auc = 0.902960
+Seed 25 ==&gt; test auc = 0.946100
+Seed 26 ==&gt; test auc = 0.900540
+Seed 27 ==&gt; test auc = 0.923984
+Seed 28 ==&gt; test auc = 0.900345
+Seed 29 ==&gt; test auc = 0.905261
+
+</code></pre>
+<p>Overall test auc = 0.904481 +/- 0.031870
+Elapsed time = 0:38:51</p>
+<p>This run took less than an hour (~40 minutes), with 20 training epochs per fold. Increasing the number of folds and epochs seems to bring down the models accuracy compared to the default settings. The overall AUC for the test data was Overall test auc = 0.904481 +/- 0.031870, which still marginally outperformed the model in experiment 2 which took nearly 17 hours.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Next-steps">Next steps<a class="anchor-link" href="#Next-steps"> </a></h1><p>The next notebook will deal with hyperparamater optimization and switching to a larger dataset.</p>
+
+</div>
+</div>
+</div>
 </div>
 
 
