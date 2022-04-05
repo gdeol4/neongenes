@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
   <head>
     {% include head.html %}
+
   </head>
   <body class="is-loading">
 
@@ -13,6 +13,7 @@
         <header id="header">
           <a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
         </header>
+
 
         <!-- Nav -->
           <nav id="nav">
@@ -25,21 +26,23 @@
         <div id="main">
 
           <!-- Post -->
-          <section class="post">
-            {% if page.layout == 'page' %}
-              <h1>{{ page.title }}</h1>
+          <section class="posts">
+            {% for post in site.posts %}
+            {% if post.hide != true %}
+                {% if post.poem == true %}
+                {% include entry_square.html %}
+                {% endif %}
             {% endif %}
-            <p>{{content}}</p>
-          </section>
+            {% endfor %}
+        </section>
+        <footer>
+          <ul class="actions">
+            <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
+            <li><a href="{{ "/blog/" | absolute_url }}" class="button">Tech</a></li>
+          </ul>
+        </footer>
 
-          <!-- Footer -->
-            <footer>
-              <ul class="actions">
-                <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
-                <li><a href="{{ "/blog/" | absolute_url }}" class="button">Blog</a></li>
-              </ul>
-            </footer>
-          </div>
+        </div>
 
         <!-- Footer -->
         {% include foot.html %}

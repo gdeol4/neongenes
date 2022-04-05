@@ -28,12 +28,20 @@
           <!-- Post -->
           <section class="posts">
             {% for post in site.posts %}
-              {% include entry_square.html %}
+            {% if post.hide != true %}
+                {% if post.poem != true %}
+                {% include entry_square.html %}
+                {% endif %}
+            {% endif %}
             {% endfor %}
-
-          </section>
-
-          </div>
+            </section>
+            <footer>
+              <ul class="actions">
+                <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
+                <li><a href="{{ "/blog/" | absolute_url }}" class="button">Tech</a></li>
+              </ul>
+            </footer>
+            </div>
 
         <!-- Footer -->
         {% include foot.html %}
