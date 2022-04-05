@@ -119,31 +119,6 @@
   
 
   
-
-  
-      ,"page6": {
-          "title": "My Library",
-          "content": "",
-          "url": "https://www.neongenes.com//library/",
-          "relUrl": "/library/",
-          "date": ""
-      }
-      
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
   
 
   
@@ -152,8 +127,6 @@
   
 
   
-  
-
   
 
   
@@ -171,7 +144,7 @@
   
 
   
-      ,"page23": {
+      ,"page14": {
           "title": "",
           "content": "Sitemap: {{ “sitemap.xml” | absolute_url }} | .",
           "url": "https://www.neongenes.com//robots.txt",
