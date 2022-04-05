@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>Scaffold splitting and initial model training using chemprop | Neongenes dev blog</title>
+<meta name="description" content="Splitting data using a chemical space aware technique - scaffold splitting. Data is then trained using a directed message passing neural network (D-MPNN).">
+
+<!-- SEO and meta information for twitter/whatsupp cards --><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Scaffold splitting and initial model training using chemprop | Neongenes dev blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Scaffold splitting and initial model training using chemprop" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Splitting data using a chemical space aware technique - scaffold splitting. Data is then trained using a directed message passing neural network (D-MPNN)." />
+<meta property="og:description" content="Splitting data using a chemical space aware technique - scaffold splitting. Data is then trained using a directed message passing neural network (D-MPNN)." />
+<link rel="canonical" href="https://www.neongenes.com//data-splitting-and-training.ipynb/" />
+<meta property="og:url" content="https://www.neongenes.com//data-splitting-and-training.ipynb/" />
+<meta property="og:site_name" content="Neongenes dev blog" />
+<meta property="og:image" content="https://www.neongenes.com//images/play.gif" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-11-12T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"Splitting data using a chemical space aware technique - scaffold splitting. Data is then trained using a directed message passing neural network (D-MPNN).","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.neongenes.com//data-splitting-and-training.ipynb/"},"url":"https://www.neongenes.com//data-splitting-and-training.ipynb/","@type":"BlogPosting","image":"https://www.neongenes.com//images/play.gif","headline":"Scaffold splitting and initial model training using chemprop","dateModified":"2021-11-12T00:00:00-06:00","datePublished":"2021-11-12T00:00:00-06:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Neongenes dev blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://www.neongenes.com//assets/css/main.css" />
+<noscript><link rel="stylesheet" href="https://www.neongenes.com//assets/css/noscript.css" /></noscript>
+<link rel="stylesheet" href="https://www.neongenes.com//assets/stylesheets/main.css" />
+<link rel="stylesheet" href="https://www.neongenes.com//assets/css/academicons.min.css"/>
+
+<!-- Analytics --><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3K90R9JCRH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3K90R9JCRH');
+</script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1S8ZDTWYBX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1S8ZDTWYBX');
+</script>
+<!-- google search -->
+<meta name="google-site-verification" content="eo4A8Z3U5MisXvF1etpKMZu-ipYw7wVckqVlSnnFzMw" />
+
+<!-- Math -->
+
+
+  </head>
+  <body class="is-loading">
+
+    <!-- Wrapper -->
+      <div id="wrapper" class="fade-in">
+
+        <!-- Header -->
+        <header id="header">
+          <a href="https://www.neongenes.com//" class="logo">Neongenes dev blog</a>
+        </header>
+
+        <!-- Nav -->
+          <nav id="nav">
+
+            <ul class="links">
+  <li class=""><a href="https://www.neongenes.com//">Home</a></li>
+  <li class=""><a href="https://www.neongenes.com//blog/">Blog</a></li>
+  <li class=""><a href="https://www.neongenes.com//categories/">Categories</a></li>
+  <!-- <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li> -->
+  <li class=""><a href="https://www.neongenes.com//library/">Library</a></li>
+  <li class=""><a href="https://www.neongenes.com//about/">About Me</a></li>
+</ul>
+
+<ul class="icons">
+  <li class=""><a href="https://www.neongenes.com//search" class="icon fa-search"><span class="label">Search</span></a></li>
+  <li><a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
+  <li><a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
+<!--   <li>
+    
+      <a href="/feed.xml" title="Atom Feed" class="icon fa-rss">
+        <span class="label">Subscribe</span>
+      </a>
+    
+  </li> -->
+</ul>
+
+
+          </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+          <!-- Post -->
+          <section class="post">
+            
+            <p><article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Scaffold splitting and initial model training using chemprop</h1><p class="page-description">Splitting data using a chemical space aware technique - scaffold splitting. Data is then trained using a directed message passing neural network (D-MPNN).</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-11-12T00:00:00-06:00" itemprop="datePublished">
+        Nov 12, 2021
+      </time>• 
+
+
+
+<span class="read-time" title="Estimated read time">
+
+  9 min read
+
+</span>
+
+    </p>
+
+    
+      <p class="category-tags"><i class="fa fa-folder category-tags-icon"></i></i>
+      
+        <a class="category-tags-link" href="/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#bioinformatics">bioinformatics</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#datasets">datasets</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#SMILES">SMILES</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#cheminformatics">cheminformatics</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#datamol">datamol</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#RDKit">RDKit</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#molecules">molecules</a>
+        
+      
+      </p>
+    
+
+    
+
+    
+      
+        <div class="nb-badges" style="display: flex; justify-content: flex-end">
+          <div class="px-2">
+
+    <a href="https://github.com/gdeol4/neongenes/tree/master/_notebooks/2021-11-12-data-splitting-and-training.ipynb.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/gdeol4/neongenes/blob/master/_notebooks/2021-11-12-data-splitting-and-training.ipynb.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Chemprop">Chemprop </a></li>
+<li class="toc-entry toc-h1"><a href="#Scaffold-splitting">Scaffold splitting </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Molecular-compound-and-its-generic-Bemis-Murcko-scaffold">Molecular compound and its generic Bemis-Murcko scaffold </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Generating-generic-Bemis-Murcko-scaffolds">Generating generic Bemis-Murcko scaffolds </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#scaffold_split-function">scaffold_split function </a></li>
+<li class="toc-entry toc-h2"><a href="#chemprop_prep-function">chemprop_prep function </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Model-training-with-chemprop">Model training with chemprop </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Model-training-1">Model training 1 </a></li>
+<li class="toc-entry toc-h2"><a href="#Model-training-2">Model training 2 </a></li>
+<li class="toc-entry toc-h2"><a href="#Model-training-3">Model training 3 </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Results">Results </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Experiment-1:">Experiment 1: </a></li>
+<li class="toc-entry toc-h3"><a href="#Experiment-2:">Experiment 2: </a></li>
+<li class="toc-entry toc-h3"><a href="#Experiment-3:">Experiment 3: </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-11-12-data-splitting-and-training.ipynb.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Chemprop">
+<a class="anchor" href="#Chemprop" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chemprop<a class="anchor-link" href="#Chemprop"> </a>
+</h1>
+<p>I found the chemprop library in the paper <a href="%22https://www.cell.com/cell/fulltext/S0092-8674(20">A Deep Learning Approach to Antibiotic Discovery</a>30102-1"), it uses the directed message passing neural network (D-MPNN) described in <a href="%22https://pubs.acs.org/doi/abs/10.1021/acs.jcim.9b00237%22">Analyzing Learned Molecular Representations for Property Prediction</a>.</p>
+<p>The drug discovery workflow described in the paper uses a training dataset of 2335 molecules with binary e.coli growth inhibition labels to train a classification model.</p>
+<p>The D-MPNN architecture as described in the paper:</p>
+<blockquote>
+<p>The D-MPNN architecture translates the graph representation of a molecule into a continuous vector via a directed bond-based message-passing approach. This builds a molecular representation by iteratively aggregating the features of individual atoms and bonds. The model operates by passing “messages” along bonds that encode information about neighboring atoms and bonds. By applying this message passing operation multiple times, the model constructs higher-level bond messages that contain information about larger chemical substructures. The highest-level bond messages are then combined into a single continuous vector representing the entire molecule.</p>
+</blockquote>
+<p>The researchers generated molecular features using RDKit to tackle overfitting, increased algorithm robustness by using an ensemble of classifiers, and optimized hyperparameters with bayesian optimization. The model achieved a ROC-AUC of 0.896 on test data.</p>
+<p>This notebook will apply the neural network to the dataset of blood-brain barrier molecules gathered in the previous notebooks.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Scaffold-splitting">
+<a class="anchor" href="#Scaffold-splitting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Scaffold splitting<a class="anchor-link" href="#Scaffold-splitting"> </a>
+</h1>
+<p>A distributional shift is a change in the data distribution between an algorithm's training dataset, and a dataset it encounters when deployed. Distributional shifts are common in the field of molecular property prediction where chemical space is huge and different areas of it exhibit high structural heterogeneity. The shifts tend to be large and difficult to handle for machine learning models.</p>
+<p>Scaffold splitting is one solution to this distributional shift. It's first described in <a href="%22https://pubs.acs.org/doi/10.1021/jm9602928%22">"The properties of known drugs. 1. Molecular frameworks</a>:</p>
+<blockquote>
+<p>A molecular scaffold reduces the chemical structure of a compound to its core components, essentially by removing all side chains and only keeping ring systems and parts that link together ring systems. An additional option for making molecular scaffolds even more general is to “forget” the identities of the bonds and atoms by replacing all atoms with carbons and all bonds with single bonds.</p>
+</blockquote>
+<p>A Murcko scaffold essentially extracts the molecular backbone by extracting the ring structures and the linkers that connect them. These scaffolds collapse molecules into bins based on their generated Murcko scaffold, reducing the number of highly similar structures. When splitting the data by scaffold, molecules sharing a scaffold are in the same split, meaning no similar molecules will be found across different splits. Any bins larger than half of the desired test set size are placed into the training set, to guarantee the scaffold diversity of the validation and test sets. All remaining bins are placed randomly into the training, validation, and test sets until each set has reached its desired size. Clustering molecules by scaffold ensures that the model will be trained on structurally diverse folds when cross-validating.</p>
+<p>Compared to a random split, a scaffold split is a more challenging and realistic evaluation setting as it more closely approximates the split present in real-world property prediction data.</p>
+<p>A molecule compared to its scaffold below:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Molecular-compound-and-its-generic-Bemis-Murcko-scaffold">
+<a class="anchor" href="#Molecular-compound-and-its-generic-Bemis-Murcko-scaffold" aria-hidden="true"><span class="octicon octicon-link"></span></a>Molecular compound and its generic Bemis-Murcko scaffold<a class="anchor-link" href="#Molecular-compound-and-its-generic-Bemis-Murcko-scaffold"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">rdkit</span> <span class="kn">import</span> <span class="n">Chem</span>
+<span class="kn">from</span> <span class="nn">rdkit.Chem.Scaffolds</span> <span class="kn">import</span> <span class="n">MurckoScaffold</span>
+
+<span class="c1"># define compound via its SMILES string</span>
+<span class="n">smiles</span> <span class="o">=</span> <span class="s2">"CN1CCCCC1CCN2C3=CC=CC=C3SC4=C2C=C(C=C4)SC"</span>
+<span class="c1"># convert SMILES string to RDKit mol object </span>
+<span class="n">mol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
+<span class="c1"># create RDKit mol object corresponding to Bemis-Murcko scaffold of original compound</span>
+<span class="n">mol_scaffold</span> <span class="o">=</span> <span class="n">MurckoScaffold</span><span class="o">.</span><span class="n">GetScaffoldForMol</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="c1"># make the scaffold generic by replacing all atoms with carbons and all bonds with single bonds</span>
+<span class="n">mol_scaffold_generic</span> <span class="o">=</span> <span class="n">MurckoScaffold</span><span class="o">.</span><span class="n">MakeScaffoldGeneric</span><span class="p">(</span><span class="n">mol_scaffold</span><span class="p">)</span>
+<span class="c1"># convert the generic scaffold mol object back to a SMILES string format</span>
+<span class="n">smiles_scaffold_generic</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">CanonSmiles</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolToSmiles</span><span class="p">(</span><span class="n">mol_scaffold_generic</span><span class="p">))</span>
+<span class="c1"># display compound and its generic Bemis-Murcko scaffold</span>
+<span class="n">display</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">mol_scaffold_generic</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">smiles_scaffold_generic</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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">
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CN1CCCCC1CCN2C3=CC=CC=C3SC4=C2C=C(C=C4)SC
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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">
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>C1CCC(CCC2C3CCCCC3CC3CCCCC32)CC1
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Generating-generic-Bemis-Murcko-scaffolds">
+<a class="anchor" href="#Generating-generic-Bemis-Murcko-scaffolds" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generating generic Bemis-Murcko scaffolds<a class="anchor-link" href="#Generating-generic-Bemis-Murcko-scaffolds"> </a>
+</h1>
+<p>Below I've written code to generate the scaffolds and a few other related molecular representations. But binning and writing the code to split them myself would take too much time so I use a built-in feature of chemprop to split the data before model training.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import packages</span>
+
+<span class="kn">import</span> <span class="nn">chemprop</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">datamol</span> <span class="k">as</span> <span class="nn">dm</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">chained_assignment</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># default='warn'</span>
+
+
+<span class="c1"># loading the datasets</span>
+<span class="n">MolNet</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/MoleculeNet.csv"</span><span class="p">)</span>
+<span class="n">B3DB</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/B3DB.csv"</span><span class="p">)</span>
+<span class="n">b3_molecules</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/b3_molecules.csv"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="scaffold_split-function">
+<a class="anchor" href="#scaffold_split-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>scaffold_split function<a class="anchor-link" href="#scaffold_split-function"> </a>
+</h2>
+<p>This function generates and sanitizes mols, generates a scaffold from the mol object, generalizes the scaffold, and lastly converts the scaffold to a SMILES string, returning a dataframe.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">scaffold_split</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"standard_smiles"</span><span class="p">]]</span> <span class="c1"># generating mols from the standard_smiles column</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dm</span><span class="o">.</span><span class="n">sanitize_mol</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sanifix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">charge_neutral</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'mol'</span><span class="p">]]</span> <span class="c1"># sanitize mol objects</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="c1"># dropping NA values</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"scaffold"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">MurckoScaffold</span><span class="o">.</span><span class="n">GetScaffoldForMol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"mol"</span><span class="p">]]</span> <span class="c1"># generating scaffolds from mol object</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"mol_scaffold_generic"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">MurckoScaffold</span><span class="o">.</span><span class="n">MakeScaffoldGeneric</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"scaffold"</span><span class="p">]]</span> <span class="c1"># generalizing scaffolds</span>
+    <span class="c1"># convert the generic scaffold mol object back to a SMILES string format</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"smiles_scaffold_generic"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Chem</span><span class="o">.</span><span class="n">CanonSmiles</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolToSmiles</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s2">"mol_scaffold_generic"</span><span class="p">]]</span>
+    
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the data prior to processing</span>
+<span class="n">MolNet</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>BBB+/BBB-</th>
+      <th>SMILES</th>
+      <th>mol</th>
+      <th>standard_smiles</th>
+      <th>selfies</th>
+      <th>inchi</th>
+      <th>inchikey</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>[Cl].CC(C)NCC(O)COc1cccc2ccccc12</td>
+      <td>&lt;img data-content="rdkit/molecule" src="data:i...</td>
+      <td>CC(C)NCC(O)COc1cccc2ccccc12.[Cl-]</td>
+      <td>[C][C][Branch1][C][C][N][C][C][Branch1][C][O][...</td>
+      <td>InChI=1S/C16H21NO2.ClH/c1-12(2)17-10-14(18)11-...</td>
+      <td>ZMRUPTIKESYGQW-UHFFFAOYSA-M</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># results of the scaffold generating function</span>
+<span class="n">data_split</span> <span class="o">=</span> <span class="n">scaffold_split</span><span class="p">(</span><span class="n">b3_molecules</span><span class="p">)</span>
+<span class="n">data_split</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>BBB+/BBB-</th>
+      <th>SMILES</th>
+      <th>mol</th>
+      <th>standard_smiles</th>
+      <th>selfies</th>
+      <th>inchi</th>
+      <th>inchikey</th>
+      <th>scaffold</th>
+      <th>mol_scaffold_generic</th>
+      <th>smiles_scaffold_generic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>[Cl].CC(C)NCC(O)COc1cccc2ccccc12</td>
+      <td>&lt;img data-content="rdkit/molecule" src="data:i...</td>
+      <td>CC(C)NCC(O)COc1cccc2ccccc12.[Cl-]</td>
+      <td>[C][C][Branch1][C][C][N][C][C][Branch1][C][O][...</td>
+      <td>InChI=1S/C16H21NO2.ClH/c1-12(2)17-10-14(18)11-...</td>
+      <td>ZMRUPTIKESYGQW-UHFFFAOYSA-M</td>
+      <td>&lt;img data-content="rdkit/molecule" src="data:i...</td>
+      <td>&lt;img data-content="rdkit/molecule" src="data:i...</td>
+      <td>C1CCC2CCCCC2C1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="chemprop_prep-function">
+<a class="anchor" href="#chemprop_prep-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>chemprop_prep function<a class="anchor-link" href="#chemprop_prep-function"> </a>
+</h2>
+<p>This function serves to prepare the data to be used by the chemprop library. Specifically, the input data must contain a SMILES string in the first column and the target value - a binary value in this experiment. The resulting dataframe is saved as a CSV file to later be used by chemprop.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># A function to process the data for use with the chemprop library</span>
+<span class="k">def</span> <span class="nf">chemprop_prep</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"mol"</span><span class="p">,</span> <span class="s2">"SMILES"</span><span class="p">,</span> <span class="s2">"selfies"</span><span class="p">,</span> <span class="s2">"inchi"</span><span class="p">,</span> <span class="s2">"inchikey"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># drop all columns except the smiles and target</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"smiles"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"standard_smiles"</span><span class="p">]</span> <span class="c1"># use standard smiles inplace of smiles</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"standard_smiles"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># drop this column now</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"smiles"</span><span class="p">,</span> <span class="s2">"BBB+/BBB-"</span><span class="p">]]</span> <span class="c1"># reorder the columns with smiles first and target second</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'./data/'</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">'.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># save the file</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Processing the three different datasets</span>
+<span class="n">molnet_chemprop</span> <span class="o">=</span> <span class="n">chemprop_prep</span><span class="p">(</span><span class="n">MolNet</span><span class="p">,</span> <span class="s1">'molnet_chemprop'</span><span class="p">)</span>
+<span class="n">B3DB_chemprop</span> <span class="o">=</span> <span class="n">chemprop_prep</span><span class="p">(</span><span class="n">B3DB</span><span class="p">,</span> <span class="s1">'B3DB_chemprep'</span><span class="p">)</span>
+<span class="n">b3_mol_chemprop</span> <span class="o">=</span> <span class="n">chemprop_prep</span><span class="p">(</span><span class="n">b3_molecules</span><span class="p">,</span> <span class="s1">'b3_mol_chemprop'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># results of processing</span>
+<span class="n">molnet_chemprop</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>smiles</th>
+      <th>BBB+/BBB-</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>CC(C)NCC(O)COc1cccc2ccccc12.[Cl-]</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Model-training-with-chemprop">
+<a class="anchor" href="#Model-training-with-chemprop" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model training with chemprop<a class="anchor-link" href="#Model-training-with-chemprop"> </a>
+</h1>
+<p>I ran three experiments with slight differences to test out the predictive ability on the blood-brain barrier molecules:</p>
+<ol>
+<li>
+<p>The split type is set to scaffold balanced; the number of folds is 10, class balancing is set to true, and 200 features are generated with RDKits 2d descriptor generator. The features are scaled when calculated and thus no further scaling is specified.</p>
+</li>
+<li>
+<p>This run sets the number of training epochs within each fold at 100. The rest of the settings mentioned above are kept the same.</p>
+</li>
+<li>
+<p>The last run has the number of folds increased from 10 to 30 while epochs per fold are set to 20.</p>
+</li>
+</ol>
+<p>These models are trained using the MoleculeNet data (~2035 molecules), further tests will use the combined dataset with ~8100 molecules.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-1">
+<a class="anchor" href="#Model-training-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model training 1<a class="anchor-link" href="#Model-training-1"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'--data_path'</span><span class="p">,</span> <span class="s1">'./data/molnet_chemprop.csv'</span><span class="p">,</span>
+    <span class="s1">'--dataset_type'</span><span class="p">,</span> <span class="s1">'classification'</span><span class="p">,</span>
+    <span class="s1">'--save_dir'</span><span class="p">,</span> <span class="s1">'./data/chemprop_checkpoints/'</span><span class="p">,</span>
+    <span class="s1">'--split_type'</span><span class="p">,</span> <span class="s1">'scaffold_balanced'</span><span class="p">,</span>
+ <span class="c1">#   '--separate_val_path', './data/chemprop_B3DB.csv',</span>
+    <span class="s1">'--num_folds'</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">,</span>
+    <span class="s1">'--class_balance'</span><span class="p">,</span>
+    <span class="s1">'--features_generator'</span><span class="p">,</span> <span class="s1">'rdkit_2d_normalized'</span><span class="p">,</span>
+    <span class="s1">'--no_features_scaling'</span><span class="p">,</span>
+    <span class="s1">'--quiet'</span>
+    
+
+<span class="p">]</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">TrainArgs</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">mean_score</span><span class="p">,</span> <span class="n">std_score</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">train_func</span><span class="o">=</span><span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">run_training</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-2">
+<a class="anchor" href="#Model-training-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model training 2<a class="anchor-link" href="#Model-training-2"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'--data_path'</span><span class="p">,</span> <span class="s1">'./data/molnet_chemprop.csv'</span><span class="p">,</span>
+    <span class="s1">'--dataset_type'</span><span class="p">,</span> <span class="s1">'classification'</span><span class="p">,</span>
+    <span class="s1">'--save_dir'</span><span class="p">,</span> <span class="s1">'./data/chemprop_checkpoints/'</span><span class="p">,</span>
+    <span class="s1">'--split_type'</span><span class="p">,</span> <span class="s1">'scaffold_balanced'</span><span class="p">,</span>
+ <span class="c1">#   '--separate_val_path', './data/chemprop_B3DB.csv',</span>
+    <span class="s1">'--num_folds'</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">,</span>
+    <span class="s1">'--class_balance'</span><span class="p">,</span>
+    <span class="s1">'--features_generator'</span><span class="p">,</span> <span class="s1">'rdkit_2d_normalized'</span><span class="p">,</span>
+    <span class="s1">'--no_features_scaling'</span><span class="p">,</span>
+    <span class="s1">'--quiet'</span><span class="p">,</span>
+    <span class="s1">'--epochs'</span><span class="p">,</span> <span class="s1">'100'</span>
+    
+
+<span class="p">]</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">TrainArgs</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">mean_score</span><span class="p">,</span> <span class="n">std_score</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">train_func</span><span class="o">=</span><span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">run_training</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-training-3">
+<a class="anchor" href="#Model-training-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model training 3<a class="anchor-link" href="#Model-training-3"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">arguments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'--data_path'</span><span class="p">,</span> <span class="s1">'./data/molnet_chemprop.csv'</span><span class="p">,</span>
+    <span class="s1">'--dataset_type'</span><span class="p">,</span> <span class="s1">'classification'</span><span class="p">,</span>
+    <span class="s1">'--save_dir'</span><span class="p">,</span> <span class="s1">'./data/chemprop_checkpoints/'</span><span class="p">,</span>
+    <span class="s1">'--split_type'</span><span class="p">,</span> <span class="s1">'scaffold_balanced'</span><span class="p">,</span>
+ <span class="c1">#   '--separate_val_path', './data/chemprop_B3DB.csv',</span>
+    <span class="s1">'--num_folds'</span><span class="p">,</span> <span class="s1">'30'</span><span class="p">,</span>
+    <span class="s1">'--class_balance'</span><span class="p">,</span>
+    <span class="s1">'--features_generator'</span><span class="p">,</span> <span class="s1">'rdkit_2d_normalized'</span><span class="p">,</span>
+    <span class="s1">'--no_features_scaling'</span><span class="p">,</span>
+    <span class="s1">'--quiet'</span><span class="p">,</span>
+    <span class="s1">'--epochs'</span><span class="p">,</span> <span class="s1">'20'</span><span class="p">,</span>
+    
+
+<span class="p">]</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">TrainArgs</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+<span class="n">mean_score</span><span class="p">,</span> <span class="n">std_score</span> <span class="o">=</span> <span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">cross_validate</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">train_func</span><span class="o">=</span><span class="n">chemprop</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">run_training</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Results">
+<a class="anchor" href="#Results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results<a class="anchor-link" href="#Results"> </a>
+</h1>
+<h3 id="Experiment-1:">
+<a class="anchor" href="#Experiment-1:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiment 1:<a class="anchor-link" href="#Experiment-1:"> </a>
+</h3>
+<p>10-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.928767
+Seed 1 ==&gt; test auc = 0.903879
+Seed 2 ==&gt; test auc = 0.955724
+Seed 3 ==&gt; test auc = 0.862450
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.892326
+Seed 6 ==&gt; test auc = 0.886606
+Seed 7 ==&gt; test auc = 0.951849
+Seed 8 ==&gt; test auc = 0.906486
+Seed 9 ==&gt; test auc = 0.937866
+
+</code></pre>
+<p>Overall test auc = 0.911620 +/- 0.029164
+Elapsed time = 0:20:54</p>
+<p>This run was the fastest and used the default number of epochs and fold. The overall AUC for the test data was 0.911620 +/- 0.029164.</p>
+<h3 id="Experiment-2:">
+<a class="anchor" href="#Experiment-2:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiment 2:<a class="anchor-link" href="#Experiment-2:"> </a>
+</h3>
+<p>10-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.929177
+Seed 1 ==&gt; test auc = 0.852848
+Seed 2 ==&gt; test auc = 0.944112
+Seed 3 ==&gt; test auc = 0.862913
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.893487
+Seed 6 ==&gt; test auc = 0.881697
+Seed 7 ==&gt; test auc = 0.941933
+Seed 8 ==&gt; test auc = 0.920437
+Seed 9 ==&gt; test auc = 0.917494
+
+</code></pre>
+<p>Overall test auc = 0.903435 +/- 0.030385
+Elapsed time = 16:49:39</p>
+<p>This run took the most time, nearing almost 17 hours with 100 epochs for each fold. The overall AUC for the test data was 0.903435 +/- 0.030385 which underperformed compared to the model in the first experiment that ran using default parameters.</p>
+<h3 id="Experiment-3:">
+<a class="anchor" href="#Experiment-3:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Experiment 3:<a class="anchor-link" href="#Experiment-3:"> </a>
+</h3>
+<p>30-fold cross validation</p>
+
+<pre><code>Seed 0 ==&gt; test auc = 0.928630
+Seed 1 ==&gt; test auc = 0.907636
+Seed 2 ==&gt; test auc = 0.943526
+Seed 3 ==&gt; test auc = 0.882607
+Seed 4 ==&gt; test auc = 0.890246
+Seed 5 ==&gt; test auc = 0.892559
+Seed 6 ==&gt; test auc = 0.870606
+Seed 7 ==&gt; test auc = 0.947479
+Seed 8 ==&gt; test auc = 0.903720
+Seed 9 ==&gt; test auc = 0.930991
+Seed 10 ==&gt; test auc = 0.795291
+Seed 11 ==&gt; test auc = 0.894284
+Seed 12 ==&gt; test auc = 0.936275
+Seed 13 ==&gt; test auc = 0.930272
+Seed 14 ==&gt; test auc = 0.950706
+Seed 15 ==&gt; test auc = 0.919849
+Seed 16 ==&gt; test auc = 0.877632
+Seed 17 ==&gt; test auc = 0.871467
+Seed 18 ==&gt; test auc = 0.888110
+Seed 19 ==&gt; test auc = 0.905920
+Seed 20 ==&gt; test auc = 0.921946
+Seed 21 ==&gt; test auc = 0.928851
+Seed 22 ==&gt; test auc = 0.870864
+Seed 23 ==&gt; test auc = 0.865779
+Seed 24 ==&gt; test auc = 0.902960
+Seed 25 ==&gt; test auc = 0.946100
+Seed 26 ==&gt; test auc = 0.900540
+Seed 27 ==&gt; test auc = 0.923984
+Seed 28 ==&gt; test auc = 0.900345
+Seed 29 ==&gt; test auc = 0.905261
+
+</code></pre>
+<p>Overall test auc = 0.904481 +/- 0.031870
+Elapsed time = 0:38:51</p>
+<p>This run took less than an hour (~40 minutes), with 20 training epochs per fold. Increasing the number of folds and epochs seems to bring down the model's accuracy compared to the default settings. The overall AUC for the test data was AUC= 0.904481 +/- 0.031870, which still marginally outperformed the model in experiment 2 that took nearly 17 hours.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gdeol4/neongenes"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-splitting-and-training.ipynb/" hidden></a>
+</article>
+
+</p>
+          </section>
+
+          <!-- Footer -->
+          <a href="#header" class="back-to-top">Back To Top &uarr;</a>
+          <footer>
+            <ul class="actions">
+              <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
+              <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
+            </ul>
+          </footer>
+        </div>
+
+        <!-- Footer -->
+        <!-- Copyright -->
+<div id="copyright">
+  <ul>
+    <li>&copy; Oluwaleke Umar Yusuf  
+      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a>  
+      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a>
+      <!-- <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> | -->
+      <!-- <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> | -->
+      <!-- 
+      <a href="/feed.xml" title="Atom Feed" class="icon fa-rss" rel="nofollow">
+        <span class="label">Subscribe</span>
+      </a>
+       -->
+    </li>
+    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a> &
+      <a href="https://github.com/OriolAbril">Oriol Abril Pla</a></li>
+    <li>Design by <a href="https://html5up.net" rel="nofollow">HTML5 UP</a> &
+      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a> &
+      <a href="https://jekyllup.com/">JekyllUp</a> </li>
+    <!-- <li><a href="https://github.com/Outsiders17711/Mein.Platz">Mein.Platz</a> / -->
+      <!-- <a href="https://github.com/Outsiders17711/Mein.Platz/actions">@actions</a> </li> -->
+  </ul>
+</div>
+
+
+      </div>
+
+    <!-- Scripts -->
+    <!-- DYN -->
+<script src="https://www.neongenes.com//assets/js/jquery.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/jquery.scrollex.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/jquery.scrolly.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/skel.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/util.js"></script>
+<script src="https://www.neongenes.com//assets/js/main.js"></script>
+
+
+  </body>
+</html>

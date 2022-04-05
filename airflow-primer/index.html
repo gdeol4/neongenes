@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>A primer on Apache Airflow | Neongenes dev blog</title>
+<meta name="description" content="Definitions and diagrams I drew about the very basics of Airflow, as a reference.">
+
+<!-- SEO and meta information for twitter/whatsupp cards --><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>A primer on Apache Airflow | Neongenes dev blog</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="A primer on Apache Airflow" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Definitions and diagrams I drew about the very basics of Airflow, as a reference." />
+<meta property="og:description" content="Definitions and diagrams I drew about the very basics of Airflow, as a reference." />
+<link rel="canonical" href="https://www.neongenes.com//airflow-primer/" />
+<meta property="og:url" content="https://www.neongenes.com//airflow-primer/" />
+<meta property="og:site_name" content="Neongenes dev blog" />
+<meta property="og:image" content="https://www.neongenes.com//images/go-with-flow.gif" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-20T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Definitions and diagrams I drew about the very basics of Airflow, as a reference.","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.neongenes.com//airflow-primer/"},"url":"https://www.neongenes.com//airflow-primer/","@type":"BlogPosting","image":"https://www.neongenes.com//images/go-with-flow.gif","headline":"A primer on Apache Airflow","dateModified":"2021-04-20T00:00:00-05:00","datePublished":"2021-04-20T00:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Neongenes dev blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://www.neongenes.com//assets/css/main.css" />
+<noscript><link rel="stylesheet" href="https://www.neongenes.com//assets/css/noscript.css" /></noscript>
+<link rel="stylesheet" href="https://www.neongenes.com//assets/stylesheets/main.css" />
+<link rel="stylesheet" href="https://www.neongenes.com//assets/css/academicons.min.css"/>
+
+<!-- Analytics --><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3K90R9JCRH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3K90R9JCRH');
+</script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1S8ZDTWYBX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1S8ZDTWYBX');
+</script>
+<!-- google search -->
+<meta name="google-site-verification" content="eo4A8Z3U5MisXvF1etpKMZu-ipYw7wVckqVlSnnFzMw" />
+
+<!-- Math -->
+
+
+  </head>
+  <body class="is-loading">
+
+    <!-- Wrapper -->
+      <div id="wrapper" class="fade-in">
+
+        <!-- Header -->
+        <header id="header">
+          <a href="https://www.neongenes.com//" class="logo">Neongenes dev blog</a>
+        </header>
+
+        <!-- Nav -->
+          <nav id="nav">
+
+            <ul class="links">
+  <li class=""><a href="https://www.neongenes.com//">Home</a></li>
+  <li class=""><a href="https://www.neongenes.com//blog/">Blog</a></li>
+  <li class=""><a href="https://www.neongenes.com//categories/">Categories</a></li>
+  <!-- <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li> -->
+  <li class=""><a href="https://www.neongenes.com//library/">Library</a></li>
+  <li class=""><a href="https://www.neongenes.com//about/">About Me</a></li>
+</ul>
+
+<ul class="icons">
+  <li class=""><a href="https://www.neongenes.com//search" class="icon fa-search"><span class="label">Search</span></a></li>
+  <li><a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
+  <li><a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
+<!--   <li>
+    
+      <a href="/feed.xml" title="Atom Feed" class="icon fa-rss">
+        <span class="label">Subscribe</span>
+      </a>
+    
+  </li> -->
+</ul>
+
+
+          </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+          <!-- Post -->
+          <section class="post">
+            
+            <p><article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">A primer on Apache Airflow</h1><p class="page-description">Definitions and diagrams I drew about the very basics of Airflow, as a reference.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-04-20T00:00:00-05:00" itemprop="datePublished">
+        Apr 20, 2021
+      </time>• 
+
+
+
+<span class="read-time" title="Estimated read time">
+
+  4 min read
+
+</span>
+
+    </p>
+
+    
+      <p class="category-tags"><i class="fa fa-folder category-tags-icon"></i></i>
+      
+        <a class="category-tags-link" href="/categories/#data-engineering">data-engineering</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#airflow">airflow</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#DAG">DAG</a>
+        
+      
+      </p>
+    
+
+    
+
+    
+      
+        <div class="nb-badges" style="display: flex; justify-content: flex-end">
+          <div class="px-2">
+
+    <a href="https://github.com/gdeol4/neongenes/tree/master/_notebooks/2021-04-20-airflow-primer.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/gdeol4/neongenes/blob/master/_notebooks/2021-04-20-airflow-primer.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-04-20-airflow-primer.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-is-airflow?">What is airflow?<a class="anchor-link" href="#What-is-airflow?"> </a></h1><p>Airflow is a platform used to author, schedule, and monitor workflows.
+It’s essentially a queuing system that runs on a metadata database and a scheduler that runs tasks. Workflows are written as Directed Acyclic Graphs (DAGs). A workflow and DAG are interchangeable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-are-DAGs?">What are DAGs?<a class="anchor-link" href="#What-are-DAGs?"> </a></h1><p>A DAG is a collection of tasks you want to run and are organized in a way that illustrates dependencies and relationships between tasks.</p>
+<p>The image below shows how a DAG is a unidirectional, acyclic graph, where each node in the graph is a task and edges define dependencies among tasks. There is no case where you should be able to go backwards from a forward node to one that's already been executed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/images/airflow1_1.jpeg" alt="" /></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A DAG can be broken up into smaller and smaller jobs and gives the user full control by generating dynamic pipelines written in code. Airflow DAGs are also extensible and can scale. DAGs are powerful because they allow for collaborative, manageable, and testable workflows. A bonus is that Airflow is developed in python and can interface with any python API.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/images/airflow1_2.jpeg" alt="" /></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The image above shows how Airflow divides the tasks into branches so that if one fails, there is still output from the other. Also, the processing time is reduced as parallel computing occurs. The chances of failure should decrease overall as each task is independent.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-are-tasks-executed?">How are tasks executed?<a class="anchor-link" href="#How-are-tasks-executed?"> </a></h2><p>An operator represents a single task in a workflow that helps carry out your task (running a python function for example).
+Operators determine what actually gets to be done when your dag runs.
+A task is an operator when instantiated. It is something on which the worker works upon.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Airflow-Architecture">Airflow Architecture<a class="anchor-link" href="#Airflow-Architecture"> </a></h2><p><img src="/images/copied_from_nb/images/airflow1_3.jpeg" alt="" /></p>
+<ul>
+<li><p>Metadata — is a relational database with info on task state, such as the top ten tasks consuming the most memory, it contains all data pertaining to jobs currently running as well as historical data.</p>
+</li>
+<li><p>Scheduler — decides which task to run, when, and in what order.</p>
+</li>
+<li><p>Web server— the UI which is essentially a flask app that talks to the metadata.</p>
+</li>
+<li><p>Executor — performs the task at ground level. The executor is a message queuing process that figures out which workers will execute which tasks. The default is the sequential executor — which cannot run tasks in parallel — meaning it can’t be used for production level code. The local executor can be used too which will run tasks till all resources on the server are at capacity. This is good for a moderate amount of DAGs. Both of these are used in single node clusters and therefore cannot be used to scaled.</p>
+</li>
+<li><p>Multi node clusters — have the same components and only the scheduler and web server are placed in the same node (master), the workers are placed in a separate instance. This set up works well because it allows for scaling by letting you add more multi-node clusters (celery is the executor of choice here for python).</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you're not dealing with terabytes of data then it's better to have the scheduler, web server, and executor together in the master node/cluster. The downside is that this single cluster approach runs everything on the same machine, so if you make a change to a DAG/scheduler, then you need to restart the entire workflow — even tasks that were in the process of executing. Celery avoids this.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/images/airflow1_4.jpeg" alt="" /></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you do build a distributed workflow with celery then a queuing system component is needed (like Redis). For local workflows, the queuing is handled by the system.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="The-life-cycle-of-a-task">The life cycle of a task<a class="anchor-link" href="#The-life-cycle-of-a-task"> </a></h2><ol>
+<li><p>The scheduler periodically checks the DAG folder to see if there are any DAGS that need to be run.</p>
+</li>
+<li><p>If any DAGS are found pending execution, the scheduler creates a diagram for it, which is an instantiation of a DAG in real time.</p>
+</li>
+<li><p>The scheduler will update the DAG state to running in the metadata and the tasks will execute.</p>
+</li>
+<li><p>The scheduler then reads the DAG and puts the tasks in order of execution into the queuing system in the form of a message. Each message contains info like DAG ID, TASK ID, and function to be executed.</p>
+</li>
+<li><p>The status of these tasks changes to queued at that point.</p>
+</li>
+<li><p>The executor then begins to execute tasks and sends fail/success messages for the tasks to the metadata.</p>
+</li>
+<li><p>The scheduler finally updates the status of the diagram when all tasks have run to success or failure.</p>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gdeol4/neongenes"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/airflow-primer/" hidden></a>
+</article>
+
+</p>
+          </section>
+
+          <!-- Footer -->
+          <a href="#header" class="back-to-top">Back To Top &uarr;</a>
+          <footer>
+            <ul class="actions">
+              <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
+              <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
+            </ul>
+          </footer>
+        </div>
+
+        <!-- Footer -->
+        <!-- Copyright -->
+<div id="copyright">
+  <ul>
+    <li>&copy; Oluwaleke Umar Yusuf  
+      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a>  
+      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a>
+      <!-- <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> | -->
+      <!-- <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> | -->
+      <!-- 
+      <a href="/feed.xml" title="Atom Feed" class="icon fa-rss" rel="nofollow">
+        <span class="label">Subscribe</span>
+      </a>
+       -->
+    </li>
+    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a> &
+      <a href="https://github.com/OriolAbril">Oriol Abril Pla</a></li>
+    <li>Design by <a href="https://html5up.net" rel="nofollow">HTML5 UP</a> &
+      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a> &
+      <a href="https://jekyllup.com/">JekyllUp</a> </li>
+    <!-- <li><a href="https://github.com/Outsiders17711/Mein.Platz">Mein.Platz</a> / -->
+      <!-- <a href="https://github.com/Outsiders17711/Mein.Platz/actions">@actions</a> </li> -->
+  </ul>
+</div>
+
+
+      </div>
+
+    <!-- Scripts -->
+    <!-- DYN -->
+<script src="https://www.neongenes.com//assets/js/jquery.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/jquery.scrollex.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/jquery.scrolly.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/skel.min.js"></script>
+<script src="https://www.neongenes.com//assets/js/util.js"></script>
+<script src="https://www.neongenes.com//assets/js/main.js"></script>
+
+
+  </body>
+</html>
