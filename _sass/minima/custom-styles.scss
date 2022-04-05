@@ -2,12 +2,9 @@
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 @import "minima/fastpages-styles";
 
-/*--- IMPORT MY STYLES ---*/
-@import "minima/outsiders17711-styles";
-
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
-@import "minima/fastpages-dracula-highlight"; // colorscheme is defined there
+@import "minima/syntax_highlight_base"; // colorscheme is defined there
 
 // must go after colorscheme
 
@@ -25,11 +22,8 @@
 // make code output wrap text
 .output_area pre {
   border-left: none;
-  border-bottom: #673ab7 solid 2px !important;
-  border-right: #673ab7 solid 2px !important;
-  border-bottom-right-radius: 5px;
   overflow-x: auto;
-  // white-space: pre-wrap;
+  white-space: pre-wrap;
   word-wrap: break-word;
 }
 
@@ -114,18 +108,6 @@ body.vscode-dark {
   max-width: 700px !important;
 }
 
-// .input_area pre, .input_area div {
-//   margin-bottom:2rem !important;
-//   margin-top:1.5rem !important;
-//   padding-bottom:0 !important;
-//   padding-top:0 !important;
-//   background: #323443 !important;
-//   -webkit-font-smoothing: antialiased;
-//   text-rendering: optimizeLegibility;
-//   font-family: DejaVu Sans Mono, monospace;
-//   border-radius: 5px;
-//   font-size: 100%;
-// }
 
 .xr-text-repr-fallback {
   /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
@@ -355,7 +337,7 @@ body.vscode-dark {
 .xr-var-dims:hover,
 .xr-var-dtype:hover,
 .xr-attrs dt:hover {
-  overflow: auto !important;
+  overflow: visible !important;
   width: auto !important;
   z-index: 1 !important;
 }
@@ -431,6 +413,3 @@ dl.xr-attrs {
   fill: currentColor !important;
 }
 }
-
-// If you want to turn off dark background for syntax highlighting, comment or delete the below line.
-// @import "minima/fastpages-dracula-highlight"; 

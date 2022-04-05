@@ -6,9 +6,10 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: Neongenes dev blog
+title: Gurkamal Deol's Development Blog
 description: Notes on machine learning, bioinformatics, and programming.
 github_username: gdeol4
+background_image:   "/images/bg.jpg"
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "neongenes"
 
@@ -134,5 +135,3 @@ defaults:
       read_time: true
       twitter_large_image: false
       use_math: false
-
-permalink: /:title/

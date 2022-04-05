@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
   <head>
     {% include head.html %}
@@ -33,14 +32,13 @@
           </section>
 
           <!-- Footer -->
-          <a href="#header" class="back-to-top">{{ site.data.text[site.locale].back_to_top | default: 'Back To Top' }} &uarr;</a>
-          <footer>
-            <ul class="actions">
-              <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
-              <li><a href="{{ "/blog/" | absolute_url }}" class="button">Blog</a></li>
-            </ul>
-          </footer>
-        </div>
+            <footer>
+              <ul class="actions">
+                <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
+                <li><a href="{{ "/blog/" | absolute_url }}" class="button">Blog</a></li>
+              </ul>
+            </footer>
+          </div>
 
         <!-- Footer -->
         {% include foot.html %}

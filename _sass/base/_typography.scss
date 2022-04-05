@@ -27,7 +27,6 @@
   }
 
   body, input, select, textarea {
-    // controls the font type of the blog text (unformatted markdowns)
     font-family: _font(family);
     font-weight: _font(weight);
     font-size: 1rem;
@@ -91,7 +90,7 @@
 
   h3 {
     font-size: 1.25rem;
-    margin: (_size(element-margin) * 0.75) 0 (_size(element-margin) * 0.5) 0;
+    margin: 0 0 (_size(element-margin) * 0.75) 0;
   }
 
   h4 {
@@ -117,26 +116,19 @@
     position: relative;
     top: -0.5rem;
   }
-  
+
   blockquote {
-    border-left: solid 4px #4caf50;
+    border-left: solid 4px;
     font-style: italic;
-    margin: 0 0 2rem 0;
-    padding: 1px 0 1px 1rem;
-    // margin: 0 0 _size(element-margin) 0;
-    // padding: (_size(element-margin) / 4) 0 (_size(element-margin) / 4) _size(element-margin);
+    margin: 0 0 _size(element-margin) 0;
+    padding: (_size(element-margin) / 4) 0 (_size(element-margin) / 4) _size(element-margin);
   }
-  
+
   code {
     font-family: _font(family-fixed);
-    font-size: 105%;
-    font-weight: bold;
-    color: deeppink;
+    font-size: 80%;
     margin: 0 0.1rem;
-    // background: _palette($p, border-bg);
-    // border-color: _palette($p, border);
-    // padding: 0.1rem 0.2rem;
-    // border-radius: 5px;
+    padding: 0.1rem 0.2rem;
   }
 
   pre {
@@ -144,13 +136,12 @@
     font-family: _font(family-fixed);
     font-size: 0.9rem;
     margin: 0 0 _size(element-margin) 0;
-    // this fixed the issue with scrollbars
-    overflow: auto !important;
 
     code {
       display: block;
-      line-height: 1.5;
-      // padding: 1rem 1.5rem;
+      line-height: 1.75;
+      padding: 1rem 1.5rem;
+      overflow-x: auto;
     }
   }
 
@@ -186,9 +177,8 @@
     }
 
     a {
-      // color: #0969da;
-      border-bottom-color: transparentize(_palette($p, fg), 0.5);
       color: _palette($p, fg-bold);
+      border-bottom-color: transparentize(_palette($p, fg), 0.5);
 
       &:hover {
         border-bottom-color: transparent;
@@ -204,10 +194,14 @@
       color: _palette($p, fg-bold);
     }
 
-    // blockquote {
-    //   border-left-color: _palette($p, border);
-    // }
+    blockquote {
+      border-left-color: _palette($p, border);
+    }
 
+    code {
+      background: _palette($p, border-bg);
+      border-color: _palette($p, border);
+    }
 
     hr {
       border-bottom-color: _palette($p, border);

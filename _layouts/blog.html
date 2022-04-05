@@ -2,8 +2,8 @@
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
   <head>
     {% include head.html %}
-  </head>
 
+  </head>
   <body class="is-loading">
 
     <!-- Wrapper -->
@@ -14,10 +14,13 @@
           <a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
         </header>
 
+
         <!-- Nav -->
-        <nav id="nav">
-          {% include nav.html %}
-        </nav>
+          <nav id="nav">
+
+            {% include nav.html %}
+
+          </nav>
 
         <!-- Main -->
         <div id="main">
@@ -25,22 +28,10 @@
           <!-- Post -->
           <section class="posts">
             {% for post in site.posts %}
-              {% if post.hide != true %}
-                {% if post.destination != 'library' %}
-                  {% include entry_square.html %}
-                {% endif %}
-              {% endif %}
+              {% include entry_square.html %}
             {% endfor %}
-          </section>
 
-          <!-- Footer -->
-          <a href="#header" class="back-to-top">{{ site.data.text[site.locale].back_to_top | default: 'Back To Top' }} &uarr;</a>
-          <footer>
-            <ul class="actions">
-              <li><a href="{{ "/" | absolute_url }}" class="button">Home</a></li>
-              <li><a href="{{ "/categories/" | absolute_url }}" class="button">Categories</a></li>
-            </ul>
-          </footer>
+          </section>
 
           </div>
 

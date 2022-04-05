@@ -15,8 +15,7 @@
     z-index: 2;
 
     > * {
-      // @include padding((_size(padding) * 2), (_size(padding) * 2));
-      padding: 2rem 2rem 1.5rem 2rem;
+      @include padding((_size(padding) * 2), (_size(padding) * 2));
       border-top: solid 2px _palette(border);
       margin: 0;
 
@@ -35,8 +34,7 @@
     }
 
     > .post {
-      // @include padding((_size(padding) * 4), (_size(padding) * 4));
-      padding: 3rem 3rem 2rem 3rem;
+      @include padding((_size(padding) * 4), (_size(padding) * 4));
 
       header {
         &.major {
@@ -52,22 +50,16 @@
         }
       }
 
-      a {
-        color: #0969da !important;
-      }
-
       &.featured {
         text-align: center;
       }
 
       @include breakpoint(large) {
-        // @include padding((_size(padding) * 3), (_size(padding) * 2));
-        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        @include padding((_size(padding) * 3), (_size(padding) * 2));
       }
 
       @include breakpoint(small) {
-        // @include padding((_size(padding) * 2), (_size(padding) * 1));
-        padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+        @include padding((_size(padding) * 2), (_size(padding) * 1));
 
         header {
           &.major {
@@ -116,7 +108,7 @@
           border-top-width: 0;
         }
       }
-      
+
       @include breakpoint(medium) {
         @include flexgrid-resize((
           columns:      2,
@@ -159,93 +151,9 @@
       }
     }
 
-    > .library_pages {
-      @include flexgrid((
-        columns:      3,
-        gutters:      (_size(padding) * 4),
-        horizontal-align:  center,
-        vertical-align:    flex-start,
-        flush:        false
-      ));
-      width: 100%;
-      padding: 0;
-
-      > img {
-        border: 2px solid darkgray !important
-      }
-
-      > article {
-        border-color: _palette(border);
-        border-left-width: 2px;
-        border-style: solid;
-        border-top-width: 2px;
-        text-align: center;
-
-        > :last-child {
-          margin-bottom: 0;
-        }
-
-        &:nth-child(3n - 2) {
-          border-left-width: 0;
-        }
-
-        &:nth-child(-n + 3) {
-          border-top-width: 0;
-        }
-      }
-
-      // set the padding and columns for entries in library pages
-      > * {
-        padding: 1.5rem !important;
-        width: 33% !important;
-      }
-    
-      @include breakpoint(medium) {
-        @include flexgrid-resize((
-          columns:      2,
-          gutters:      (_size(padding) * 2.5),
-          flush:        false
-          ));
-        }
-        
-        @include breakpoint(small) {
-          @include flexgrid-resize((
-            columns:      1,
-            gutters:      (_size(padding) * 2),
-            prev-columns:    2,
-            flush:        false
-            ));
-            
-            > article {
-              &:nth-child(2n - 1) {
-                border-left-width: 2px;
-              }
-              
-              &:nth-child(-n + 2) {
-                border-top-width: 2px;
-              }
-              
-              &:nth-child(n) {
-                border-left-width: 0;
-              }
-              
-              &:nth-child(-n + 1) {
-                border-top-width: 0;
-              }
-              
-              .image {
-                max-width: 25rem;
-                margin-left: auto;
-                margin-right: auto;
-              }
-        }
-      }
-    }
-
     @include breakpoint(small) {
       > * {
-        // @include padding((_size(padding) * 1), (_size(padding) * 1));
-        padding: 1rem 1.5em 1rem 1.5rem;
+        @include padding((_size(padding) * 1), (_size(padding) * 1));
       }
     }
 
