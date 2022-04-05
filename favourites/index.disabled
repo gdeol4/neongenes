@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>My Favourites | Neongenes dev blog</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>My Favourites | Gurkamal Deol's Development Blog</title>
 <meta name="description" content="">
 
 <!-- SEO and meta information for twitter/whatsupp cards --><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>My Favourites | Neongenes dev blog</title>
+<title>My Favourites | Gurkamal Deol’s Development Blog</title>
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="My Favourites" />
 <meta property="og:locale" content="en_US" />
@@ -16,11 +15,11 @@
 <meta property="og:description" content="Notes on machine learning, bioinformatics, and programming." />
 <link rel="canonical" href="https://www.neongenes.com//favourites/" />
 <meta property="og:url" content="https://www.neongenes.com//favourites/" />
-<meta property="og:site_name" content="Neongenes dev blog" />
+<meta property="og:site_name" content="Gurkamal Deol’s Development Blog" />
 <script type="application/ld+json">
-{"description":"Notes on machine learning, bioinformatics, and programming.","url":"https://www.neongenes.com//favourites/","@type":"WebPage","headline":"My Favourites","@context":"https://schema.org"}</script>
+{"url":"https://www.neongenes.com//favourites/","@type":"WebPage","headline":"My Favourites","description":"Notes on machine learning, bioinformatics, and programming.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Neongenes dev blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Gurkamal Deol's Development Blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://www.neongenes.com//assets/css/main.css" />
 <noscript><link rel="stylesheet" href="https://www.neongenes.com//assets/css/noscript.css" /></noscript>
 <link rel="stylesheet" href="https://www.neongenes.com//assets/stylesheets/main.css" />
@@ -41,17 +40,6 @@
 </script>
 
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1S8ZDTWYBX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-1S8ZDTWYBX');
-</script>
-<!-- google search -->
-<meta name="google-site-verification" content="eo4A8Z3U5MisXvF1etpKMZu-ipYw7wVckqVlSnnFzMw" />
-
 <!-- Math -->
 
 
@@ -63,7 +51,7 @@
 
         <!-- Header -->
         <header id="header">
-          <a href="https://www.neongenes.com//" class="logo">Neongenes dev blog</a>
+          <a href="https://www.neongenes.com//" class="logo">Gurkamal Deol's Development Blog</a>
         </header>
 
         <!-- Nav -->
@@ -72,23 +60,22 @@
             <ul class="links">
   <li class=""><a href="https://www.neongenes.com//">Home</a></li>
   <li class=""><a href="https://www.neongenes.com//blog/">Blog</a></li>
+  <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li>
   <li class=""><a href="https://www.neongenes.com//categories/">Categories</a></li>
-  <!-- <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li> -->
-  <li class=""><a href="https://www.neongenes.com//library/">Library</a></li>
-  <li class=""><a href="https://www.neongenes.com//about/">About Me</a></li>
+  <li class=""><a href="https://www.neongenes.com//about/">About me</a></li>
 </ul>
 
 <ul class="icons">
   <li class=""><a href="https://www.neongenes.com//search" class="icon fa-search"><span class="label">Search</span></a></li>
   <li><a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
   <li><a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
-<!--   <li>
+  <li>
     
       <a href="/feed.xml" title="Atom Feed" class="icon fa-rss">
         <span class="label">Subscribe</span>
       </a>
     
-  </li> -->
+  </li>
 </ul>
 
 
@@ -539,37 +526,33 @@
           </section>
 
           <!-- Footer -->
-          <a href="#header" class="back-to-top">Back To Top &uarr;</a>
-          <footer>
-            <ul class="actions">
-              <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
-              <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
-            </ul>
-          </footer>
-        </div>
+            <footer>
+              <ul class="actions">
+                <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
+                <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
+              </ul>
+            </footer>
+          </div>
 
         <!-- Footer -->
         <!-- Copyright -->
 <div id="copyright">
   <ul>
-    <li>&copy; Oluwaleke Umar Yusuf  
-      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a>  
-      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a>
-      <!-- <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> | -->
-      <!-- <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> | -->
-      <!-- 
+    <li>&copy; Oriol Abril Pla |
+      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a> |
+      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a> |
+      <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> |
+      <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> |
+      
       <a href="/feed.xml" title="Atom Feed" class="icon fa-rss" rel="nofollow">
         <span class="label">Subscribe</span>
       </a>
-       -->
+      
     </li>
-    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a> &
-      <a href="https://github.com/OriolAbril">Oriol Abril Pla</a></li>
+    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a></li>
     <li>Design by <a href="https://html5up.net" rel="nofollow">HTML5 UP</a> &
-      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a> &
-      <a href="https://jekyllup.com/">JekyllUp</a> </li>
-    <!-- <li><a href="https://github.com/Outsiders17711/Mein.Platz">Mein.Platz</a> / -->
-      <!-- <a href="https://github.com/Outsiders17711/Mein.Platz/actions">@actions</a> </li> -->
+      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a></li>
+    <li>Jekyll Integration by <a href="https://jekyllup.com/">JekyllUp</a> </li>
   </ul>
 </div>
 

@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>Preprocessing a dataset of blood brain barrier molecules with Datamol | Neongenes dev blog</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="twitter:card" content="summary" /><title>Preprocessing a dataset of blood brain barrier molecules with Datamol | Gurkamal Deol's Development Blog</title>
 <meta name="description" content="Sanitizing and manipulating molecules with binary labels of blood-brain barrier penetration (permeability).">
 
 <!-- SEO and meta information for twitter/whatsupp cards --><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Preprocessing a dataset of blood brain barrier molecules with Datamol | Neongenes dev blog</title>
+<title>Preprocessing a dataset of blood brain barrier molecules with Datamol | Gurkamal Deol’s Development Blog</title>
 <meta name="generator" content="Jekyll v4.1.1" />
 <meta property="og:title" content="Preprocessing a dataset of blood brain barrier molecules with Datamol" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Sanitizing and manipulating molecules with binary labels of blood-brain barrier penetration (permeability)." />
 <meta property="og:description" content="Sanitizing and manipulating molecules with binary labels of blood-brain barrier penetration (permeability)." />
-<link rel="canonical" href="https://www.neongenes.com//working-with-SMILES/" />
-<meta property="og:url" content="https://www.neongenes.com//working-with-SMILES/" />
-<meta property="og:site_name" content="Neongenes dev blog" />
+<link rel="canonical" href="https://www.neongenes.com//python/bioinformatics/datasets/smiles/cheminformatics/datamol/rdkit/molecules/2021/10/22/working-with-SMILES.html" />
+<meta property="og:url" content="https://www.neongenes.com//python/bioinformatics/datasets/smiles/cheminformatics/datamol/rdkit/molecules/2021/10/22/working-with-SMILES.html" />
+<meta property="og:site_name" content="Gurkamal Deol’s Development Blog" />
 <meta property="og:image" content="https://www.neongenes.com//images/mol.gif" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-10-22T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Sanitizing and manipulating molecules with binary labels of blood-brain barrier penetration (permeability).","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.neongenes.com//working-with-SMILES/"},"url":"https://www.neongenes.com//working-with-SMILES/","@type":"BlogPosting","image":"https://www.neongenes.com//images/mol.gif","headline":"Preprocessing a dataset of blood brain barrier molecules with Datamol","dateModified":"2021-10-22T00:00:00-05:00","datePublished":"2021-10-22T00:00:00-05:00","@context":"https://schema.org"}</script>
+{"datePublished":"2021-10-22T00:00:00-05:00","url":"https://www.neongenes.com//python/bioinformatics/datasets/smiles/cheminformatics/datamol/rdkit/molecules/2021/10/22/working-with-SMILES.html","@type":"BlogPosting","image":"https://www.neongenes.com//images/mol.gif","headline":"Preprocessing a dataset of blood brain barrier molecules with Datamol","dateModified":"2021-10-22T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.neongenes.com//python/bioinformatics/datasets/smiles/cheminformatics/datamol/rdkit/molecules/2021/10/22/working-with-SMILES.html"},"description":"Sanitizing and manipulating molecules with binary labels of blood-brain barrier penetration (permeability).","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Neongenes dev blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<!-- Feed --><link type="application/atom+xml" rel="alternate" href="https://www.neongenes.com//feed.xml" title="Gurkamal Deol's Development Blog" /><!-- CSS --><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://www.neongenes.com//assets/css/main.css" />
 <noscript><link rel="stylesheet" href="https://www.neongenes.com//assets/css/noscript.css" /></noscript>
 <link rel="stylesheet" href="https://www.neongenes.com//assets/stylesheets/main.css" />
@@ -44,17 +43,6 @@
 </script>
 
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-1S8ZDTWYBX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-1S8ZDTWYBX');
-</script>
-<!-- google search -->
-<meta name="google-site-verification" content="eo4A8Z3U5MisXvF1etpKMZu-ipYw7wVckqVlSnnFzMw" />
-
 <!-- Math -->
 
 
@@ -66,7 +54,7 @@
 
         <!-- Header -->
         <header id="header">
-          <a href="https://www.neongenes.com//" class="logo">Neongenes dev blog</a>
+          <a href="https://www.neongenes.com//" class="logo">Gurkamal Deol's Development Blog</a>
         </header>
 
         <!-- Nav -->
@@ -75,23 +63,22 @@
             <ul class="links">
   <li class=""><a href="https://www.neongenes.com//">Home</a></li>
   <li class=""><a href="https://www.neongenes.com//blog/">Blog</a></li>
+  <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li>
   <li class=""><a href="https://www.neongenes.com//categories/">Categories</a></li>
-  <!-- <li class=""><a href="https://www.neongenes.com//tags/">Tags</a></li> -->
-  <li class=""><a href="https://www.neongenes.com//library/">Library</a></li>
-  <li class=""><a href="https://www.neongenes.com//about/">About Me</a></li>
+  <li class=""><a href="https://www.neongenes.com//about/">About me</a></li>
 </ul>
 
 <ul class="icons">
   <li class=""><a href="https://www.neongenes.com//search" class="icon fa-search"><span class="label">Search</span></a></li>
   <li><a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
   <li><a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
-<!--   <li>
+  <li>
     
       <a href="/feed.xml" title="Atom Feed" class="icon fa-rss">
         <span class="label">Subscribe</span>
       </a>
     
-  </li> -->
+  </li>
 </ul>
 
 
@@ -745,45 +732,41 @@
   </div>
 <!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js" repo="gdeol4/neongenes" issue-term="title" label="blogpost-comment" theme="github-light" crossorigin="anonymous" async>
-</script><a class="u-url" href="/working-with-SMILES/" hidden></a>
+</script><a class="u-url" href="/python/bioinformatics/datasets/smiles/cheminformatics/datamol/rdkit/molecules/2021/10/22/working-with-SMILES.html" hidden></a>
 </article>
-
 </p>
           </section>
 
           <!-- Footer -->
-          <a href="#header" class="back-to-top">Back To Top ↑</a>
-          <footer>
-            <ul class="actions">
-              <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
-              <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
-            </ul>
-          </footer>
-        </div>
+            <footer>
+              <ul class="actions">
+                <li><a href="https://www.neongenes.com//" class="button">Home</a></li>
+                <li><a href="https://www.neongenes.com//blog/" class="button">Blog</a></li>
+              </ul>
+            </footer>
+          </div>
 
         <!-- Footer -->
         <!-- Copyright -->
 <div id="copyright">
   <ul>
-    <li>© Oluwaleke Umar Yusuf  
-      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a>  
-      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a>
-      <!-- <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> | -->
-      <!-- <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> | -->
-      <!-- 
+    <li>© Oriol Abril Pla |
+      <a href="https://github.com/gdeol4" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a> |
+      <a href="https://twitter.com/" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a> |
+      <a href="https://orcid.org/" class="ai ai-orcid" rel="nofollow"><span class="label">ORCID</span></a> |
+      <a href="https://scholar.google.es/citations?user=" class="ai ai-google-scholar" rel="nofollow"><span class="label">Google Scholar</span></a> |
+      
       <a href="/feed.xml" title="Atom Feed" class="icon fa-rss" rel="nofollow">
         <span class="label">Subscribe</span>
       </a>
-       -->
+      
     </li>
-    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a> &amp;
-      <a href="https://github.com/OriolAbril">Oriol Abril Pla</a>
+    <li>Powered by <a href="https://fastpages.fast.ai/">fastpages</a>
 </li>
     <li>Design by <a href="https://html5up.net" rel="nofollow">HTML5 UP</a> &amp;
-      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a> &amp;
-      <a href="https://jekyllup.com/">JekyllUp</a> </li>
-    <!-- <li><a href="https://github.com/Outsiders17711/Mein.Platz">Mein.Platz</a> / -->
-      <!-- <a href="https://github.com/Outsiders17711/Mein.Platz/actions">@actions</a> </li> -->
+      <a href="https://github.com/mmistakes/jekyll-theme-basically-basic">Basically Basic</a>
+</li>
+    <li>Jekyll Integration by <a href="https://jekyllup.com/">JekyllUp</a> </li>
   </ul>
 </div>
 
