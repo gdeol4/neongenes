@@ -1,13 +1,12 @@
-//Default Overrides For Styles In theme used
+//Default Overrides For Styles In Minima 
 // If you wish to override any of this CSS, do so in _sass/minima/custom-styles.css
 
-// edit the look of images, i added borders
 .post img {
-  display: block;
-  vertical-align: top;
-  margin-left: auto;
-  border: groove;
-  margin-right: auto;
+        display: block;
+        // border:1px solid #021a40;
+        vertical-align: top;
+        margin-left: auto;
+        margin-right: auto;
 }
 
 img.emoji{
@@ -30,11 +29,42 @@ img.emoji{
 
 // make non-headings slightly lighter
 .post-content p, .post-content li {
+   font-size: 20px;
    color: #515151;
 }
 
 .post-link{
     font-weight: normal;
+}
+
+// change padding of headings
+h1 {
+    margin-top:2.5rem !important;
+}
+
+h2 {
+    margin-top:2rem !important;      
+}
+
+h3, h4 {
+    margin-top:1.5rem !important;      
+}
+
+p {
+    margin-top:1rem !important; 
+    margin-bottom:1rem !important;   
+}
+
+h1, h2, h3, h4 {
+    font-weight: normal !important;
+    margin-bottom:0.5rem !important;  
+    code {
+      font-size: 100%;
+    }
+}
+
+pre {
+    margin-bottom:1.5rem !important; 
 }
 
 // make sure the post title doesn't have too much spacing
@@ -47,10 +77,13 @@ li {
   }
   .post-meta-description {
     color: rgb(88, 88, 88);
+    font-size: 15px;
     margin-top:.05rem !important;
     margin-bottom:.05rem !important;
   }
 }
+
+
 
 //  Code Folding
  details.description[open] summary::after {
@@ -68,10 +101,18 @@ details.description:not([open]) summary::after {
 
 // Adjust font size for footnotes.
 .footnotes {
-  font-size: .9rem !important;
-  p, li {
-    font-size: .9rem !important;
- }
+  font-size: 12px !important;
+  p, li{
+    font-size: 12px !important;
+ } 
+}
+
+// Adjust with of social media icons were getting cut off
+.social-media-list{
+  .svg-icon {
+    width: 25px !important;
+    height: 23px !important;
+  }
 }
 
 // Make Anchor Links Appear Only on Hover
@@ -124,14 +165,14 @@ h6:hover .anchor-link {
 }
 .category-tags-link {
   color:rgb(187, 129, 129) !important;
-  font-size: 1rem !important;
+  font-size: 13px !important;
 }
 
 // Search Page Styles
 .js-search-results {padding-top: 0.2rem;}
 .search-results-list-item {padding-bottom: 1rem;}
 .search-results-list-item .search-result-title {
-  font-size: 1rem;
+  font-size: 16px;
   color: #d9230f;
 }
 .search-result-rel-url {color: silver;}
@@ -141,12 +182,12 @@ h6:hover .anchor-link {
 
 .search-result-rel-date {
   color: rgb(109, 120, 138);
-  font-size: 1rem;
+  font-size: 14px;
 }
 
 .search-result-preview {
   color: #777;
-  font-size: 1rem;
+  font-size: 16px;
   margin-top:.02rem !important;
   margin-bottom:.02rem !important;
 }
@@ -155,35 +196,27 @@ h6:hover .anchor-link {
   font-weight:bold;
 }
 
-// Handle Overflow With Table Output
-
 table {
-  display: block !important;
-  overflow-x: auto;
-  white-space: nowrap;
-  font-size: 75%;
+  white-space: normal;
+  max-width: 100%;
+  font-size: 100%;
   border:none;
   th{
     text-align: center! important;
-  }
-  td{
-    text-overflow:ellipsis;
-    overflow:hidden;
-    max-width: 15em;
   }
 }
 
 // customize scrollbars
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 18px;
 }
 ::-webkit-scrollbar-thumb {
   height: 6px;
-  border: 2.5px solid rgba(0, 0, 0, 0);
+  border: 4px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
   -webkit-border-radius: 7px;
-  background-color: #ffffff;
+  background-color: #9D9D9D;
   -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
 ::-webkit-scrollbar-button {
@@ -207,214 +240,37 @@ table {
 // @media only screen and (max-width: 1200px) {
 //   /* for mobile phone and tablet devices */
   .output_wrapper{
-    overflow: scroll;
+    overflow: auto;
   }
 // }
-
-.output_wrapper{
-  overflow: scroll;
-}
 
 .svg-icon.orange{
   width: 30px;
   height: 23px;
 }
 
-// flash alerts
-.flash {
+.code_cell {
+  margin: 1.5rem 0px !important;
+}
+
+pre code {
+  font-size: 15px !important;
+}
+
+// Handle youtube videos, so they dont break on mobile devices
+.youtube-iframe-wrapper {
   position: relative;
-  padding: 10px 10px;
-  border-style: solid;
-  border-width: 4px;
-  border-radius: 10px;
+  padding-bottom: 56.10%;
+  height: 0;
+  overflow: hidden;
 }
 
-// videos
-center {
-  // show scrollbar when they overflow
-  overflow: auto;
-  /* width: -webkit-fill-available; */
-}
-
-// massively massive buttons
-/* Button */
-input[type="submit"],
-input[type="reset"],
-input[type="button"],
-button,
-.button {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    -moz-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
-    -webkit-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
-    -ms-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
-    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
-    border: 0;
-    cursor: pointer;
-    display: inline-block;
-    font-family: "Source Sans Pro", Helvetica, sans-serif;
-    font-size: 0.8rem;
-    font-weight: 900;
-    letter-spacing: 0.075em;
-    height: 3rem;
-    margin: 10px;
-    line-height: 3rem;
-    padding: 0 2rem;
-    text-align: center;
-    text-decoration: none;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-input[type="submit"].icon:before,
-input[type="reset"].icon:before,
-input[type="button"].icon:before,
-button.icon:before,
-.button.icon:before {
-    margin-right: 0.5rem;
-}
-
-input[type="submit"].icon.solo,
-input[type="reset"].icon.solo,
-input[type="button"].icon.solo,
-button.icon.solo,
-.button.icon.solo {
-    position: relative;
-    width: 4rem;
-    height: 4rem;
-    line-height: 4rem;
-    border-radius: 4rem;
-    text-indent: 4rem;
-    overflow: hidden;
-    padding: 0;
-    white-space: nowrap;
-}
-
-input[type="submit"].icon.solo:before,
-input[type="reset"].icon.solo:before,
-input[type="button"].icon.solo:before,
-button.icon.solo:before,
-.button.icon.solo:before {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    width: inherit;
-    height: inherit;
-    line-height: inherit;
-    font-size: 1.25rem;
-    margin-right: 0;
-    text-align: center;
-    text-indent: 0;
-}
-
-input[type="submit"].fit,
-input[type="reset"].fit,
-input[type="button"].fit,
-button.fit,
-.button.fit {
-    display: block;
-    margin: 0 0 1rem 0;
-    width: 100%;
-}
-
-input[type="submit"].small,
-input[type="reset"].small,
-input[type="button"].small,
-button.small,
-.button.small {
-    font-size: 0.7rem;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    padding: 0 1.5rem;
-}
-
-input[type="submit"].big,
-input[type="reset"].big,
-input[type="button"].big,
-button.big,
-.button.big {
-    font-size: 0.9rem;
-    height: 3.5rem;
-    line-height: 3.5rem;
-    padding: 0 2.75rem;
-}
-
-@media screen and (max-width: 980px) {
-
-    input[type="submit"],
-    input[type="reset"],
-    input[type="button"],
-    button,
-    .button {
-        font-size: 0.9rem;
-        height: 3.25rem;
-        line-height: 3.25rem;
-    }
-
-        input[type="submit"].big,
-        input[type="reset"].big,
-        input[type="button"].big,
-        button.big,
-        .button.big {
-            font-size: 1rem;
-            height: 3.75rem;
-            line-height: 3.75rem;
-        }
-
-}
-
-input[type="submit"].disabled, input[type="submit"]:disabled,
-input[type="reset"].disabled,
-input[type="reset"]:disabled,
-input[type="button"].disabled,
-input[type="button"]:disabled,
-button.disabled,
-button:disabled,
-.button.disabled,
-.button:disabled {
-    -moz-pointer-events: none;
-    -webkit-pointer-events: none;
-    -ms-pointer-events: none;
-    pointer-events: none;
-    opacity: 0.25;
-}
-
-input[type="submit"],
-input[type="reset"],
-input[type="button"],
-button,
-.button {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 2px #212931;
-    color: #212931 !important;
-}
-
-input[type="submit"]:hover,
-input[type="reset"]:hover,
-input[type="button"]:hover,
-button:hover,
-.button:hover {
-    box-shadow: inset 0 0 0 2px #18bfef;
-    color: #18bfef !important;
-}
-
-input[type="submit"].special,
-input[type="reset"].special,
-input[type="button"].special,
-button.special,
-.button.special {
-    background-color: #212931;
-    box-shadow: none;
-    color: #ffffff !important;
-}
-
-input[type="submit"].special:hover,
-input[type="reset"].special:hover,
-input[type="button"].special:hover,
-button.special:hover,
-.button.special:hover {
-    background-color: #18bfef;
+.youtube-iframe-wrapper iframe,
+.youtube-iframe-wrapper object,
+.youtube-iframe-wrapper embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

@@ -6,10 +6,9 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: Gurkamal Deol
+title: Neongenes dev blog
 description: Notes on machine learning, bioinformatics, and programming.
 github_username: gdeol4
-background_image:   "/images/bg.jpg"
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "neongenes"
 
@@ -101,7 +100,7 @@ plugins:
 paginate: 15
 paginate_path: /page:num/
 
-remote_theme: jekyllup/jekyll-theme-massively
+remote_theme: jekyll/minima
 
 titles_from_headings:
   enabled:     true
@@ -124,14 +123,3 @@ feed:
   
 exclude:
   - settings.ini
-
-# Front Matter Defaults
-defaults:
-  # _posts
-  - scope:
-      path: "_posts"
-      type: posts
-    values:
-      read_time: true
-      twitter_large_image: false
-      use_math: false

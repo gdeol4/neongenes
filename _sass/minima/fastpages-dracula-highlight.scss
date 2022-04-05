@@ -14,7 +14,6 @@ $dt-purple: #bd93f9;
 $dt-red: #ff5555;
 $dt-yellow: #f1fa8c;
 $dt-green-light: rgb(172, 229, 145);
-$dt-darkish-orange: rgb(231, 153, 122);
 
 .language-python + .language-plaintext {
     border-left: 1px solid grey;
@@ -42,8 +41,8 @@ $dt-darkish-orange: rgb(231, 153, 122);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-family: Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace;
-    border-radius: 10px;
-    font-size: 100%;
+    border-radius: 5px;
+    font-size: 105%;
 }
 .output_area pre, .output_area div {
     margin-bottom:1rem !important;
@@ -53,13 +52,7 @@ $dt-darkish-orange: rgb(231, 153, 122);
 }
 .input_area pre {
     border-left: 1px solid lightcoral;
-    border-left: 10px solid $dt-code-cell-background;
-    border-left: 10px solid $dt-code-cell-background;
-    border-top: 10px solid $dt-code-cell-background;
-    border-bottom: 10px solid $dt-code-cell-background;
-    border-radius: 15px !important;
 }
-
 .output_area pre {
     border-left: 1px solid grey;
     margin-left: 1rem !important;
@@ -78,18 +71,14 @@ $dt-darkish-orange: rgb(231, 153, 122);
  *
  */
 
- .highlight {
-  // background: $dt-code-cell-background !important;
-  color: $dt-gray-light !important;
-  pre, code {
-   background: $dt-code-cell-background;
-   color: $dt-gray-light;
-   border-left: 10px solid $dt-code-cell-background;
-   border-left: 10px solid $dt-code-cell-background;
-   border-top: 10px solid $dt-code-cell-background;
-   border-bottom: 10px solid $dt-code-cell-background;
-   border-radius: 15px !important;
-  }
+.highlight {
+    background: $dt-code-cell-background !important;
+    color: $dt-gray-light !important;
+    pre, code {
+     background: $dt-code-cell-background;
+     color: $dt-gray-light;
+     font-size: 110%;
+    }
    
     .hll,
     .s,
@@ -106,7 +95,7 @@ $dt-darkish-orange: rgb(231, 153, 122);
     .sr,
     .s1,
     .ss {
-      color: $dt-darkish-orange;
+         color:rgb(231, 153, 122);
     }
   
     .go {
@@ -143,7 +132,7 @@ $dt-darkish-orange: rgb(231, 153, 122);
  
     .p {
          font-weight: bold;
-         color: $dt-green !important;
+         color: rgb(102, 217, 239);
  }
   
     .ge {
@@ -160,7 +149,6 @@ $dt-darkish-orange: rgb(231, 153, 122);
     .cpf,
     .cs {
       color: $dt-blue;
-      font-style: italic;
     }
 
     .c1 {
@@ -227,4 +215,8 @@ $dt-darkish-orange: rgb(231, 153, 122);
     .gd {
       color: $dt-red;
     }
+}
+
+p code{
+  font-size: 19px;
 }
