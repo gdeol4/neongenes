@@ -100,7 +100,7 @@ plugins:
 paginate: 15
 paginate_path: /page:num/
 
-remote_theme: jekyll/minima
+remote_theme: jekyllup/jekyll-theme-massively
 
 titles_from_headings:
   enabled:     true
@@ -123,3 +123,16 @@ feed:
   
 exclude:
   - settings.ini
+
+# Front Matter Defaults
+defaults:
+  # _posts
+  - scope:
+      path: "_posts"
+      type: posts
+    values:
+      read_time: true
+      twitter_large_image: false
+      use_math: false
+
+permalink: /:title/

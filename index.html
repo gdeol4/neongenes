@@ -1,10 +1,92 @@
 ---
-layout: home
+layout: null
+title: Home
+description: "mein platz, my little corner of the internet"
+sitemap:
+  priority: 1.0
 search_exclude: true
-image: images/logo.png
 ---
 
-![]({{site.baseurl}}/images/banner.gif "https://github.com/fastai/fastpages")
+<!DOCTYPE HTML>
 
+<!--
+  Massively by HTML5 UP
+  html5up.net | @ajlkn
+  Jekyll integration by somiibo.com
+  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 
-# Posts
+<html>
+  <head>
+    {% include head.html %}
+  </head>
+
+  <body class="is-loading">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+
+      <!-- Intro -->
+      <div id="intro">
+        <h1>{{site.title}}</h1>
+        <p>{{page.description}}</p>
+        <ul class="actions">
+          <li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+        </ul>
+      </div>
+
+      <!-- Header -->
+      <header id="header">
+        <a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+      </header>
+
+      <!-- Nav -->
+      <nav id="nav">
+        {% include nav.html %}
+      </nav>
+
+      <!-- Main -->
+      <div id="main">
+        <!-- Featured Post -->
+        <article class="post featured">
+          <header class="major">
+            <h2 style="font-size: 2.75rem;">HighLord @Outsiders17711</h2>
+            <p style="font-size: x-large;">αν πεθάνεις πριν πεθάνεις, δεν θα πεθάνεις όταν πεθάνεις</p>
+            <p>if you die before you die, you won't die when you die</p>
+          </header>
+          <a class="image main">
+            <img style="max-height:480px;" src="{{ "/images/outsiders.png" | absolute_url }}" alt="HighLord @Outsiders17711"/>
+          </a>
+        </article>
+
+        <!-- Posts -->
+        <!-- <section class="posts">
+          {% for post in site.posts %}
+            {% if post.hide != true %}
+              {% include entry_square.html %}
+            {% endif %}
+          {% endfor %}
+        </section> -->
+
+        <!-- Footer -->
+        <footer>
+          <ul class="actions">
+            <li><a href="{{ "/blog/" | absolute_url }}" class="button">Blog</a></li>
+            <li><a href="{{ "/library/" | absolute_url }}" class="button">Library</a></li>
+            <li><a href="{{ "/about/" | absolute_url }}" class="button">About Me</a></li>
+          </ul>
+        </footer>
+
+      </div> 
+
+      <!-- Footer -->
+      {% include foot.html %}
+
+      </div>
+
+    <!-- Scripts -->
+    {% include scripts-main.html %}
+
+  </body>
+  
+</html>
