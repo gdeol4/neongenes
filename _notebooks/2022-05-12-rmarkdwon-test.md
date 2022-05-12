@@ -1,3 +1,17 @@
+---
+title: "testing R markdown to markdown conversion"
+description: "Awesome description"
+layout: post
+toc: true
+comments: true
+image:
+hide: false
+search_exclude: true
+categories: [fastpages, jupyter]
+metadata_key1: metadata_value1
+metadata_key2: metadata_value2
+---
+
 ## R Markdown
 
 This is an R Markdown document. Markdown is a simple formatting syntax
