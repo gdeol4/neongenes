@@ -4,7 +4,6 @@ description: "Awesome description"
 layout: post
 toc: true
 comments: true
-image:
 hide: false
 search_exclude: true
 categories: [fastpages, jupyter]
