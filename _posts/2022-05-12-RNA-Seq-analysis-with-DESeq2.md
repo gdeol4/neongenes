@@ -1,3 +1,16 @@
+---
+title: "RNA-Seq analysis of SMOC2 using DESeq2"
+description: "Awesome description"
+layout: post
+toc: true
+comments: true
+hide: false
+search_exclude: true
+categories: [Bioinformatics, R]
+metadata_key1: metadata_value1
+metadata_key2: metadata_value2
+---
+
 # Introduction
 
 ### What is smoc2?
