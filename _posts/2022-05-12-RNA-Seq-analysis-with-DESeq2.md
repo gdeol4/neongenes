@@ -73,15 +73,29 @@ library(tidyverse)
 Differential expression analysis:
 
 1. Read in count matrix and create metadata
+
+
 2. Quality control:
+
+
     * Normalize counts to account for differences in library depth.
+
     * Perform principal component analysis 
+
     * Perform hierarchical clustering using heatmaps
+
     * Identify potential sample outliers and major sources of variation in the data
+
+
 3. Differential expression analysis:
+
     * Run differential expression analysis
+
     * Modeling counts
+
     * Shrinking log2 fold change
+
+
     * Testing for differential expression
 
 # Importing read counts associated with genes
@@ -144,77 +158,33 @@ rownames(smoc2_metadata) = c('smoc2_fibrosis1','smoc2_fibrosis2','smoc2_fibrosis
 
 ### Preparing the data for DESeq2
 
-After we have our data loaded, we need to make sure it’s in a specific
-format so that it will be accepted as input to DESeq2.
+The data needs to be in a specific format to be accepted as an input to DESeq2. This requires the sample names in the 
+metadata and counts datasets to be in the same order. Therefore, the row names of our metadata need to be in the same 
+order as the column names of our counts data.
 
-Bringing in data for DESeq2: sample order DESeq2 requires the sample
-names in the metadata and counts datasets to be in the same order.
-Therefore, the row names of our metadata need to be in the same order as
-the column names of our counts data. As we can see in these images, the
-sample names for the counts are in a nice order while the names in the
-metadata are not.
+Currently the order is not the same, and this can be confirmed with the all() function to compare the row and coloumn order
+which will return FALSE.The match() function can be used to determine the order needed. The first argumnent to the function 
+is a vector of values in the order desired, and the second is a vector of values to be reordered.
 
-Bringing in data for DESeq2: sample order Alternatively, we can explore
-the row names and column names with the rownames() and colnames()
-functions.
-
-Bringing in data for DESeq2: sample order By looking at our sample names
-in both datasets, we can see that the order is not the same, but it’s
-not always clear, so using the all() function with the “double equal to”
-sign can check if all of the row names of the metadata are in the same
-order as the column names of the raw counts data. The all() function
-returns a FALSE value. Now we know that our samples are not in the same
-order, so we need to reorder the data to use it with DESeq2.
-
-Matching order between vectors To easily reorder the rows of the
-metadata to match the order of columns in the counts data, we can use
-the match() function. The match() function takes two vectors as input.
-The first is a vector of values in the order we want, and the second is
-a vector of values we would like to reorder. In our example, the column
-names of the raw counts data is the vector with the order we want, so it
-will be in the first position of the match() function. The row names of
-the metadata is the vector to be reordered, so it will be in the second
-position. The output shows how we would need to reorder the rows of the
-metadata to be in the same order as the columns in the count data. For
-instance the 6th row would need to come first, followed by the 9th row,
-then the 1st row, so on and so forth.
-
-Reordering with the match() function Now, we can use the output of the
-match() function to reorder the rows of the metadata to be in the same
-order as the columns in the count data. To do this we can save the
-indices output by match() to a variable, in this case called idx. Then,
-we can rearrange the metadata by using the square brackets and adding
-idx to the rows position. The samples should now be in the same order
-for both datasets.
-
-Checking the order To check the order we can use the all() function
-again. Since they match, we can now use these datasets to create the
-DESeq2 object needed to start the DESeq2 workflow.
-
-8.  Creating the DESeq2 object To create the DESeq2 object, use the
-    DESeqDataSetFromMatrix() function. This function takes as input the
-    raw counts, associated metadata, and a design formula detailing
-    which conditions in the metadata we want to use for differential
-    expression analysis. We will talk in more detail about the design
-    formula later. This function will create a DESeq2 object, of the
-    class Ranged Summarized Experiment. This is a list-like object with
-    slots available for the data it will generate throughout the
-    analysis. Currently, it only has a few of the slots filled with the
-    count data, metadata, and design information.
+Reordering can be done with the match() function by using the output of match() to reorder the rows of the metadata to be in
+the same order as the columns in the count data. To do this the indices output by match() need to be extracted to a variable. 
+Then, rearrange the metadata by using the square brackets and adding the index to the rows position. The samples should now be 
+in the same order for both datasets, which can be confirmed by running the all() function once again
 
 ``` r
 #check if the column orders are the same with the all function
 all(rownames(smoc2_metadata) ==  colnames(data))
-```
 
-    ## [1] FALSE
+[1] FALSE
+```
 
 ``` r
 #determine the matching order between the vectors using match()
 match(colnames(data), rownames(smoc2_metadata))
+
+[1] 1 4 5 6 3 7 2
 ```
 
-    ## [1] 1 4 5 6 3 7 2
 
 ``` r
 #use the match() function to reorder the column of the raw counts
@@ -243,11 +213,18 @@ all(rownames(reordered_smoc2_meta) ==  colnames(data))
 
     ## [1] TRUE
 
-Good work, we now have a DESeq2 object storing our raw counts and
-metadata that we can use to explore the data with DESeq2 functions and
-to use for performing the differential expression analysis.
 
 ### Creating the DESeq2 DataSet (DDS)
+
+Now a DESeq2 dataSet (DDS) needs to be created to store the raw counts and metadata to use for performing 
+the differential expression analysis. The DESeq2 object is created with the **DESeqDataSetFromMatrix()** function.
+This function takes as input the raw counts, associated metadata, and a design formula detailing which conditions 
+in the metadata to use for differential expression analysis.
+
+This function creates a DESeq2 object, of the class Ranged Summarized Experiment. This is a list-like object with slots 
+available for the data it will generate throughout the analysis. Currently, it only has a few of the slots filled with the
+count data, metadata, and design information.
+
 
 ``` r
 # Create a DESeq2 object
@@ -255,10 +232,6 @@ dds_smoc2 = DESeqDataSetFromMatrix(countData = data,
                                    colData = reordered_smoc2_meta,
                                    design = ~ condition)
 ```
-
-    ## converting counts to integer mode
-
-    ## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in design formula are characters, converting to factors
 
 ### Estimating size factors
 
