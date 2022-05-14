@@ -17,6 +17,19 @@ explore the effect of fibrosis on gene expression using ‘Wild type’
 samples during lectures and ‘Smoc2 over-expression’ data during
 exercises.
 
+In this example, sample A has nearly
+    twice the reads, represented as small rectangles, aligning to each
+    of the genes as sample B only because sample A has nearly twice the
+    number of reads sequenced. 
+
+    In this image, we can see
+    that the green DE gene takes up a large proportion of reads for
+    Sample A. If we just divided our counts by the total number of
+    reads, normalization for the majority of genes would be skewed by
+    the highly expressed DE gene. For this reason, when performing a DE
+    analysis, we need to use a method that is resistant to these outlier
+    genes.
+
 # Introduction
 
 ### What is smoc2?
@@ -77,14 +90,34 @@ Differential expression analysis:
 
 2. Quality control:
 
+Normalizing the raw counts to assess sample-level quality control is the first step in the workflow. The raw counts 
+represent the number of reads aligning to each gene and should be proportional to the expression of the RNA in
+the sample; however, there are factors other than RNA expression that can influence the number of reads aligning to each gene. 
+The count data can be adjusted to remove the influence of these factors on the overall counts using normalization methods. 
+The main factors often considered during normalization of count data are library depth, gene length, and RNA composition.
 
-    * Normalize counts to account for differences in library depth.
+Differences in library size between samples can lead to many more reads being aligned to genes in one sample versus another sample.
+Therefore, we need to adjust the counts assigned to each gene based on the size of the library prior to doing differential expression 
+analysis.
 
-    * Perform principal component analysis 
+Gene length normalization is another normalization factor often adjusted for. A longer gene generates a longer
+transcript, which generates more fragments for sequencing. Therefore, a longer gene will often have more counts than a shorter
+gene with the same level of expression. Since DE analysis compares expression levels of the same genes between conditions, we do 
+not need to normalize for gene length. However, if you were to compare the expression levels of different genes, you would need 
+to account for lengths of the genes.
 
-    * Perform hierarchical clustering using heatmaps
+Library composition effect is the third factor that needs to be taken into account for by adjusting library size, the composition 
+of the library is also important. A few highly differentially expressed genes can skew many normalization methods that are not resistant 
+to these outliers. 
 
-    * Identify potential sample outliers and major sources of variation in the data
+
+* Normalize counts to account for differences in library depth.
+
+* Perform principal component analysis 
+
+* Perform hierarchical clustering using heatmaps
+
+* Identify potential sample outliers and major sources of variation in the data
 
 
 3. Differential expression analysis:
@@ -156,6 +189,9 @@ rownames(smoc2_metadata) = c('smoc2_fibrosis1','smoc2_fibrosis2','smoc2_fibrosis
 
 # Normalization
 
+DESeq2 normalization uses a ‘median of ratios’ method of normalization. This method adjusts the raw counts for library size
+and is resistant to large numbers of differentially expressed genes.
+
 ### Preparing the data for DESeq2
 
 The data needs to be in a specific format to be accepted as an input to DESeq2. This requires the sample names in the 
@@ -195,24 +231,25 @@ reordered_smoc2_meta = smoc2_metadata[reorder_idx, ]
 
 #view the new table
 reordered_smoc2_meta
+
+                     genotype condition
+     smoc2_fibrosis1 smoc2_oe  fibrosis
+     smoc2_fibrosis4 smoc2_oe  fibrosis
+     smoc2_normal1   smoc2_oe    normal
+     smoc2_normal3   smoc2_oe    normal
+     smoc2_fibrosis3 smoc2_oe  fibrosis
+     smoc2_normal4   smoc2_oe    normal
+     smoc2_fibrosis2 smoc2_oe  fibrosis
 ```
 
-    ##                 genotype condition
-    ## smoc2_fibrosis1 smoc2_oe  fibrosis
-    ## smoc2_fibrosis4 smoc2_oe  fibrosis
-    ## smoc2_normal1   smoc2_oe    normal
-    ## smoc2_normal3   smoc2_oe    normal
-    ## smoc2_fibrosis3 smoc2_oe  fibrosis
-    ## smoc2_normal4   smoc2_oe    normal
-    ## smoc2_fibrosis2 smoc2_oe  fibrosis
+
 
 ``` r
 #check to see if the column and row names are in the same order
 all(rownames(reordered_smoc2_meta) ==  colnames(data))
+
+[1] TRUE
 ```
-
-    ## [1] TRUE
-
 
 ### Creating the DESeq2 DataSet (DDS)
 
@@ -225,7 +262,6 @@ This function creates a DESeq2 object, of the class Ranged Summarized Experiment
 available for the data it will generate throughout the analysis. Currently, it only has a few of the slots filled with the
 count data, metadata, and design information.
 
-
 ``` r
 # Create a DESeq2 object
 dds_smoc2 = DESeqDataSetFromMatrix(countData = data,
@@ -235,64 +271,10 @@ dds_smoc2 = DESeqDataSetFromMatrix(countData = data,
 
 ### Estimating size factors
 
-Got It! 1. Count normalization Now that we have our DESeq2 object
-created with the raw counts and metadata stored inside, we can start the
-DESeq2 workflow.
-
-2.  DESeq workflow - normalization The first step in the workflow is to
-    normalize the raw counts to assess sample-level quality control
-    metrics.
-
-3.  Count normalization But what does it mean to normalize the raw
-    counts? The raw counts represent the number of reads aligning to
-    each gene and should be proportional to the expression of the RNA in
-    the sample; however, there are factors other than RNA expression
-    that can influence the number of reads aligning to each gene. We can
-    adjust the count data to remove the influence of these factors on
-    the overall counts using normalization methods. The main factors
-    often considered during normalization of count data are library
-    depth, gene length, and RNA composition.
-
-4.  Library depth normalization Differences in library size between
-    samples can lead to many more reads being aligned to genes in one
-    sample versus another sample. In this example, sample A has nearly
-    twice the reads, represented as small rectangles, aligning to each
-    of the genes as sample B only because sample A has nearly twice the
-    number of reads sequenced. Therefore, we need to adjust the counts
-    assigned to each gene based on the size of the library prior to
-    doing differential expression analysis.
-
-5.  Gene length normalization Another normalization factor often
-    adjusted for is gene length. A longer gene generates a longer
-    transcript, which generates more fragments for sequencing.
-    Therefore, a longer gene will often have more counts than a shorter
-    gene with the same level of expression. In this example, gene X is
-    twice as long as gene Y and, due to the difference in length, is
-    assigned twice as many reads. Since DE analysis compares expression
-    levels of the same genes between conditions, we do not need to
-    normalize for gene length. However, if you were to compare the
-    expression levels of different genes, you would need to account for
-    lengths of the genes.
-
-6.  Library composition effect When adjusting for library size, the
-    composition of the library is also important. A few highly
-    differentially expressed genes can skew many normalization methods
-    that are not resistant to these outliers. In this image, we can see
-    that the green DE gene takes up a large proportion of reads for
-    Sample A. If we just divided our counts by the total number of
-    reads, normalization for the majority of genes would be skewed by
-    the highly expressed DE gene. For this reason, when performing a DE
-    analysis, we need to use a method that is resistant to these outlier
-    genes.
-
-7.  Normalized counts: calculation To calculate the normalized counts
-    with DESeq2, we can use the function estimateSizeFactors() on the
-    DESeq2 object, dds_wt, and assign the output to a slot in the DESeq2
-    object, by re-assigning to dds_wt. DESeq2 will use these size
-    factors to normalize the raw counts. The raw counts for each sample
-    are divided by the associated sample-specific size factor for
-    normalization. To view the size factors used for normalization, we
-    can use the sizeFactors() function.
+The function estimateSizeFactors() can be used on the DESeq2 object to calculate the normalized counts and assign the output to a 
+slot in the DESeq2 object, by re-assigning to DDS. DESeq2 will use these size factors to normalize the raw counts. The raw counts for each 
+sample are divided by the associated sample-specific size factor for normalization. To view the size factors used for normalization, the 
+sizeFactors() function can be used.
 
 ``` r
 #estimating the size factors and feeding them back to the dds object by reassigning to the dds object
@@ -300,24 +282,16 @@ dds_smoc2 = estimateSizeFactors(dds_smoc2)
 
 #viewing the size factors
 sizeFactors(dds_smoc2)
-```
 
-    ## smoc2_fibrosis1 smoc2_fibrosis4   smoc2_normal1   smoc2_normal3 smoc2_fibrosis3   smoc2_normal4 smoc2_fibrosis2 
-    ##       1.4319832       1.0826799       0.7106482       0.7989734       1.2480024       0.8482426       1.1189642
+     smoc2_fibrosis1 smoc2_fibrosis4   smoc2_normal1   smoc2_normal3 smoc2_fibrosis3   smoc2_normal4 smoc2_fibrosis2 
+           1.4319832       1.0826799       0.7106482       0.7989734       1.2480024       0.8482426       1.1189642
+```
 
 ## Extracting normalized counts
 
-7.  DESeq2 normalization DESeq2 uses a ‘median of ratios’ method of
-    normalization. This method adjusts the raw counts for library size
-    and is resistant to large numbers of differentially expressed genes.
-
-8.  Normalized counts: extraction Once the size factors have been
-    calculated and added to the DESeq2 object, the normalized counts can
-    be extracted from it. We can extract the normalized counts from the
-    DESeq2 object using the counts() function while specifying that we
-    would like the normalized counts with the normalized = TRUE
-    argument. If the default was left as normalized = FALSE, then we
-    would extract the raw counts from the object.
+Once the size factors have been calculated and added to the DESeq2 object, the normalized counts can be extracted from it. To extract 
+the normalized counts from the DESeq2 object the ```counts()``` function can be used while specifying the normalized counts with the
+```normalized = TRUE``` argument. If the default was left as ```normalized = FALSE```, then the raw counts would be extracted from the oject.
 
 ``` r
 #once factors are calculated and reassigned then the normalized counts can be extracted using the counts function with normalized=TRUE argument
@@ -326,24 +300,19 @@ normalized_smoc2_counts = counts(dds_smoc2, normalized=TRUE)
 
 ``` r
 head(normalized_smoc2_counts)
+
+
+          smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
+     [1,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
+     [2,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
+     [3,]        50.27992        27.70902      0.000000      3.754818         28.8461      1.178908        45.57786
+     [4,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
+     [5,]         0.00000         0.00000      1.407166      0.000000          0.0000      0.000000         0.00000
+     [6,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
 ```
 
-    ##      smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
-    ## [1,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-    ## [2,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-    ## [3,]        50.27992        27.70902      0.000000      3.754818         28.8461      1.178908        45.57786
-    ## [4,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-    ## [5,]         0.00000         0.00000      1.407166      0.000000          0.0000      0.000000         0.00000
-    ## [6,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
 
 ### Transform the normalized counts
-
-Congratulations, we now have our normalized counts, which we can use to
-accurately compare gene expression between samples. We will be using the
-normalized counts to explore similarities in gene expression between
-each of our samples, with the expection that our biological replicates
-are more similar to each other and the different conditions (wild type
-and fibrosis) are more different.
 
 # Unsupervised clustering analysis
 
