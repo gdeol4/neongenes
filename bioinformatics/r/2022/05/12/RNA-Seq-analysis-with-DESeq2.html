@@ -544,8 +544,7 @@ PCA.</p>
 </span><span class="n">pheatmap</span><span class="p">(</span><span class="n">vsd_cor_smoc2</span><span class="p">,</span><span class="w"> </span><span class="n">annotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">select</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">,</span><span class="w"> </span><span class="n">condition</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="images/heatmap.png" alt="plot the heatmap"></p>
-
+<p><img src="/images/heatmap.png" alt="" title="plot the heatmap"></p>
 <h3 id="principal-component-analysis">
 <a class="anchor" href="#principal-component-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Principal component analysis</h3>
 
@@ -668,7 +667,7 @@ every gene of the normal samples using the <code class="language-plaintext highl
   </span><span class="n">ylab</span><span class="p">(</span><span class="s2">"Variance per gene"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="images/dispersion.png" alt=""></p>
+<p><img src="/images/dispersion.png" alt="" title="dispersion"></p>
 
 <p>The variance in gene expression increases with the mean. This is expected for RNA-Seq data. Also, note how the range in values for variance is greater for 
 lower mean counts than higher mean counts. This is also expected for RNA-Seq count data.</p>
@@ -708,7 +707,7 @@ by sample outliers or contamination.</p>
 variation in the data could be poorly estimated and the DE results could be less accurate. The assumptions DESeq2 makes are that the dispersions should generally decrease with increasing mean and that they should more or less follow
 the fitted line.</p>
 
-<p><img src="images/shrink.png" alt=""></p>
+<p><img src="/images/shrink.png" alt="" title="shrink"></p>
 
 <h3 id="extracting-the-results-of-de-analysis">
 <a class="anchor" href="#extracting-the-results-of-de-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>extracting the results of DE analysis</h3>
@@ -769,7 +768,7 @@ such as genes with low numbers of counts or high dispersion values.</p>
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plotMA</span><span class="p">(</span><span class="n">smoc2_results</span><span class="p">,</span><span class="w"> </span><span class="n">ylim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-8</span><span class="p">,</span><span class="m">8</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="normalized.png" alt=""></p>
+<p><img src="/images/normalized.png" alt="" title="normalized"></p>
 
 <h3 id="lfc-shrinkage">
 <a class="anchor" href="#lfc-shrinkage" aria-hidden="true"><span class="octicon octicon-link"></span></a>LFC shrinkage</h3>
@@ -868,7 +867,7 @@ Benjamini-Hochberg, or BH-method, to adjust p-values for multiple testing and co
      </span><span class="n">Warning</span><span class="o">:</span><span class="w"> </span><span class="n">Removed</span><span class="w"> </span><span class="m">25395</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="n">containing</span><span class="w"> </span><span class="n">missing</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="p">(</span><span class="n">geom_point</span><span class="p">)</span><span class="n">.</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="images/volcano.png" alt="plot volcano"></p>
+<p><img src="/images/volcano.png" alt="" title="plot volcano"></p>
 
 <h1 id="references">
 <a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h1>
