@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      41 min read
+      40 min read
     
 </span></p>
 
@@ -149,14 +149,13 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#estimating-size-factors">Estimating size factors</a></li>
 <li class="toc-entry toc-h2"><a href="#extracting-normalized-counts">Extracting normalized counts</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#transform-the-normalized-counts">Transform the normalized counts</a></li>
+<li class="toc-entry toc-h3"><a href="#log-transform-the-normalized-counts">Log transform the normalized counts</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toc-entry toc-h1"><a href="#unsupervised-clustering-analysis">Unsupervised clustering analysis</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#log-transformations">log transformations</a></li>
 <li class="toc-entry toc-h3"><a href="#hierarchical-clustering-with-a-correlation-heatmap">Hierarchical clustering with a correlation heatmap</a></li>
 <li class="toc-entry toc-h3"><a href="#principal-component-analysis">Principal component analysis</a></li>
 <li class="toc-entry toc-h3"><a href="#running-the-de-analysis">Running the DE analysis</a></li>
@@ -265,26 +264,6 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].</p>
   </li>
 </ol>
 
-<p>Normalizing the raw counts to assess sample-level quality control is the first step in the workflow. The raw counts 
-represent the number of reads aligning to each gene and should be proportional to the expression of the RNA in
-the sample; however, there are factors other than RNA expression that can influence the number of reads aligning to each gene. 
-The count data can be adjusted to remove the influence of these factors on the overall counts using normalization methods. 
-The main factors often considered during normalization of count data are library depth, gene length, and RNA composition.</p>
-
-<p>Differences in library size between samples can lead to many more reads being aligned to genes in one sample versus another sample.
-Therefore, we need to adjust the counts assigned to each gene based on the size of the library prior to doing differential expression 
-analysis.</p>
-
-<p>Gene length normalization is another normalization factor often adjusted for. A longer gene generates a longer
-transcript, which generates more fragments for sequencing. Therefore, a longer gene will often have more counts than a shorter
-gene with the same level of expression. Since DE analysis compares expression levels of the same genes between conditions, we do 
-not need to normalize for gene length. However, if you were to compare the expression levels of different genes, you would need 
-to account for lengths of the genes.</p>
-
-<p>Library composition effect is the third factor that needs to be taken into account for by adjusting library size, the composition 
-of the library is also important. A few highly differentially expressed genes can skew many normalization methods that are not resistant 
-to these outliers.</p>
-
 <ul>
   <li>
     <p>Normalize counts to account for differences in library depth.</p>
@@ -380,6 +359,26 @@ names.</p>
 
 <h1 id="normalization">
 <a class="anchor" href="#normalization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Normalization</h1>
+
+<p>Normalizing the raw counts to assess sample-level quality control is the first step in the workflow. The raw counts 
+represent the number of reads aligning to each gene and should be proportional to the expression of the RNA in
+the sample; however, there are factors other than RNA expression that can influence the number of reads aligning to each gene. 
+The count data can be adjusted to remove the influence of these factors on the overall counts using normalization methods. 
+The main factors often considered during normalization of count data are library depth, gene length, and RNA composition.</p>
+
+<p>Differences in library size between samples can lead to many more reads being aligned to genes in one sample versus another sample.
+Therefore, we need to adjust the counts assigned to each gene based on the size of the library prior to doing differential expression 
+analysis.</p>
+
+<p>Gene length normalization is another normalization factor often adjusted for. A longer gene generates a longer
+transcript, which generates more fragments for sequencing. Therefore, a longer gene will often have more counts than a shorter
+gene with the same level of expression. Since DE analysis compares expression levels of the same genes between conditions, we do 
+not need to normalize for gene length. However, if you were to compare the expression levels of different genes, you would need 
+to account for lengths of the genes.</p>
+
+<p>Library composition effect is the third factor that needs to be taken into account for by adjusting library size, the composition 
+of the library is also important. A few highly differentially expressed genes can skew many normalization methods that are not resistant 
+to these outliers.</p>
 
 <p>DESeq2 normalization uses a ‘median of ratios’ method of normalization. This method adjusts the raw counts for library size
 and is resistant to large numbers of differentially expressed genes.</p>
@@ -496,47 +495,22 @@ the normalized counts from the DESeq2 object the <code class="language-plaintext
      </span><span class="p">[</span><span class="m">6</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="transform-the-normalized-counts">
-<a class="anchor" href="#transform-the-normalized-counts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transform the normalized counts</h3>
+<h3 id="log-transform-the-normalized-counts">
+<a class="anchor" href="#log-transform-the-normalized-counts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Log transform the normalized counts</h3>
+
+<p>Before visualizing the data the normalized counts should be log transformed to improve the visualization of the clustering.
+For RNA-Seq data, DESeq2 uses a variance stabilizing transformation (VST), which is a logarithmic transformation that moderates the
+variance across the mean. The normalized counts can be transformed by using the <code class="language-plaintext highlighter-rouge">DESeq2 vst()</code> function on the DESeq2 object. 
+The <code class="language-plaintext highlighter-rouge">blind=TRUE</code> argument specifies that the transformation should be blind to the sample information given in the design formula; 
+this argument should be specified when performing quality assessment.</p>
 
 <h1 id="unsupervised-clustering-analysis">
 <a class="anchor" href="#unsupervised-clustering-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unsupervised clustering analysis</h1>
 
-<ol>
-  <li>
-    <p>Unsupervised clustering analyses Now that we have our normalized
-counts, we can continue on in the differential expression analysis
-workflow.</p>
-  </li>
-  <li>
-    <p>Unsupervised clustering analyses With our counts normalized for
-library size, we can now compare the counts between the different
-samples. We can explore how similar the samples are to each other
-with regards to gene expression to assess the quality of our
-experiment. To do this we use visualization methods for unsupervised
-clustering analyses, including hierarchical clustering heatmaps and
-principal component analysis or PCA. We perform these QC methods to
-get an idea of how similar the biological replicates are to each
-other and to identify outlier samples and major sources of variation
-present in the dataset.</p>
-  </li>
-</ol>
-
-<h3 id="log-transformations">
-<a class="anchor" href="#log-transformations" aria-hidden="true"><span class="octicon octicon-link"></span></a>log transformations</h3>
-
-<ol>
-  <li>Unsupervised clustering analyses: log transformation When using
-these visualization methods, we should first log transform the
-normalized counts to improve the visualization of the clustering.
-For RNA-Seq data, DESeq2 uses a variance stabilizing transformation
-(VST), which is a logarithmic transformation that moderates the
-variance across the mean. We can transform the normalized counts by
-using the DESeq2 vst() function on the DESeq2 object. The blind=TRUE
-argument specifies that the transformation should be blind to the
-sample information given in the design formula; this argument should
-be specified when performing quality assessment.</li>
-</ol>
+<p>With the counts normalized for library size, the counts between the different samples can now be compared. To assess the quality of 
+experiment the samples are compared to each other with regards to gene expression. These comparisons are done visually though unsupervised
+clustering analysis using hierarchical clustering heatmaps and PCA these are performed to get an idea of how similar the biological 
+replicates are to each other and to identify outlier samples and major sources of variation present in the dataset.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Unsupervised clustering analyses: log transformation</span><span class="w">
 
@@ -547,42 +521,19 @@ be specified when performing quality assessment.</li>
 <h3 id="hierarchical-clustering-with-a-correlation-heatmap">
 <a class="anchor" href="#hierarchical-clustering-with-a-correlation-heatmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hierarchical clustering with a correlation heatmap</h3>
 
-<ol>
-  <li>
-    <p>Hierarchical clustering with correlation heatmaps Hierarchical
-clustering with heatmaps is used to assess the similarity in gene
-expression between the different samples in a dataset. This
-technique is used to explore how similar replicates are to each
-other and whether the samples belonging to different sample groups
-cluster separately. The heatmap is created by using the gene
-expression correlation values for all pairwise combinations of
-samples in the dataset, with the value 1 being perfect correlation.
-The hierarchical tree shows which samples are more similar to each
-other and the colors in the heatmap depict the correlation values.
-We expect the biological replicates to cluster together and sample
-conditions to cluster apart. Since the majority of genes should not
-be differentially expressed, samples should generally have high
-correlations with each other. Samples with correlation values below
-0-point-8 may require further investigation to determine whether
-these samples are outliers or have contamination.</p>
-  </li>
-  <li>
-    <p>Hierarchical clustering with correlation heatmaps To create a
-hierarchical heatmap, we are going to extract the VST-transformed
-normalized counts as a matrix from the vsd object using the assay()
-function. Then, we can compute the pairwise correlation values
-between each pair of samples using the cor() function. Using View()
-we can view the correlation values between each of the sample pairs.</p>
-  </li>
-  <li>
-    <p>Hierarchical clustering with correlation heatmaps After generating
-the correlation values, we can use the pheatmap package to create
-the heatmap. The annotation argument selects which factors in the
-metadata to include as annotation bars. We use the select() function
-from the dplyr package to select the condition column in the
-wildtype metadata.</p>
-  </li>
-</ol>
+<p>Hierarchical clustering with heatmaps is used to assess the similarity in gene expression between the different samples in a dataset. This
+technique is used to explore how similar replicates are to each other and whether the samples belonging to different sample groups
+cluster separately. The heatmap is created by using the gene expression correlation values for all pairwise combinations of samples in the dataset, 
+with the value 1 being perfect correlation. The hierarchical tree shows which samples are more similar to each other and the colors in the heatmap 
+depict the correlation values. We expect the biological replicates to cluster together and sample conditions to cluster apart. Since the majority of 
+genes should not be differentially expressed, samples should generally have high correlations with each other. Samples with correlation values below 
+<strong>0.8</strong> may require further investigation to determine whether these samples are outliers or have contamination.</p>
+
+<p>To create the heatmap the VST-transformed normalized counts will be extracted as a matrix from the vsd object using the <code class="language-plaintext highlighter-rouge">assay()</code> function. 
+Then, the pairwise correlation values between each pair of samples will be computed using the <code class="language-plaintext highlighter-rouge">cor()</code> function</p>
+
+<p>After generating the correlation values, the pheatmap package can be used to create the heatmap. The annotation argument selects which factors in the
+metadata to include as annotation bars. Use the <code class="language-plaintext highlighter-rouge">select()</code> function from the <code class="language-plaintext highlighter-rouge">dplyr</code> package to select the condition column in the metadata.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Hierarchical clustering with correlation heatmaps</span><span class="w">
 
@@ -594,65 +545,31 @@ wildtype metadata.</p>
 
 </span><span class="c1">#view correlation statistics</span><span class="w">
 </span><span class="n">vsd_cor_smoc2</span><span class="w">
+
+                     </span><span class="n">smoc2_fibrosis1</span><span class="w"> </span><span class="n">smoc2_fibrosis4</span><span class="w"> </span><span class="n">smoc2_normal1</span><span class="w"> </span><span class="n">smoc2_normal3</span><span class="w"> </span><span class="n">smoc2_fibrosis3</span><span class="w"> </span><span class="n">smoc2_normal4</span><span class="w"> </span><span class="n">smoc2_fibrosis2</span><span class="w">
+     </span><span class="n">smoc2_fibrosis1</span><span class="w">       </span><span class="m">1.0000000</span><span class="w">       </span><span class="m">0.9948457</span><span class="w">     </span><span class="m">0.9631782</span><span class="w">     </span><span class="m">0.9637385</span><span class="w">       </span><span class="m">0.9949621</span><span class="w">     </span><span class="m">0.9597660</span><span class="w">       </span><span class="m">0.9958622</span><span class="w">
+     </span><span class="n">smoc2_fibrosis4</span><span class="w">       </span><span class="m">0.9948457</span><span class="w">       </span><span class="m">1.0000000</span><span class="w">     </span><span class="m">0.9668704</span><span class="w">     </span><span class="m">0.9671808</span><span class="w">       </span><span class="m">0.9951846</span><span class="w">     </span><span class="m">0.9635529</span><span class="w">       </span><span class="m">0.9946819</span><span class="w">
+     </span><span class="n">smoc2_normal1</span><span class="w">         </span><span class="m">0.9631782</span><span class="w">       </span><span class="m">0.9668704</span><span class="w">     </span><span class="m">1.0000000</span><span class="w">     </span><span class="m">0.9935479</span><span class="w">       </span><span class="m">0.9678895</span><span class="w">     </span><span class="m">0.9940744</span><span class="w">       </span><span class="m">0.9651063</span><span class="w">
+     </span><span class="n">smoc2_normal3</span><span class="w">         </span><span class="m">0.9637385</span><span class="w">       </span><span class="m">0.9671808</span><span class="w">     </span><span class="m">0.9935479</span><span class="w">     </span><span class="m">1.0000000</span><span class="w">       </span><span class="m">0.9691965</span><span class="w">     </span><span class="m">0.9942610</span><span class="w">       </span><span class="m">0.9656578</span><span class="w">
+     </span><span class="n">smoc2_fibrosis3</span><span class="w">       </span><span class="m">0.9949621</span><span class="w">       </span><span class="m">0.9951846</span><span class="w">     </span><span class="m">0.9678895</span><span class="w">     </span><span class="m">0.9691965</span><span class="w">       </span><span class="m">1.0000000</span><span class="w">     </span><span class="m">0.9650676</span><span class="w">       </span><span class="m">0.9952111</span><span class="w">
+     </span><span class="n">smoc2_normal4</span><span class="w">         </span><span class="m">0.9597660</span><span class="w">       </span><span class="m">0.9635529</span><span class="w">     </span><span class="m">0.9940744</span><span class="w">     </span><span class="m">0.9942610</span><span class="w">       </span><span class="m">0.9650676</span><span class="w">     </span><span class="m">1.0000000</span><span class="w">       </span><span class="m">0.9618977</span><span class="w">
+     </span><span class="n">smoc2_fibrosis2</span><span class="w">       </span><span class="m">0.9958622</span><span class="w">       </span><span class="m">0.9946819</span><span class="w">     </span><span class="m">0.9651063</span><span class="w">     </span><span class="m">0.9656578</span><span class="w">       </span><span class="m">0.9952111</span><span class="w">     </span><span class="m">0.9618977</span><span class="w">       </span><span class="m">1.0000000</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##                 smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
-## smoc2_fibrosis1       1.0000000       0.9948457     0.9631782     0.9637385       0.9949621     0.9597660       0.9958622
-## smoc2_fibrosis4       0.9948457       1.0000000     0.9668704     0.9671808       0.9951846     0.9635529       0.9946819
-## smoc2_normal1         0.9631782       0.9668704     1.0000000     0.9935479       0.9678895     0.9940744       0.9651063
-## smoc2_normal3         0.9637385       0.9671808     0.9935479     1.0000000       0.9691965     0.9942610       0.9656578
-## smoc2_fibrosis3       0.9949621       0.9951846     0.9678895     0.9691965       1.0000000     0.9650676       0.9952111
-## smoc2_normal4         0.9597660       0.9635529     0.9940744     0.9942610       0.9650676     1.0000000       0.9618977
-## smoc2_fibrosis2       0.9958622       0.9946819     0.9651063     0.9656578       0.9952111     0.9618977       1.0000000
-</code></pre></div></div>
-
-<ol>
-  <li>Hierarchical clustering with correlation heatmaps The output from
-the heatmap shows that the biological replicates cluster together
-and the conditions separate. This is encouraging since our
-differentially expressed genes between our conditions are likely to
-be driving this separation. Also, all correlation values are
-expectedly high without any outlier samples. If our replicates did
-not cluster as expected, we could plot the heatmap with all of the
-metadata and see whether any other factor corresponds to the
-separation of the samples. If so, you would want to see if you get
-similar results with the Principal Component Analysis, which we will
-be covering in the next lesson. If identified by both methods, we
-can account for it in the DESeq2 model. If you have an outlier
-identified, you would also want to check the PCA. If you see the
-outlier with both methods, you could investigate that sample more
-and decide whether to remove it from the analysis.</li>
-</ol>
+<p>The output fromthe heatmap shows that the biological replicates cluster together and the conditions separate. This is encouraging since
+differentially expressed genes between the conditions are likely to be driving this separation. Also, all correlation values are expectedly 
+high without any outlier samples. If the replicates did not cluster as expected, the heatmap could be plotted with all of the metadata and 
+see whether any other factor corresponds to the separation of the samples. If so, you would want to see if you get similar results with the 
+PCA.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot the heatmap</span><span class="w">
 </span><span class="n">pheatmap</span><span class="p">(</span><span class="n">vsd_cor_smoc2</span><span class="p">,</span><span class="w"> </span><span class="n">annotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">select</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">,</span><span class="w"> </span><span class="n">condition</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="pre-post_files/figure-gfm/unnamed-chunk-13-1.png" alt=""><!-- --></p>
+<p><img src="images/heatmap.png" alt="plot the heatmap"></p>
 
 <h3 id="principal-component-analysis">
 <a class="anchor" href="#principal-component-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Principal component analysis</h3>
-
-<p>To continue with the quality assessment of our samples, in the first
-part of this exercise, we will perform PCA to look how our samples
-cluster and whether our condition of interest corresponds with the
-principal components explaining the most variation in the data.</p>
-
-<p>When performing quality assessment of our count data, we need to
-transform the normalized counts for better visualization of the variance
-for unsupervised clustering analyses. To assess the similarity of the
-smoc2 samples using hierarchical heatmaps, transform the normalized
-counts and perform hierarchical clustering analysis. Assume all
-libraries have been loaded, the DESeq2 object created, and the size
-factors have been stored in the DESeq2 object, dds_smoc2.</p>
-
-<p>Well done, now let’s assess the heatmap to determine whether our samples
-cluster as expected and if we have any outliers. If we had additional
-metadata for possible sources of variation, then we would want to
-include these factors as annotation bars as well.</p>
-
-<p>Got It! 1. Principal component analysis The next type of unsupervised
-clustering method is principal component analysis, or PCA.</p>
 
 <ol>
   <li>
