@@ -1,6 +1,6 @@
 ---
 title: "RNA-Seq analysis of SMOC2 using DESeq2"
-description: "Awesome description"
+description: "Complete RNA-Seq analysis workflow of SMOC2 over expression using DESeq2 and Tidyverse"
 layout: post
 toc: true
 comments: true
@@ -11,27 +11,42 @@ metadata_key1: metadata_value1
 metadata_key2: metadata_value2
 ---
 
+notes:
+Initially, we will
+explore the effect of fibrosis on gene expression using ‘Wild type’
+samples during lectures and ‘Smoc2 over-expression’ data during
+exercises.
+
 # Introduction
 
 ### What is smoc2?
 
+Secreted modular calcium-binding protein 2 (Smoc2) is an acidic extracellular matrix glycoprotein 
+and plays an important role in bone mineralization, cell-matrix interactions, collagen binding, and 
+bone remodeling[1]. SMOCs also influence cell growth factor signaling, cell migration and proliferation, 
+angiogenesis. SMOC2 has been shown to have increased expression in kidney fibrosis, or renal fibrosis, 
+which is characterized as an aberrant repair response to chronic tissue injury. This results in an excess 
+of extracellular matrix in the space between tubules and capillaries within the kidney. However, it is 
+unknown how Smoc2 functions in the induction and progression of fibrosis[2].
+
+1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
+2. Vannahme C, Gosling S, Paulsson M, Maurer P, Hartmann U. Characterization of SMOC-2, a modular extracellular calcium-binding protein. Biochem J 2003; 373:805–814. doi: 10.1042/bj20030532.
+
 ### A look at the dataset
 
-Introduction to dataset: Smoc2 Smoc2, or Secreted modular
-calcium-binding protein 2, has been shown to have increased expression
-in kidney fibrosis, which is characterized by an excess of extracellular
-matrix in the space between tubules and capillaries within the kidney.
-However, it is unknown how Smoc2 functions in the induction and
-progression of fibrosis.
+This dataset cpmes from the research paper: 
 
-Introduction to dataset: Experimental design There are four sample
-groups being tested: normal, control mice, referred to as wild type
-mice, with and without fibrosis and Smoc2 over-expressing mice with and
-without fibrosis. There are three biological replicates for all normal
-samples and four replicates for all fibrosis samples. Initially, we will
-explore the effect of fibrosis on gene expression using ‘Wild type’
-samples during lectures and ‘Smoc2 over-expression’ data during
-exercises.
+**_Silencing SMOC2 ameliorates kidney fibrosis by inhibiting fibroblast to myofibroblast transformation._** 
+
+
+The experimental design:
+
+* There are four sample groups being tested:
+    1. Normal control mice (wild type) with and without fibrosis 
+    2. Smoc2 over-expressing mice with and without fibrosis. 
+
+* There are three biological replicates for all normal
+samples and four replicates for all fibrosis samples. 
 
 ### Tools used
 
