@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      40 min read
+      38 min read
     
 </span></p>
 
@@ -159,9 +159,16 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#hierarchical-clustering-with-a-correlation-heatmap">Hierarchical clustering with a correlation heatmap</a></li>
 <li class="toc-entry toc-h3"><a href="#principal-component-analysis">Principal component analysis</a></li>
 <li class="toc-entry toc-h3"><a href="#running-the-de-analysis">Running the DE analysis</a></li>
-<li class="toc-entry toc-h3"><a href="#dispersion">Dispersion</a></li>
-<li class="toc-entry toc-h3"><a href="#relationship-between-mean-and-variance">Relationship between mean and variance</a></li>
-<li class="toc-entry toc-h3"><a href="#plotting-dispersion-estimates">Plotting dispersion estimates</a></li>
+<li class="toc-entry toc-h3"><a href="#mean-and-variance">Mean and variance</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#relationship-between-mean-and-variance">Relationship between mean and variance</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#dispersion">Dispersion</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#plotting-dispersion-estimates">Plotting dispersion estimates</a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h3"><a href="#extracting-the-results-of-de-analysis">extracting the results of DE analysis</a></li>
 <li class="toc-entry toc-h3"><a href="#ma-plot">MA plot</a></li>
 <li class="toc-entry toc-h3"><a href="#lfc-shrinkage">LFC shrinkage</a></li>
@@ -186,7 +193,103 @@ reads, normalization for the majority of genes would be skewed by
 the highly expressed DE gene. For this reason, when performing a DE
 analysis, we need to use a method that is resistant to these outlier
 genes.
+
+3.  Principal component analysis (PCA): Theory To understand this a bit
+better, we can think of a dataset with two samples. We could plot
+the normalized counts of every gene for one sample on the x-axis and
+the other sample on the y-axis. In this example, Gene A has four
+counts for sample 1 plotted on the x-axis and 5 counts for sample 2
+on the y-axis. We can plot the other genes similarly.
+
+4.  Principal component analysis (PCA): Theory We can draw a line
+through the dataset where there exists the most variation, or where
+there is the largest spread. In this example, the line with largest
+spread is between genes B and C. This line represents the first
+principal component. The second most variation in the dataset,
+represented as PC2, must be perpendicular to PC1, in order to best
+describe the variance in the dataset not included in PC1. In this
+example, PC2 is drawn between genes A and D. The spread is much
+smaller for PC2. In reality, your dataset will have more samples and
+many more genes. The number of principal components is equal to the
+number of samples, n, in the dataset, so finding the largest amount
+of variation, PC1, means plotting a line through n-dimensional
+space.
 </code></pre></div></div>
+
+<ol>
+  <li>
+    <p>Principal component analysis (PCA): Theory The most variant genes
+for a principal component have the most influence on that principal
+component’s direction. In our example, the most variant genes for
+PC1, genes B and C, would affect the direction of the line more than
+genes A and D.</p>
+
+    <p>Well done! If there is an outlier on the heatmap, then we would want to
+see it with PCA as well. We similarly hope our biological replicates
+cluster together and conditions separate by PC1 and/or PC2. If we don’t
+see this, there may be sources of variation present in our data and if
+these sources are present in our metadata, then we can explore these
+sources of variation by coloring the PCA by these factors.
+Alternatively, we might not see sample groups separate if the condition
+of interest does not cause a big change in gene expression.</p>
+  </li>
+</ol>
+
+<p>Start by fitting the raw counts to
+    the DESeq2 model. To do this, DESeq2 will first need to estimate the
+    size factors, if they haven’t already been estimated, and estimate
+    the variation in expression across replicates for each gene. After
+    these calculations, the data can be fit to the negative binomial
+    model.</p>
+
+<ol>
+  <li>
+    <p>DESeq2 workflow: Model To perform these calculations and fit the
+negative binomial model requires only two functions. The first
+function creates the DESeq2 object, which is the same function we
+used previously during count normalization. We wouldn’t need to
+re-create the object unless we removed samples or found additional
+sources of variation during QC using PCA and the correlation
+heatmap. When we created the DESeq2 object, we provided the raw
+counts, metadata, and design formula. We have explored the raw
+counts and metadata, but what exactly was specified with</p>
+
+    <ol>
+      <li>
+        <p>DESeq2 workflow: Design formula For example, if this is your
+metadata and you know that strain, sex, and treatment are major
+sources of variation in the data as determined by the PCA and
+heatmap, then all of these factors should be included in the design
+formula. If my condition of interest is treatment, then it would
+come last in the formula with the other factors preceding it in any
+order. Therefore, the design formula would be: tilde, strain plus
+sex plus treatment. The tilde tells DESeq2 to model the counts using
+the following formula, so it should always proceed your factors.</p>
+      </li>
+      <li>
+        <p>DESeq2 workflow: Design formula DESeq2 also allows for complex
+designs. For instance, using the same metadata, if we wanted to know
+the effect of sex on the effect of treatment, we could use an
+interaction term. In this case, we could regress out the variation
+due to strain, sex and treatment and test for genes that
+significantly differ in their treatment effect due to sex using the
+interaction term, sex colon treatment, as the last term in the
+formula. For more information about specifying complex designs, I
+recommend reading through the DESeq2 vignette or the Bioconductor
+support site.</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>DESeq2 workflow: Running Once you have the DESeq2 object with the
+raw counts, metadata, and the appropriate design formula, you can
+perform model fitting with the function DESeq(). As it runs it will
+output the completed steps as it fills in the different slots in the
+DESeq2 object. The final DESeq2 object will contain all of the
+information needed for performing the differential expression
+testing between specific sample groups.</p>
+  </li>
+</ol>
 
 <h1 id="introduction">
 <a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
@@ -571,347 +674,116 @@ PCA.</p>
 <h3 id="principal-component-analysis">
 <a class="anchor" href="#principal-component-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Principal component analysis</h3>
 
-<ol>
-  <li>
-    <p>Principal component analysis (PCA): Overview PCA is a technique used
-to emphasize the variation present in a dataset. PCA finds the
-principal components of a dataset, with the first principal
-component, or PC1, representing the greatest amount of variance in
-the data.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory To understand this a bit
-better, we can think of a dataset with two samples. We could plot
-the normalized counts of every gene for one sample on the x-axis and
-the other sample on the y-axis. In this example, Gene A has four
-counts for sample 1 plotted on the x-axis and 5 counts for sample 2
-on the y-axis. We can plot the other genes similarly.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory We can draw a line
-through the dataset where there exists the most variation, or where
-there is the largest spread. In this example, the line with largest
-spread is between genes B and C. This line represents the first
-principal component. The second most variation in the dataset,
-represented as PC2, must be perpendicular to PC1, in order to best
-describe the variance in the dataset not included in PC1. In this
-example, PC2 is drawn between genes A and D. The spread is much
-smaller for PC2. In reality, your dataset will have more samples and
-many more genes. The number of principal components is equal to the
-number of samples, n, in the dataset, so finding the largest amount
-of variation, PC1, means plotting a line through n-dimensional
-space.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory The most variant genes
-for a principal component have the most influence on that principal
-component’s direction. In our example, the most variant genes for
-PC1, genes B and C, would affect the direction of the line more than
-genes A and D.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory We give quantitative
-scores to genes based on how much they influence the different PCs.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory A ‘per sample’ PC value
-is computed by taking the product of the influence and the
-normalized read count for each gene and summing across all genes.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory For PCA we generally plot
-these per sample PC values. Samples that cluster together have more
-similar gene expression profiles than samples that cluster apart,
-especially for the most variant genes.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory This is a good method to
-explore the quality of the data as we hope to see replicates cluster
-together and conditions to separate on PC1. Sample outliers and
-major sources of variation can also be identified with this method.</p>
-  </li>
-  <li>
-    <p>Principal component analysis (PCA): Theory We can perform PCA using
-DESeq2’s plotPCA() function to plot the first two PCs. This function
-takes as input the transformed vsd object, and we can use the
-intgroup argument to specify what factor in the metadata to use to
-color the plot. We can see that the sample groups, normal and
-fibrosis, separate well on PC1. This means that our condition
-corresponds to PC1, which represents 88% of the variance in our
-data, while 4% is explained by PC2. This is great since it seems
-that a lot of the variation in gene expression in the dataset can
-likely be explained by the differences between sample groups.
-However, if the samples do not separate by PC1 or PC2, the effect of
-the condition could be small or there are sometimes other larger
-sources of variation present. You can color the PCA by other
-factors, such as age, sex, batch, etcetera, to identify other major
-sources of variation that could correspond to one of the large
-principal components. We’ll talk later about how we can account for
-these sources of variation in the model. Just to note, if you would
-like to explore PCs other than PC1 or PC2, the prcomp() base
-function allows a more thorough analysis of PCs.</p>
-  </li>
-</ol>
+<p>PCA is a technique used to emphasize the variation present in a dataset. PCA finds the principal components of a dataset, with the first principal
+component, or PC1, representing the greatest amount of variance in the data. Genes are given quantitative scores based on how much they influence 
+the different PCs. A ‘per sample’ PC value is computed by taking the product of the influence and the normalized read count for each gene and summing 
+across all genes.For PCA we generally plot these per sample PC values. Samples that cluster together have more similar gene expression profiles than 
+samples that cluster apart, especially for the most variant genes.</p>
 
-<p>PCA analysis To continue with the quality assessment of our samples, in
-the first part of this exercise, we will perform PCA to look how our
-samples cluster and whether our condition of interest corresponds with
-the principal components explaining the most variation in the data. In
-the second part, we will answer questions about the PCA plot.</p>
+<p>This is a good method to explore the quality of the data as we hope to see replicates cluster together and conditions to separate on PC1. Sample 
+outliers and major sources of variation can also be identified with this method.</p>
 
-<p>To assess the similarity of the smoc2 samples using PCA, we need to
-transform the normalized counts then perform the PCA analysis. Assume
-all libraries have been loaded, the DESeq2 object created, and the size
-factors have been stored in the DESeq2 object, dds_smoc2.</p>
+<p>Perform PCA using DESeq2’s <code class="language-plaintext highlighter-rouge">plotPCA()</code> function to plot the first two PCs. This function takes as input the transformed vsd object, and the
+<code class="language-plaintext highlighter-rouge">intgroup</code> argument to specify what factor in the metadata to use to color the plot. The sample groups, normal and fibrosis, separate well on PC1. 
+This means that the condition corresponds to PC1, which represents 88% of the variance in the data, while 4% is explained by PC2. This is great since 
+it seems that a lot of the variation in gene expression in the dataset can likely be explained by the differences between sample groups. However, if 
+the samples do not separate by PC1 or PC2, the effect of the condition could be small or there are sometimes other larger sources of variation present. 
+You can color the PCA by other factors, such as age, sex, batch, etcetera, to identify other major sources of variation that could correspond to one 
+of the large principal components.</p>
+
+<p>Perform PCA to look how the samples cluster and whether the condition of interest corresponds with
+the principal components explaining the most variation in the data.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot pca</span><span class="w">
 </span><span class="n">plotPCA</span><span class="p">(</span><span class="n">vsd_smoc2</span><span class="p">,</span><span class="w"> </span><span class="n">intgroup</span><span class="o">=</span><span class="s2">"condition"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="pre-post_files/figure-gfm/unnamed-chunk-14-1.png" alt=""><!-- --></p>
-
-<p>Well done! If there is an outlier on the heatmap, then we would want to
-see it with PCA as well. We similarly hope our biological replicates
-cluster together and conditions separate by PC1 and/or PC2. If we don’t
-see this, there may be sources of variation present in our data and if
-these sources are present in our metadata, then we can explore these
-sources of variation by coloring the PCA by these factors.
-Alternatively, we might not see sample groups separate if the condition
-of interest does not cause a big change in gene expression.</p>
+<p><img src="images/deseq2pca.png" alt="plot pca"></p>
 
 <h3 id="running-the-de-analysis">
 <a class="anchor" href="#running-the-de-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running the DE analysis</h3>
 
-<p>Got It! 1. Overview of the DE analysis Now that we have explored the
-quality of our samples, removed any outlier samples, and assessed the
-major sources of variation present, we can start the differential
-expression analysis with DESeq2.</p>
+<p>Now that we have explored the quality of our samples, removed any outlier samples, and assessed the major sources of variation present, we can start the 
+differential expression analysis with DESeq2. by performing the differential expression analysis with DESeq2, we are trying to identify which genes have 
+significant differences in expression between the normal and fibrosis sample groups.</p>
+
+<p>The differential expression analysis with DESeq2 consists of roughly three steps:</p>
 
 <ol>
-  <li>
-    <p>Review the dataset/question Remember, by performing the differential
-expression analysis with DESeq2, we are trying to identify which
-genes have significant differences in expression between the normal
-and fibrosis sample groups.</p>
-  </li>
-  <li>
-    <p>Overview of the DE analysis The differential expression analysis
-with DESeq2 consists of roughly three steps: fitting the raw counts
-for each gene to the DESeq2 negative binomial model and testing for
-differential expression, shrinking the log2 fold changes, and
-extracting and visualizing the results.</p>
-  </li>
-  <li>
-    <p>DESeq2 workflow: Model We will start by fitting the raw counts to
-the DESeq2 model. To do this, DESeq2 will first need to estimate the
-size factors, if they haven’t already been estimated, and estimate
-the variation in expression across replicates for each gene. After
-these calculations, the data can be fit to the negative binomial
-model.</p>
-  </li>
-  <li>
-    <p>DESeq2 workflow: Model To perform these calculations and fit the
-negative binomial model requires only two functions. The first
-function creates the DESeq2 object, which is the same function we
-used previously during count normalization. We wouldn’t need to
-re-create the object unless we removed samples or found additional
-sources of variation during QC using PCA and the correlation
-heatmap. When we created the DESeq2 object, we provided the raw
-counts, metadata, and design formula. We have explored the raw
-counts and metadata, but what exactly was specified with the design
-formula? The design formula is an important part of modeling,
-telling DESeq2 the known major sources of variation to control for,
-or regress out, as well as, the condition of interest to use for
-differential expression testing.</p>
-  </li>
-  <li>
-    <p>DESeq2 workflow: Design formula For example, if this is your
-metadata and you know that strain, sex, and treatment are major
-sources of variation in the data as determined by the PCA and
-heatmap, then all of these factors should be included in the design
-formula. If my condition of interest is treatment, then it would
-come last in the formula with the other factors preceding it in any
-order. Therefore, the design formula would be: tilde, strain plus
-sex plus treatment. The tilde tells DESeq2 to model the counts using
-the following formula, so it should always proceed your factors.
-Also, the factor names in the design formula need to exactly match
-the column names in the metadata.</p>
-  </li>
-  <li>
-    <p>DESeq2 workflow: Design formula DESeq2 also allows for complex
-designs. For instance, using the same metadata, if we wanted to know
-the effect of sex on the effect of treatment, we could use an
-interaction term. In this case, we could regress out the variation
-due to strain, sex and treatment and test for genes that
-significantly differ in their treatment effect due to sex using the
-interaction term, sex colon treatment, as the last term in the
-formula. For more information about specifying complex designs, I
-recommend reading through the DESeq2 vignette or the Bioconductor
-support site.</p>
-  </li>
-  <li>
-    <p>DESeq2 workflow: Running Once you have the DESeq2 object with the
-raw counts, metadata, and the appropriate design formula, you can
-perform model fitting with the function DESeq(). As it runs it will
-output the completed steps as it fills in the different slots in the
-DESeq2 object. The final DESeq2 object will contain all of the
-information needed for performing the differential expression
-testing between specific sample groups.</p>
-  </li>
+  <li>Fitting the raw counts for each gene to the DESeq2 negative binomial model and testing for differential expression.</li>
+  <li>Shrinking the log2 fold changes.</li>
+  <li>Extracting and visualizing the results.</li>
 </ol>
+
+<p>The design formula is an important part of modeling, telling DESeq2 the known major sources of variation to control for, or regress out, as well as, the condition 
+of interest to use for differential expression testing. Also, the factor names in the design formula need to exactly match the column names in the metadata.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Run DESeq2 analysis </span><span class="w">
 </span><span class="n">dds_smoc2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">DESeq</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">)</span><span class="w">
+
+     </span><span class="n">using</span><span class="w"> </span><span class="n">pre</span><span class="o">-</span><span class="n">existing</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">factors</span><span class="w">
+
+     </span><span class="n">estimating</span><span class="w"> </span><span class="n">dispersions</span><span class="w">
+
+     </span><span class="n">gene</span><span class="o">-</span><span class="n">wise</span><span class="w"> </span><span class="n">dispersion</span><span class="w"> </span><span class="n">estimates</span><span class="w">
+
+     </span><span class="n">mean</span><span class="o">-</span><span class="n">dispersion</span><span class="w"> </span><span class="n">relationship</span><span class="w">
+
+     </span><span class="n">final</span><span class="w"> </span><span class="n">dispersion</span><span class="w"> </span><span class="n">estimates</span><span class="w">
+
+     </span><span class="n">fitting</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">testing</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## using pre-existing size factors
+<h3 id="mean-and-variance">
+<a class="anchor" href="#mean-and-variance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mean and variance</h3>
 
-## estimating dispersions
+<p>explore the fit of the smoc2 data to the negative binomial model by plotting the dispersion estimates using the <code class="language-plaintext highlighter-rouge">plotDispEsts()</code> function. The dispersion 
+estimates are used to model the raw counts; if the dispersions don’t follow the assumptions made by DESeq2, then the variation in the data could be poorly estimated 
+and the DE results could be less accurate.</p>
 
-## gene-wise dispersion estimates
+<p>The assumptions DESeq2 makes are that the dispersions should generally decrease with increasing mean and that they should more or less follow
+the fitted line. The goal of the differential expression analysis is to determine whether a gene’s mean expression between sample groups is
+different given the variation within groups. This is determined by testing the probability of the log2 fold changes between groups being significantly different from zero. 
+The log2 fold changes are found by the log of the one sample group mean, therefore, to model the counts requires information about the mean and variation in the data. To
+explore the variation in the data, the variance will be observed in gene expression relative to the mean. Variance is the square of the standard deviation, representing 
+how far away the expression of the individual samples are from the means.</p>
 
-## mean-dispersion relationship
-
-## final dispersion estimates
-
-## fitting model and testing
-</code></pre></div></div>
-
-<h3 id="dispersion">
-<a class="anchor" href="#dispersion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dispersion</h3>
-
-<p>After fitting the model in the previous exercise, let’s explore the fit
-of our smoc2 data to the negative binomial model by plotting the
-dispersion estimates using the plotDispEsts() function. Remember that
-the dispersion estimates are used to model the raw counts; if the
-dispersions don’t follow the assumptions made by DESeq2, then the
-variation in the data could be poorly estimated and the DE results could
-be less accurate.</p>
-
-<p>The assumptions DESeq2 makes are that the dispersions should generally
-decrease with increasing mean and that they should more or less follow
-the fitted line</p>
-
-<p>Got It! 1. DESeq2 model Now that we have run the DE analysis, we could
-explore our results. However, before proceeding, we should explore how
-well our data fit the model.</p>
-
-<ol>
-  <li>DESeq2 model The goal of the differential expression analysis is to
-determine whether a gene’s mean expression between sample groups is
-different given the variation within groups. This is determined by
-testing the probability of the log2 fold changes between groups
-being significantly different from zero. The log2 fold changes are
-found by the log of the one sample group mean, shown here as the
-treatment group, divided by the mean of the other sample group,
-shown here as the control group. Therefore, to model the counts
-requires information about the mean and variation in the data. To
-explore the variation in our data, we will observe the variance in
-gene expression relative to the mean. Variance is the square of the
-standard deviation, representing how far away the expression of the
-individual samples, as shown by the dark red and blue circles, are
-from the means, shown in pink and light blue.</li>
-</ol>
-
-<p>DESeq2 model - mean-variance relationship For RNA-Seq data, the variance
-is generally expected to increase with the gene’s mean expression. To
-observe this relationship, we can calculate the means and variances for
-every gene of the normal samples using the apply() function.</p>
-
-<ol>
-  <li>
-    <p>DESeq2 model - dispersion Then we can create a data frame for
-plotting with ggplot2. We plot the mean and variance values for each
-gene using log10 scales. Each black dot represents a gene.</p>
-  </li>
-  <li>
-    <p>DESeq2 model - dispersion We see the variance in gene expression
-increases with the mean. This is expected for RNA-Seq data. Also,
-note how the range in values for variance is greater for lower mean
-counts than higher mean counts. This is also expected for RNA-Seq
-count data. A measure of the variance for a given mean is described
-by a metric called dispersion in the DESeq2 model. The DESeq2 model
-uses dispersion to assess the variability in expression when
-modeling the counts.</p>
-  </li>
-  <li>
-    <p>DESeq2 model - dispersion The DESeq2 model calculates dispersion as
-being indirectly related to the mean and directly related to the
-variance of the data using the formula displayed. So, an increase in
-variance will increase dispersion, while an increase in mean will
-decrease dispersion. For any two genes with the same mean
-expression, the only difference in dispersion will be based on
-differences in variance. To check the fit of our data to the DESeq2
-model, it can be useful to look at the dispersion estimates.</p>
-  </li>
-  <li>
-    <p>DESeq2 model - dispersion To plot the dispersions relative to the
-means for each gene, we can use the plotDispEsts() function on the
-DESeq2 object. Each black dot is a gene with associated mean and
-dispersion values. We expect dispersion values to decrease with
-increasing mean, which is what we see. With only a few replicates
-for RNA-Seq experiments, gene-wise estimates of dispersion are often
-inaccurate, so DESeq2 uses information across all genes to determine
-the most likely estimates of dispersion for a given mean expression
-value, shown with the red line in the figure. Genes with
-inaccurately small estimates of variation could yield many false
-positives, or genes that are identified as DE, when they are really
-not. Therefore, the original gene-wise dispersion estimates, shown
-as the black dots in the figure, are shrunken towards the curve to
-yield more accurate estimates of dispersion, shown as blue dots. The
-more accurate, shrunken dispersion estimates are used to model the
-counts for determining the differentially-expressed genes. Extremely
-high dispersion values, shown surrounded by blue circles, are not
-shrunken, due to the likelihood that the gene may have higher
-variability than others for biological or technical reasons and
-reducing the variation could result in false positives. The strength
-of the shrinkage is dependent on the distance from the curve and
-sample size. Larger numbers of replicates can estimate the mean and
-variation more accurately, so yield less shrinkage.</p>
-  </li>
-  <li>
-    <p>DESeq2 model - dispersion Worrisome plots would include a cloud of
-data that doesn’t follow the curve or dispersions that don’t
-decrease with increasing mean. These problems can often be explained
-by sample outliers or contamination. Examples of worrisome
-dispersion plots are shown in the figures.</p>
-  </li>
-</ol>
+<p>For RNA-Seq data, the variance is generally expected to increase with the gene’s mean expression. To observe this relationship, calculate the means and variances for
+every gene of the normal samples using the <code class="language-plaintext highlighter-rouge">apply()</code> function.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculating mean for each gene (each row)</span><span class="w">
 </span><span class="n">mean_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">apply</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">mean</span><span class="p">)</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">mean_counts</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1]  0.0000000  0.0000000 34.0000000  0.0000000  0.3333333  0.0000000
-</code></pre></div></div>
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w">  </span><span class="m">0.0000000</span><span class="w">  </span><span class="m">0.0000000</span><span class="w"> </span><span class="m">34.0000000</span><span class="w">  </span><span class="m">0.0000000</span><span class="w">  </span><span class="m">0.3333333</span><span class="w">  </span><span class="m">0.0000000</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculating variance for each gene( each row)</span><span class="w">
 </span><span class="n">variance_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">apply</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">)</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">variance_counts</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1]    0.0000000    0.0000000 1308.0000000    0.0000000    0.3333333    0.0000000
-</code></pre></div></div>
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w">    </span><span class="m">0.0000000</span><span class="w">    </span><span class="m">0.0000000</span><span class="w"> </span><span class="m">1308.0000000</span><span class="w">    </span><span class="m">0.0000000</span><span class="w">    </span><span class="m">0.3333333</span><span class="w">    </span><span class="m">0.0000000</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Plotting relationship between mean and variance:</span><span class="w">
 
 </span><span class="c1"># Creating data frame with mean and vairance for every gene</span><span class="w">
 </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">mean_counts</span><span class="p">,</span><span class="w"> </span><span class="n">variance_counts</span><span class="p">)</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w">
+
+       </span><span class="n">mean_counts</span><span class="w"> </span><span class="n">variance_counts</span><span class="w">
+     </span><span class="m">1</span><span class="w">   </span><span class="m">0.0000000</span><span class="w">       </span><span class="m">0.0000000</span><span class="w">
+     </span><span class="m">2</span><span class="w">   </span><span class="m">0.0000000</span><span class="w">       </span><span class="m">0.0000000</span><span class="w">
+     </span><span class="m">3</span><span class="w">  </span><span class="m">34.0000000</span><span class="w">    </span><span class="m">1308.0000000</span><span class="w">
+     </span><span class="m">4</span><span class="w">   </span><span class="m">0.0000000</span><span class="w">       </span><span class="m">0.0000000</span><span class="w">
+     </span><span class="m">5</span><span class="w">   </span><span class="m">0.3333333</span><span class="w">       </span><span class="m">0.3333333</span><span class="w">
+     </span><span class="m">6</span><span class="w">   </span><span class="m">0.0000000</span><span class="w">       </span><span class="m">0.0000000</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##   mean_counts variance_counts
-## 1   0.0000000       0.0000000
-## 2   0.0000000       0.0000000
-## 3  34.0000000    1308.0000000
-## 4   0.0000000       0.0000000
-## 5   0.3333333       0.3333333
-## 6   0.0000000       0.0000000
-</code></pre></div></div>
+<p>Create a data frame for plotting with <code class="language-plaintext highlighter-rouge">ggplot2</code>. Plot the mean and variance values for each gene using log10 scales. Each black dot represents a gene.</p>
 
-<h3 id="relationship-between-mean-and-variance">
-<a class="anchor" href="#relationship-between-mean-and-variance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Relationship between mean and variance</h3>
+<h4 id="relationship-between-mean-and-variance">
+<a class="anchor" href="#relationship-between-mean-and-variance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Relationship between mean and variance</h4>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ggplot</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
   </span><span class="n">geom_point</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">mean_counts</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">variance_counts</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
@@ -921,21 +793,44 @@ dispersion plots are shown in the figures.</p>
   </span><span class="n">ylab</span><span class="p">(</span><span class="s2">"Variance per gene"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## Warning: Transformation introduced infinite values in continuous y-axis
+<p><img src="images/dispersion.png" alt=""></p>
 
-## Warning: Transformation introduced infinite values in continuous x-axis
-</code></pre></div></div>
+<p>The variance in gene expression increases with the mean. This is expected for RNA-Seq data. Also, note how the range in values for variance is greater for 
+lower mean counts than higher mean counts. This is also expected for RNA-Seq count data.</p>
 
-<p><img src="pre-post_files/figure-gfm/unnamed-chunk-19-1.png" alt=""><!-- --></p>
+<h3 id="dispersion">
+<a class="anchor" href="#dispersion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dispersion</h3>
 
-<h3 id="plotting-dispersion-estimates">
-<a class="anchor" href="#plotting-dispersion-estimates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting dispersion estimates</h3>
+<p>A measure of the variance for a given mean is described by a metric called dispersion in the DESeq2 model. The DESeq2 model uses dispersion to assess the variability in 
+expression when modeling the counts.</p>
+
+<p>The DESeq2 model calculates dispersion as being indirectly related to the mean and directly related to the variance of the  data using the formula displayed. 
+So, an increase in variance will increase dispersion, while an increase in mean will decrease dispersion. For any two genes with the same mean expression, 
+the only difference in dispersion will be based on differences in variance. To check the fit of the data to the DESeq2 model, it can be useful to look at 
+the dispersion estimates.</p>
+
+<h4 id="plotting-dispersion-estimates">
+<a class="anchor" href="#plotting-dispersion-estimates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting dispersion estimates</h4>
+
+<p>To plot the dispersions relative to the means for each gene, use the <code class="language-plaintext highlighter-rouge">plotDispEsts()</code> function on the DESeq2 object. Each black dot is a gene with associated 
+mean and dispersion values. Expect dispersion values to decrease with increasing mean, which is what is seen. With only a few replicates for RNA-Seq experiments, 
+gene-wise estimates of dispersion are often inaccurate, so DESeq2 uses information across all genes to determine the most likely estimates of dispersion for a 
+given mean expression value, shown with the red line in the figure. Genes with inaccurately small estimates of variation could yield many false positives, or 
+genes that are identified as DE, when they are really not. Therefore, the original gene-wise dispersion estimates, shown as the black dots in the figure, are 
+shrunken towards the curve to yield more accurate estimates of dispersion, shown as blue dots. The more accurate, shrunken dispersion estimates are used to model the
+counts for determining the differentially-expressed genes. Extremely high dispersion values, shown surrounded by blue circles, are not shrunken, due to the likelihood 
+that the gene may have higher variability than others for biological or technical reasons and reducing the variation could result in false positives. The strength
+of the shrinkage is dependent on the distance from the curve and sample size. Larger numbers of replicates can estimate the mean and variation more accurately, 
+so yield less shrinkage.</p>
+
+<p>Worrisome plots would include a cloud of data that doesn’t follow the curve or dispersions that don’t decrease with increasing mean. These problems can often be explained 
+by sample outliers or contamination.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#plot dispersion estimates</span><span class="w">
 </span><span class="n">plotDispEsts</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="pre-post_files/figure-gfm/unnamed-chunk-20-1.png" alt=""><!-- --></p>
+<p><img src="images/normalized.png" alt=""></p>
 
 <h3 id="extracting-the-results-of-de-analysis">
 <a class="anchor" href="#extracting-the-results-of-de-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>extracting the results of DE analysis</h3>
