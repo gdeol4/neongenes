@@ -99,29 +99,28 @@ Differential expression analysis:
 
 ``` r
 data <- read_csv("C:/Users/gurka/Downloads/fibrosis_smoc2_rawcounts/fibrosis_smoc2_rawcounts.csv")
+
+     New names:
+     Rows: 47729 Columns: 8
 ```
 
-    ## New names:
-    ## Rows: 47729 Columns: 8
-    ## ── Column specification
-    ## ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── Delimiter: "," chr
-    ## (1): ...1 dbl (7): smoc2_fibrosis1, smoc2_fibrosis4, smoc2_normal1, smoc2_normal3, smoc2_fibrosis3, smoc2_normal4, smoc2_fibrosis2
-    ## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-    ## • `` -> `...1`
+
 
 ``` r
 head(data)
+
+
+     # A tibble: 6 × 8
+       ...1               smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
+       <chr>                        <dbl>           <dbl>         <dbl>         <dbl>           <dbl>         <dbl>           <dbl>
+     1 ENSMUSG00000102693               0               0             0             0               0             0               0
+     2 ENSMUSG00000064842               0               0             0             0               0             0               0
+     3 ENSMUSG00000051951              72              30             0             3              36             1              51
+     4 ENSMUSG00000102851               0               0             0             0               0             0               0
+     5 ENSMUSG00000103377               0               0             1             0               0             0               0
+     6 ENSMUSG00000104017               0               0             0             0               0             0               0
 ```
 
-    ## # A tibble: 6 × 8
-    ##   ...1               smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
-    ##   <chr>                        <dbl>           <dbl>         <dbl>         <dbl>           <dbl>         <dbl>           <dbl>
-    ## 1 ENSMUSG00000102693               0               0             0             0               0             0               0
-    ## 2 ENSMUSG00000064842               0               0             0             0               0             0               0
-    ## 3 ENSMUSG00000051951              72              30             0             3              36             1              51
-    ## 4 ENSMUSG00000102851               0               0             0             0               0             0               0
-    ## 5 ENSMUSG00000103377               0               0             1             0               0             0               0
-    ## 6 ENSMUSG00000104017               0               0             0             0               0             0               0
 
 ``` r
 data <- subset (data[-c(1)])
