@@ -42,24 +42,17 @@ This dataset cpmes from the research paper:
 The experimental design:
 
 * There are four sample groups being tested:
+
+
     1. Normal control mice (wild type) with and without fibrosis 
+
+
     2. Smoc2 over-expressing mice with and without fibrosis. 
 
-* There are three biological replicates for all normal
-samples and four replicates for all fibrosis samples. 
+
+* There are three biological replicates for all normal samples and four replicates for all fibrosis samples. 
 
 ### Tools used
-
-Differential expression analysis: tools While there are a large number
-of statistical packages developed for DE analysis, DESeq2 and EdgeR are
-two of the most popular tools. Both tools use the negative binomial
-model to model the raw count data, employ similar methods, and
-typically, yield similar results. Both are pretty stringent and have a
-good balance between sensitivity and specificity. Limma-Voom is another
-set of tools often used together for DE analysis, while also a good
-method, it can be a bit less sensitive for smaller sample sizes. We will
-be using DESeq2 for the DE analysis, which has an extensive vignette
-available to help with questions.
 
 ``` r
 #Load library for DESeq2
@@ -77,20 +70,19 @@ library(tidyverse)
 
 ### Overview of workflow
 
-Differential expression analysis: DESeq2 workflow We will be using the
-DESeq2 tool to perform the differential expression analysis, but what
-are the steps we will need to perform? Displayed in the workflow are the
-steps in the differential expression analysis, separated into quality
-control and DE analysis steps. To start, we will take the count matrix
-containing the raw counts for each sample and perform quality control
-steps. First, the counts will be normalized to account for differences
-in library depth. Then, principal component analysis and hierarchical
-clustering using heatmaps will be performed to identify potential sample
-outliers and major sources of variation in the data. After QC, the DE
-analysis will be performed, including the modeling of counts, shrinking
-the log2 fold changes, and testing for differential expression. We will
-cover each of these steps in more detail as we progress through the
-workflow.
+Differential expression analysis:
+
+1. Read in count matrix and create metadata
+2. Quality control:
+    * Normalize counts to account for differences in library depth.
+    * Perform principal component analysis 
+    * Perform hierarchical clustering using heatmaps
+    * Identify potential sample outliers and major sources of variation in the data
+3. Differential expression analysis:
+    * Run differential expression analysis
+    * Modeling counts
+    * Shrinking log2 fold change
+    * Testing for differential expression
 
 # Importing read counts associated with genes
 
@@ -128,16 +120,9 @@ data <- subset (data[-c(1)])
 
 ### Putting together the metadata
 
-Preparation for differential expression analysis: metadata In addition
-to our raw counts, we require sample metadata. At the very least, we
-need to know which of our samples correspond to each condition. To
-generate our metadata, we create a vector for each column and combine
-the vectors into a data frame. The sample names are added as the row
+Sample metadata is required in addition to the raw count data, data such as which of the samples correspond to each condition. To
+create the metadata, a vector for each column is created and the vectors are combine into a data frame. The sample names are added as the row
 names.
-
-Preparation for differential expression analysis: metadata After we have
-the counts and metadata files, we can start the differential expression
-analysis workflow.
 
 ``` r
 #create genotype vector
@@ -151,7 +136,8 @@ condition = c('fibrosis','fibrosis','fibrosis','fibrosis','normal','normal','nor
 smoc2_metadata = data.frame(genotype, condition)
 
 #Assign the row names of the data frame
-rownames(smoc2_metadata) = c('smoc2_fibrosis1','smoc2_fibrosis2','smoc2_fibrosis3','smoc2_fibrosis4', 'smoc2_normal1','smoc2_normal3', 'smoc2_normal4' )
+rownames(smoc2_metadata) = c('smoc2_fibrosis1','smoc2_fibrosis2','smoc2_fibrosis3','smoc2_fibrosis4', 
+                            'smoc2_normal1','smoc2_normal3', 'smoc2_normal4' )
 ```
 
 # Normalization
