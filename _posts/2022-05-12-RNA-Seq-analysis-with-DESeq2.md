@@ -393,7 +393,7 @@ the principal components explaining the most variation in the data.
 plotPCA(vsd_smoc2, intgroup="condition")
 ```
 
-![plot pca](images/deseq2pca.png)
+![plot pca](/images/deseq2pca.png)
 
 
 ### Running the DE analysis
