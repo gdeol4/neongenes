@@ -540,8 +540,7 @@ The dispersion estimates are used to model the raw counts; if the dispersions do
 variation in the data could be poorly estimated and the DE results could be less accurate. The assumptions DESeq2 makes are that the dispersions should generally decrease with increasing mean and that they should more or less follow
 the fitted line.
 
-
-![](images/normalized.png)
+![](images/shrink.png)
 
 
 ### extracting the results of DE analysis
@@ -630,6 +629,8 @@ smoc2_results = lfcShrink(dds_smoc2,
 ```
 
 
+
+
 ### Create a results dataframe
 
 Now that we have extracted our results, we can get a nice overview of the number of differentially expressed genes there are for our designated alpha level using the summary() function. It will output the numbers/percentages of up- and down-regulated genes, as well as, give information about independent filtering and outliers removed.
@@ -651,66 +652,29 @@ summary(smoc2_results)
 DESeq2’s ```summary()``` function provides the number of differentially expressed genes for the alpha level and information about the number of genes filtered. Our results give
 over 10,000 genes as DE, which is the sum of the DE genes with log2 fold changes less than 0 and those with fold changes greater than 0. This is a lot of genes to sift through. If we wanted to return the genes most likely to be biologically relevant, we could also include a log2 fold change threshold. Oftentimes, a log2 fold change threshold isn’t preferred. However, it can be helpful when dealing with such large numbers of DE genes.
 
+To test for significant genes using both an alpha value threshold and a log2 foldchange threshold different from 0, we need to re-run the results function.
+Let’s use a small 1-point-25-foldchange threshold, which equals 0-point-32 on the log2 scale, by adding the lfcThreshold argument to our results() function. 
+While using any log2 fold change cut-off increases the risk of losing biologically relevant genes, by using a very small log2 foldchange threshold, we are 
+hoping to reduce the risk that the genes more biologically meaningful.
+
 ``` r
 smoc2_results = results(dds_smoc2, contrast = c("condition", "fibrosis", "normal"), lfcThreshold = 0.32, alpha = 0.05)
 ```
 
 Now we implemented a log2 fold change threshold of 1.25 fold (log2 0.32) when testing for significant genes. Now we can use these results to subset only the significant genes with p-adjusted values less than 0.05.
 
+Now that we have the results, we need to re-shrink the foldchanges, then run the summary() function again. Now, we have returned just over 6,000 DE genes.
+
 ``` r
 # Save results as a data frame
 smoc2_res_all <- data.frame(smoc2_results)
 ```
 
-
 Now let’s look at the values in the results table and identify the differentially expressed genes. To determine significant DE genes, we will be using the p-values adjusted for multiple test correction in the last column. The reason for this is that for every gene tested with an alpha of 0-point-05, there is a 5% chance that the gene is called as DE when it is not, yielding false positives. If we were to test the roughly 47,000 genes in the raw counts file, we would have about 5% or over 2,000 genes as false positives. It would be difficult to identify the true positives, or genes that are called DE when they truly are, from the false. Therefore, multiple test correction is performed by DESeq2 using the
 Benjamini-Hochberg, or BH-method, to adjust p-values for multiple testing and control the proportion of false positives relative to true. Using the BH-method and an alpha value of 0-point-05, if we had 1,000 genes identified as DE, we would expect 5% of the DE genes to be false positives, or 50 genes. To reduce the number of genes tested, DESeq2 automatically filters out genes unlikely to be truly differentially expressed prior to testing, such as genes with zero counts across all samples, genes with low mean values across all samples, and genes with extreme count outliers. 
 
 
-
-5.  Significant DE genes - fold-change threshold To test for significant
-    genes using both an alpha value threshold and a log2 foldchange
-    threshold different from 0, we need to re-run the results function.
-    Let’s use a small 1-point-25-foldchange threshold, which equals
-    0-point-32 on the log2 scale, by adding the lfcThreshold argument to
-    our results() function. While using any log2 fold change cut-off
-    increases the risk of losing biologically relevant genes, by using a
-    very small log2 foldchange threshold, we are hoping to reduce the
-    risk that the genes more biologically meaningful.
-
-6.  Significant DE genes - summary Now that we have the results, we need
-    to re-shrink the foldchanges, then run the summary() function again.
-    Now, we have returned just over 6,000 DE genes.
-
-7.  Results - annotate To better understand which genes the results
-    pertain to, we can use the annotables package to quickly obtain gene
-    names for the Ensembl gene IDs using the table of gene annotations
-    for the Grch38 mouse genome build.
-
-8.  Results - extract To annotate the genes with gene names and
-    descriptions, we need to first turn our results table into a data
-    frame using the data-dot-frame() function. Then, after changing the
-    row names to a column, we can merge the gene names and descriptions
-    with our results using the left_join() function and merging by
-    Ensembl gene IDs. Now we have our entire results table.
-
-9.  Significant DE genes - arrange To extract the significant DE genes,
-    we’ll subset the results table, using the subset() function, for
-    genes with p-adjusted values less than the alpha value of
-    0-point-05. We should see all p-adjusted values are less than
-    0-point-05 and log2 foldchanges are greater than the absolute value
-    of 0-point-32. We will use the arrange() function to order the genes
-    by p-adjusted values to generate the final table of significant
-    results. We can explore this table for interesting or expected genes
-    with a high probability of being related to kidney fibrosis.
-
-10. Significant DE genes If we look up many of these top genes, we will
-    find known roles associated with fibrosis, which is an encouraging
-    and exciting result for us.
-
-To reduce the number of DE genes that we are returning and to reduce the
-likelihood of the DE genes being biologically meaningful, we are going
-to use a small log2 fold change threshold to determine the DE genes.
+To extract the significant DE genes, we’ll subset the results table, using the subset() function, for genes with p-adjusted values less than the alpha value of 0-point-05. We should see all p-adjusted values are less than 0-point-05 and log2 foldchanges are greater than the absolute value of 0-point-32. We will use the arrange() function to order the genes by p-adjusted values to generate the final table of significant results. We can explore this table for interesting or expected genes with a high probability of being related to kidney fibrosis.
 
 ``` r
 # Subset the results to only return the significant genes with p-adjusted values less than 0.05
@@ -719,39 +683,22 @@ smoc2_res_sig <- subset(smoc2_res_all, padj < 0.05)
 
 ``` r
 head(smoc2_res_sig)
+
+          baseMean log2FoldChange      lfcSE       stat       pvalue         padj
+     3    22.47809      4.4981432 0.82929064   5.038213 4.698974e-07 2.829520e-06
+     17   12.06950     -2.3959881 0.60066414  -3.456155 5.479409e-04 2.278479e-03
+     33 1380.35712     -0.8942696 0.09748260  -5.890996 3.838750e-09 2.815588e-08
+     35 2522.97515     -1.9163511 0.14944995 -10.681510 1.242343e-26 2.749899e-25
+     40   11.55182      2.3983021 0.70397545   2.952237 3.154811e-03 1.160401e-02
+     45 1921.19192     -0.9062709 0.08444206  -6.942877 3.841942e-12 3.594718e-11
 ```
 
-    ##      baseMean log2FoldChange      lfcSE       stat       pvalue         padj
-    ## 3    22.47809      4.4981432 0.82929064   5.038213 4.698974e-07 2.829520e-06
-    ## 17   12.06950     -2.3959881 0.60066414  -3.456155 5.479409e-04 2.278479e-03
-    ## 33 1380.35712     -0.8942696 0.09748260  -5.890996 3.838750e-09 2.815588e-08
-    ## 35 2522.97515     -1.9163511 0.14944995 -10.681510 1.242343e-26 2.749899e-25
-    ## 40   11.55182      2.3983021 0.70397545   2.952237 3.154811e-03 1.160401e-02
-    ## 45 1921.19192     -0.9062709 0.08444206  -6.942877 3.841942e-12 3.594718e-11
+### Visualizing results
 
-4.  Visualizing results - Volcano plot In addition to the MA plot
-    explored previously, another useful plot providing a global view of
-    the results is the volcano plot, which shows the fold changes
-    relative to the adjusted p-values for all genes. First, using all
-    results, wt_res_all, convert the row names to a column called
-    ensgene, then create a column of logical values indicating if the
-    gene is DE using the mutate() function, with p-adjusted value
-    threshold less than 0-point-05. Then, use ggplot2 to plot the log2
-    foldchange values versus the -log10 adjusted p-value. The points for
-    the genes should then be colored by whether they are significant
-    using the threshold column.
+In addition to the MA plot explored previously, another useful plot providing a global view of the results is the volcano plot, which shows the fold changes relative to the adjusted p-values for all genes. First, create a column of logical values indicating if the gene is DE using the mutate() function, with p-adjusted value threshold less than 0-point-05. Then, use ggplot2 to plot the log2 foldchange values versus the -log10 adjusted p-value. The points for the genes should then be colored by whether they are significant using the threshold column.
 
-5.  Visualizing results - Volcano plot We can zoom in on the volcano
-    plot to visualize better the significance cut-off using the ylim()
-    function within ggplot2.
 
-To explore the results, visualizations can be helpful to see a global
-view of the data, as well as, characteristics of the significant genes.
-Usually, we expect to see significant genes identified across the range
-of mean values, which we can plot using the MA plot. If we only see
-significant genes with high mean values, then it could indicate an issue
-with our data. The volcano plot helps us to get an idea of the range of
-fold changes needed to identify significance in our data.
+The volcano plot helps us to get an idea of the range of fold changes needed to identify significance in our data.
 
 ``` r
 # Generate logical column 
@@ -767,8 +714,10 @@ ggplot(smoc2_res_all) +
   theme(legend.position = "none", 
         plot.title = element_text(size = rel(1.5), hjust = 0.5), 
         axis.title = element_text(size = rel(1.25)))
+
+     Warning: Removed 25395 rows containing missing values (geom_point).
 ```
 
-    ## Warning: Removed 25395 rows containing missing values (geom_point).
 
-![](pre-post_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+
+![](images/volcano.png)
