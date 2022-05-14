@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      30 min read
+      28 min read
     
 </span></p>
 
@@ -173,6 +173,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#ma-plot">MA plot</a></li>
 <li class="toc-entry toc-h3"><a href="#lfc-shrinkage">LFC shrinkage</a></li>
 <li class="toc-entry toc-h3"><a href="#create-a-results-dataframe">Create a results dataframe</a></li>
+<li class="toc-entry toc-h3"><a href="#visualizing-results">Visualizing results</a></li>
 </ul>
 </li>
 </ul><h1 id="introduction">
@@ -717,7 +718,7 @@ by sample outliers or contamination.</p>
 variation in the data could be poorly estimated and the DE results could be less accurate. The assumptions DESeq2 makes are that the dispersions should generally decrease with increasing mean and that they should more or less follow
 the fitted line.</p>
 
-<p><img src="images/normalized.png" alt=""></p>
+<p><img src="images/shrink.png" alt=""></p>
 
 <h3 id="extracting-the-results-of-de-analysis">
 <a class="anchor" href="#extracting-the-results-of-de-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>extracting the results of DE analysis</h3>
@@ -818,10 +819,17 @@ such as genes with low numbers of counts or high dispersion values.</p>
 <p>DESeq2’s <code class="language-plaintext highlighter-rouge">summary()</code> function provides the number of differentially expressed genes for the alpha level and information about the number of genes filtered. Our results give
 over 10,000 genes as DE, which is the sum of the DE genes with log2 fold changes less than 0 and those with fold changes greater than 0. This is a lot of genes to sift through. If we wanted to return the genes most likely to be biologically relevant, we could also include a log2 fold change threshold. Oftentimes, a log2 fold change threshold isn’t preferred. However, it can be helpful when dealing with such large numbers of DE genes.</p>
 
+<p>To test for significant genes using both an alpha value threshold and a log2 foldchange threshold different from 0, we need to re-run the results function.
+Let’s use a small 1-point-25-foldchange threshold, which equals 0-point-32 on the log2 scale, by adding the lfcThreshold argument to our results() function. 
+While using any log2 fold change cut-off increases the risk of losing biologically relevant genes, by using a very small log2 foldchange threshold, we are 
+hoping to reduce the risk that the genes more biologically meaningful.</p>
+
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">smoc2_results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">results</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">,</span><span class="w"> </span><span class="n">contrast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"condition"</span><span class="p">,</span><span class="w"> </span><span class="s2">"fibrosis"</span><span class="p">,</span><span class="w"> </span><span class="s2">"normal"</span><span class="p">),</span><span class="w"> </span><span class="n">lfcThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.32</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Now we implemented a log2 fold change threshold of 1.25 fold (log2 0.32) when testing for significant genes. Now we can use these results to subset only the significant genes with p-adjusted values less than 0.05.</p>
+
+<p>Now that we have the results, we need to re-shrink the foldchanges, then run the summary() function again. Now, we have returned just over 6,000 DE genes.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Save results as a data frame</span><span class="w">
 </span><span class="n">smoc2_res_all</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">smoc2_results</span><span class="p">)</span><span class="w">
@@ -830,103 +838,29 @@ over 10,000 genes as DE, which is the sum of the DE genes with log2 fold changes
 <p>Now let’s look at the values in the results table and identify the differentially expressed genes. To determine significant DE genes, we will be using the p-values adjusted for multiple test correction in the last column. The reason for this is that for every gene tested with an alpha of 0-point-05, there is a 5% chance that the gene is called as DE when it is not, yielding false positives. If we were to test the roughly 47,000 genes in the raw counts file, we would have about 5% or over 2,000 genes as false positives. It would be difficult to identify the true positives, or genes that are called DE when they truly are, from the false. Therefore, multiple test correction is performed by DESeq2 using the
 Benjamini-Hochberg, or BH-method, to adjust p-values for multiple testing and control the proportion of false positives relative to true. Using the BH-method and an alpha value of 0-point-05, if we had 1,000 genes identified as DE, we would expect 5% of the DE genes to be false positives, or 50 genes. To reduce the number of genes tested, DESeq2 automatically filters out genes unlikely to be truly differentially expressed prior to testing, such as genes with zero counts across all samples, genes with low mean values across all samples, and genes with extreme count outliers.</p>
 
-<ol>
-  <li>
-    <p>Significant DE genes - fold-change threshold To test for significant
-genes using both an alpha value threshold and a log2 foldchange
-threshold different from 0, we need to re-run the results function.
-Let’s use a small 1-point-25-foldchange threshold, which equals
-0-point-32 on the log2 scale, by adding the lfcThreshold argument to
-our results() function. While using any log2 fold change cut-off
-increases the risk of losing biologically relevant genes, by using a
-very small log2 foldchange threshold, we are hoping to reduce the
-risk that the genes more biologically meaningful.</p>
-  </li>
-  <li>
-    <p>Significant DE genes - summary Now that we have the results, we need
-to re-shrink the foldchanges, then run the summary() function again.
-Now, we have returned just over 6,000 DE genes.</p>
-  </li>
-  <li>
-    <p>Results - annotate To better understand which genes the results
-pertain to, we can use the annotables package to quickly obtain gene
-names for the Ensembl gene IDs using the table of gene annotations
-for the Grch38 mouse genome build.</p>
-  </li>
-  <li>
-    <p>Results - extract To annotate the genes with gene names and
-descriptions, we need to first turn our results table into a data
-frame using the data-dot-frame() function. Then, after changing the
-row names to a column, we can merge the gene names and descriptions
-with our results using the left_join() function and merging by
-Ensembl gene IDs. Now we have our entire results table.</p>
-  </li>
-  <li>
-    <p>Significant DE genes - arrange To extract the significant DE genes,
-we’ll subset the results table, using the subset() function, for
-genes with p-adjusted values less than the alpha value of
-0-point-05. We should see all p-adjusted values are less than
-0-point-05 and log2 foldchanges are greater than the absolute value
-of 0-point-32. We will use the arrange() function to order the genes
-by p-adjusted values to generate the final table of significant
-results. We can explore this table for interesting or expected genes
-with a high probability of being related to kidney fibrosis.</p>
-  </li>
-  <li>
-    <p>Significant DE genes If we look up many of these top genes, we will
-find known roles associated with fibrosis, which is an encouraging
-and exciting result for us.</p>
-  </li>
-</ol>
-
-<p>To reduce the number of DE genes that we are returning and to reduce the
-likelihood of the DE genes being biologically meaningful, we are going
-to use a small log2 fold change threshold to determine the DE genes.</p>
+<p>To extract the significant DE genes, we’ll subset the results table, using the subset() function, for genes with p-adjusted values less than the alpha value of 0-point-05. We should see all p-adjusted values are less than 0-point-05 and log2 foldchanges are greater than the absolute value of 0-point-32. We will use the arrange() function to order the genes by p-adjusted values to generate the final table of significant results. We can explore this table for interesting or expected genes with a high probability of being related to kidney fibrosis.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Subset the results to only return the significant genes with p-adjusted values less than 0.05</span><span class="w">
 </span><span class="n">smoc2_res_sig</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">smoc2_res_all</span><span class="p">,</span><span class="w"> </span><span class="n">padj</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.05</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">smoc2_res_sig</span><span class="p">)</span><span class="w">
+
+          </span><span class="n">baseMean</span><span class="w"> </span><span class="n">log2FoldChange</span><span class="w">      </span><span class="n">lfcSE</span><span class="w">       </span><span class="n">stat</span><span class="w">       </span><span class="n">pvalue</span><span class="w">         </span><span class="n">padj</span><span class="w">
+     </span><span class="m">3</span><span class="w">    </span><span class="m">22.47809</span><span class="w">      </span><span class="m">4.4981432</span><span class="w"> </span><span class="m">0.82929064</span><span class="w">   </span><span class="m">5.038213</span><span class="w"> </span><span class="m">4.698974e-07</span><span class="w"> </span><span class="m">2.829520e-06</span><span class="w">
+     </span><span class="m">17</span><span class="w">   </span><span class="m">12.06950</span><span class="w">     </span><span class="m">-2.3959881</span><span class="w"> </span><span class="m">0.60066414</span><span class="w">  </span><span class="m">-3.456155</span><span class="w"> </span><span class="m">5.479409e-04</span><span class="w"> </span><span class="m">2.278479e-03</span><span class="w">
+     </span><span class="m">33</span><span class="w"> </span><span class="m">1380.35712</span><span class="w">     </span><span class="m">-0.8942696</span><span class="w"> </span><span class="m">0.09748260</span><span class="w">  </span><span class="m">-5.890996</span><span class="w"> </span><span class="m">3.838750e-09</span><span class="w"> </span><span class="m">2.815588e-08</span><span class="w">
+     </span><span class="m">35</span><span class="w"> </span><span class="m">2522.97515</span><span class="w">     </span><span class="m">-1.9163511</span><span class="w"> </span><span class="m">0.14944995</span><span class="w"> </span><span class="m">-10.681510</span><span class="w"> </span><span class="m">1.242343e-26</span><span class="w"> </span><span class="m">2.749899e-25</span><span class="w">
+     </span><span class="m">40</span><span class="w">   </span><span class="m">11.55182</span><span class="w">      </span><span class="m">2.3983021</span><span class="w"> </span><span class="m">0.70397545</span><span class="w">   </span><span class="m">2.952237</span><span class="w"> </span><span class="m">3.154811e-03</span><span class="w"> </span><span class="m">1.160401e-02</span><span class="w">
+     </span><span class="m">45</span><span class="w"> </span><span class="m">1921.19192</span><span class="w">     </span><span class="m">-0.9062709</span><span class="w"> </span><span class="m">0.08444206</span><span class="w">  </span><span class="m">-6.942877</span><span class="w"> </span><span class="m">3.841942e-12</span><span class="w"> </span><span class="m">3.594718e-11</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##      baseMean log2FoldChange      lfcSE       stat       pvalue         padj
-## 3    22.47809      4.4981432 0.82929064   5.038213 4.698974e-07 2.829520e-06
-## 17   12.06950     -2.3959881 0.60066414  -3.456155 5.479409e-04 2.278479e-03
-## 33 1380.35712     -0.8942696 0.09748260  -5.890996 3.838750e-09 2.815588e-08
-## 35 2522.97515     -1.9163511 0.14944995 -10.681510 1.242343e-26 2.749899e-25
-## 40   11.55182      2.3983021 0.70397545   2.952237 3.154811e-03 1.160401e-02
-## 45 1921.19192     -0.9062709 0.08444206  -6.942877 3.841942e-12 3.594718e-11
-</code></pre></div></div>
+<h3 id="visualizing-results">
+<a class="anchor" href="#visualizing-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Visualizing results</h3>
 
-<ol>
-  <li>
-    <p>Visualizing results - Volcano plot In addition to the MA plot
-explored previously, another useful plot providing a global view of
-the results is the volcano plot, which shows the fold changes
-relative to the adjusted p-values for all genes. First, using all
-results, wt_res_all, convert the row names to a column called
-ensgene, then create a column of logical values indicating if the
-gene is DE using the mutate() function, with p-adjusted value
-threshold less than 0-point-05. Then, use ggplot2 to plot the log2
-foldchange values versus the -log10 adjusted p-value. The points for
-the genes should then be colored by whether they are significant
-using the threshold column.</p>
-  </li>
-  <li>
-    <p>Visualizing results - Volcano plot We can zoom in on the volcano
-plot to visualize better the significance cut-off using the ylim()
-function within ggplot2.</p>
-  </li>
-</ol>
+<p>In addition to the MA plot explored previously, another useful plot providing a global view of the results is the volcano plot, which shows the fold changes relative to the adjusted p-values for all genes. First, create a column of logical values indicating if the gene is DE using the mutate() function, with p-adjusted value threshold less than 0-point-05. Then, use ggplot2 to plot the log2 foldchange values versus the -log10 adjusted p-value. The points for the genes should then be colored by whether they are significant using the threshold column.</p>
 
-<p>To explore the results, visualizations can be helpful to see a global
-view of the data, as well as, characteristics of the significant genes.
-Usually, we expect to see significant genes identified across the range
-of mean values, which we can plot using the MA plot. If we only see
-significant genes with high mean values, then it could indicate an issue
-with our data. The volcano plot helps us to get an idea of the range of
-fold changes needed to identify significance in our data.</p>
+<p>The volcano plot helps us to get an idea of the range of fold changes needed to identify significance in our data.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Generate logical column </span><span class="w">
 </span><span class="n">smoc2_res_all</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">smoc2_results</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">padj</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.05</span><span class="p">)</span><span class="w">
@@ -940,12 +874,11 @@ fold changes needed to identify significance in our data.</p>
   </span><span class="n">theme</span><span class="p">(</span><span class="n">legend.position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"none"</span><span class="p">,</span><span class="w"> 
         </span><span class="n">plot.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rel</span><span class="p">(</span><span class="m">1.5</span><span class="p">),</span><span class="w"> </span><span class="n">hjust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">),</span><span class="w"> 
         </span><span class="n">axis.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_text</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rel</span><span class="p">(</span><span class="m">1.25</span><span class="p">)))</span><span class="w">
+
+     </span><span class="n">Warning</span><span class="o">:</span><span class="w"> </span><span class="n">Removed</span><span class="w"> </span><span class="m">25395</span><span class="w"> </span><span class="n">rows</span><span class="w"> </span><span class="n">containing</span><span class="w"> </span><span class="n">missing</span><span class="w"> </span><span class="n">values</span><span class="w"> </span><span class="p">(</span><span class="n">geom_point</span><span class="p">)</span><span class="n">.</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## Warning: Removed 25395 rows containing missing values (geom_point).
-</code></pre></div></div>
-
-<p><img src="pre-post_files/figure-gfm/unnamed-chunk-31-1.png" alt=""><!-- --></p>
+<p><img src="images/volcano.png" alt=""></p>
 
   </div><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
