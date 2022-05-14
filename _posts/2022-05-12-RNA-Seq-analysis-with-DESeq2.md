@@ -26,10 +26,6 @@ of extracellular matrix in the space between tubules and capillaries within the 
 unknown how Smoc2 functions in the induction and progression of fibrosis[2].
 
 
-1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
-2. Vannahme C, Gosling S, Paulsson M, Maurer P, Hartmann U. Characterization of SMOC-2, a modular extracellular calcium-binding protein. Biochem J 2003; 373:805–814. doi: 10.1042/bj20030532.
-
-
 ### A look at the dataset
 
 
@@ -718,6 +714,8 @@ ggplot(smoc2_res_all) +
      Warning: Removed 25395 rows containing missing values (geom_point).
 ```
 
-
-
 ![](images/volcano.png)
+
+# References
+1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
+2. Vannahme C, Gosling S, Paulsson M, Maurer P, Hartmann U. Characterization of SMOC-2, a modular extracellular calcium-binding protein. Biochem J 2003; 373:805–814. doi: 10.1042/bj20030532.
