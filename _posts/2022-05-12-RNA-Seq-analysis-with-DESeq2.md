@@ -713,7 +713,7 @@ ggplot(smoc2_res_all) +
      Warning: Removed 25395 rows containing missing values (geom_point).
 ```
 
-![](images/volcano.png)
+![plot volcano](images/volcano.png)
 
 # References
 1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
