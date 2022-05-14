@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      44 min read
+      42 min read
     
 </span></p>
 
@@ -243,21 +243,43 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].</p>
 <p>Differential expression analysis:</p>
 
 <ol>
-  <li>Read in count matrix and create metadata</li>
-  <li>Quality control:
+  <li>
+    <p>Read in count matrix and create metadata</p>
+  </li>
+  <li>
+    <p>Quality control:</p>
+
     <ul>
-      <li>Normalize counts to account for differences in library depth.</li>
-      <li>Perform principal component analysis</li>
-      <li>Perform hierarchical clustering using heatmaps</li>
-      <li>Identify potential sample outliers and major sources of variation in the data</li>
+      <li>
+        <p>Normalize counts to account for differences in library depth.</p>
+      </li>
+      <li>
+        <p>Perform principal component analysis</p>
+      </li>
+      <li>
+        <p>Perform hierarchical clustering using heatmaps</p>
+      </li>
+      <li>
+        <p>Identify potential sample outliers and major sources of variation in the data</p>
+      </li>
     </ul>
   </li>
-  <li>Differential expression analysis:
+  <li>
+    <p>Differential expression analysis:</p>
+
     <ul>
-      <li>Run differential expression analysis</li>
-      <li>Modeling counts</li>
-      <li>Shrinking log2 fold change</li>
-      <li>Testing for differential expression</li>
+      <li>
+        <p>Run differential expression analysis</p>
+      </li>
+      <li>
+        <p>Modeling counts</p>
+      </li>
+      <li>
+        <p>Shrinking log2 fold change</p>
+      </li>
+      <li>
+        <p>Testing for differential expression</p>
+      </li>
     </ul>
   </li>
 </ol>
@@ -325,79 +347,30 @@ names.</p>
 <h3 id="preparing-the-data-for-deseq2">
 <a class="anchor" href="#preparing-the-data-for-deseq2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing the data for DESeq2</h3>
 
-<p>After we have our data loaded, we need to make sure it’s in a specific
-format so that it will be accepted as input to DESeq2.</p>
+<p>The data needs to be in a specific format to be accepted as an input to DESeq2. This requires the sample names in the 
+metadata and counts datasets to be in the same order. Therefore, the row names of our metadata need to be in the same 
+order as the column names of our counts data.</p>
 
-<p>Bringing in data for DESeq2: sample order DESeq2 requires the sample
-names in the metadata and counts datasets to be in the same order.
-Therefore, the row names of our metadata need to be in the same order as
-the column names of our counts data. As we can see in these images, the
-sample names for the counts are in a nice order while the names in the
-metadata are not.</p>
+<p>Currently the order is not the same, and this can be confirmed with the all() function to compare the row and coloumn order
+which will return FALSE.The match() function can be used to determine the order needed. The first argumnent to the function 
+is a vector of values in the order desired, and the second is a vector of values to be reordered.</p>
 
-<p>Bringing in data for DESeq2: sample order Alternatively, we can explore
-the row names and column names with the rownames() and colnames()
-functions.</p>
-
-<p>Bringing in data for DESeq2: sample order By looking at our sample names
-in both datasets, we can see that the order is not the same, but it’s
-not always clear, so using the all() function with the “double equal to”
-sign can check if all of the row names of the metadata are in the same
-order as the column names of the raw counts data. The all() function
-returns a FALSE value. Now we know that our samples are not in the same
-order, so we need to reorder the data to use it with DESeq2.</p>
-
-<p>Matching order between vectors To easily reorder the rows of the
-metadata to match the order of columns in the counts data, we can use
-the match() function. The match() function takes two vectors as input.
-The first is a vector of values in the order we want, and the second is
-a vector of values we would like to reorder. In our example, the column
-names of the raw counts data is the vector with the order we want, so it
-will be in the first position of the match() function. The row names of
-the metadata is the vector to be reordered, so it will be in the second
-position. The output shows how we would need to reorder the rows of the
-metadata to be in the same order as the columns in the count data. For
-instance the 6th row would need to come first, followed by the 9th row,
-then the 1st row, so on and so forth.</p>
-
-<p>Reordering with the match() function Now, we can use the output of the
-match() function to reorder the rows of the metadata to be in the same
-order as the columns in the count data. To do this we can save the
-indices output by match() to a variable, in this case called idx. Then,
-we can rearrange the metadata by using the square brackets and adding
-idx to the rows position. The samples should now be in the same order
-for both datasets.</p>
-
-<p>Checking the order To check the order we can use the all() function
-again. Since they match, we can now use these datasets to create the
-DESeq2 object needed to start the DESeq2 workflow.</p>
-
-<ol>
-  <li>Creating the DESeq2 object To create the DESeq2 object, use the
-DESeqDataSetFromMatrix() function. This function takes as input the
-raw counts, associated metadata, and a design formula detailing
-which conditions in the metadata we want to use for differential
-expression analysis. We will talk in more detail about the design
-formula later. This function will create a DESeq2 object, of the
-class Ranged Summarized Experiment. This is a list-like object with
-slots available for the data it will generate throughout the
-analysis. Currently, it only has a few of the slots filled with the
-count data, metadata, and design information.</li>
-</ol>
+<p>Reordering can be done with the match() function by using the output of match() to reorder the rows of the metadata to be in
+the same order as the columns in the count data. To do this the indices output by match() need to be extracted to a variable. 
+Then, rearrange the metadata by using the square brackets and adding the index to the rows position. The samples should now be 
+in the same order for both datasets, which can be confirmed by running the all() function once again</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#check if the column orders are the same with the all function</span><span class="w">
 </span><span class="nf">all</span><span class="p">(</span><span class="n">rownames</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w">  </span><span class="n">colnames</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] FALSE
-</code></pre></div></div>
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="kc">FALSE</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#determine the matching order between the vectors using match()</span><span class="w">
 </span><span class="n">match</span><span class="p">(</span><span class="n">colnames</span><span class="p">(</span><span class="n">data</span><span class="p">),</span><span class="w"> </span><span class="n">rownames</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">))</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] 1 4 5 6 3 7 2
-</code></pre></div></div>
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">2</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#use the match() function to reorder the column of the raw counts</span><span class="w">
 </span><span class="n">reorder_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="n">colnames</span><span class="p">(</span><span class="n">data</span><span class="p">),</span><span class="w"> </span><span class="n">rownames</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">))</span><span class="w">
@@ -426,23 +399,23 @@ count data, metadata, and design information.</li>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] TRUE
 </code></pre></div></div>
 
-<p>Good work, we now have a DESeq2 object storing our raw counts and
-metadata that we can use to explore the data with DESeq2 functions and
-to use for performing the differential expression analysis.</p>
-
 <h3 id="creating-the-deseq2-dataset-dds">
 <a class="anchor" href="#creating-the-deseq2-dataset-dds" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating the DESeq2 DataSet (DDS)</h3>
+
+<p>Now a DESeq2 dataSet (DDS) needs to be created to store the raw counts and metadata to use for performing 
+the differential expression analysis. The DESeq2 object is created with the <strong>DESeqDataSetFromMatrix()</strong> function.
+This function takes as input the raw counts, associated metadata, and a design formula detailing which conditions 
+in the metadata to use for differential expression analysis.</p>
+
+<p>This function creates a DESeq2 object, of the class Ranged Summarized Experiment. This is a list-like object with slots 
+available for the data it will generate throughout the analysis. Currently, it only has a few of the slots filled with the
+count data, metadata, and design information.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a DESeq2 object</span><span class="w">
 </span><span class="n">dds_smoc2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DESeqDataSetFromMatrix</span><span class="p">(</span><span class="n">countData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w">
                                    </span><span class="n">colData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reordered_smoc2_meta</span><span class="p">,</span><span class="w">
                                    </span><span class="n">design</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">condition</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## converting counts to integer mode
-
-## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in design formula are characters, converting to factors
-</code></pre></div></div>
 
 <h3 id="estimating-size-factors">
 <a class="anchor" href="#estimating-size-factors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Estimating size factors</h3>
