@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      28 min read
+      27 min read
     
 </span></p>
 
@@ -291,30 +291,24 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].</p>
 <a class="anchor" href="#importing-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Importing the data</h3>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"C:/Users/gurka/Downloads/fibrosis_smoc2_rawcounts/fibrosis_smoc2_rawcounts.csv"</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## New names:
-## Rows: 47729 Columns: 8
-## ── Column specification
-## ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── Delimiter: "," chr
-## (1): ...1 dbl (7): smoc2_fibrosis1, smoc2_fibrosis4, smoc2_normal1, smoc2_normal3, smoc2_fibrosis3, smoc2_normal4, smoc2_fibrosis2
-## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## • `` -&gt; `...1`
-</code></pre></div></div>
+     </span><span class="n">New</span><span class="w"> </span><span class="n">names</span><span class="o">:</span><span class="w">
+     </span><span class="n">Rows</span><span class="o">:</span><span class="w"> </span><span class="m">47729</span><span class="w"> </span><span class="n">Columns</span><span class="o">:</span><span class="w"> </span><span class="m">8</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## # A tibble: 6 × 8
-##   ...1               smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
-##   &lt;chr&gt;                        &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;
-## 1 ENSMUSG00000102693               0               0             0             0               0             0               0
-## 2 ENSMUSG00000064842               0               0             0             0               0             0               0
-## 3 ENSMUSG00000051951              72              30             0             3              36             1              51
-## 4 ENSMUSG00000102851               0               0             0             0               0             0               0
-## 5 ENSMUSG00000103377               0               0             1             0               0             0               0
-## 6 ENSMUSG00000104017               0               0             0             0               0             0               0
-</code></pre></div></div>
+
+     </span><span class="c1"># A tibble: 6 × 8</span><span class="w">
+       </span><span class="n">...1</span><span class="w">               </span><span class="n">smoc2_fibrosis1</span><span class="w"> </span><span class="n">smoc2_fibrosis4</span><span class="w"> </span><span class="n">smoc2_normal1</span><span class="w"> </span><span class="n">smoc2_normal3</span><span class="w"> </span><span class="n">smoc2_fibrosis3</span><span class="w"> </span><span class="n">smoc2_normal4</span><span class="w"> </span><span class="n">smoc2_fibrosis2</span><span class="w">
+       </span><span class="o">&lt;</span><span class="n">chr</span><span class="o">&gt;</span><span class="w">                        </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">           </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">         </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">         </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">           </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">         </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">           </span><span class="o">&lt;</span><span class="n">dbl</span><span class="o">&gt;</span><span class="w">
+     </span><span class="m">1</span><span class="w"> </span><span class="n">ENSMUSG00000102693</span><span class="w">               </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">
+     </span><span class="m">2</span><span class="w"> </span><span class="n">ENSMUSG00000064842</span><span class="w">               </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">
+     </span><span class="m">3</span><span class="w"> </span><span class="n">ENSMUSG00000051951</span><span class="w">              </span><span class="m">72</span><span class="w">              </span><span class="m">30</span><span class="w">             </span><span class="m">0</span><span class="w">             </span><span class="m">3</span><span class="w">              </span><span class="m">36</span><span class="w">             </span><span class="m">1</span><span class="w">              </span><span class="m">51</span><span class="w">
+     </span><span class="m">4</span><span class="w"> </span><span class="n">ENSMUSG00000102851</span><span class="w">               </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">
+     </span><span class="m">5</span><span class="w"> </span><span class="n">ENSMUSG00000103377</span><span class="w">               </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">1</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">
+     </span><span class="m">6</span><span class="w"> </span><span class="n">ENSMUSG00000104017</span><span class="w">               </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">               </span><span class="m">0</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">)])</span><span class="w">
 </span></code></pre></div></div>
