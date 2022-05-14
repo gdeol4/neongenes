@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      45 min read
+      44 min read
     
 </span></p>
 
@@ -204,29 +204,25 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].</p>
 <p>The experimental design:</p>
 
 <ul>
-  <li>There are four sample groups being tested:
+  <li>
+    <p>There are four sample groups being tested:</p>
+
     <ol>
-      <li>Normal control mice (wild type) with and without fibrosis</li>
-      <li>Smoc2 over-expressing mice with and without fibrosis.</li>
+      <li>
+        <p>Normal control mice (wild type) with and without fibrosis</p>
+      </li>
+      <li>
+        <p>Smoc2 over-expressing mice with and without fibrosis.</p>
+      </li>
     </ol>
   </li>
-  <li>There are three biological replicates for all normal
-samples and four replicates for all fibrosis samples.</li>
+  <li>
+    <p>There are three biological replicates for all normal samples and four replicates for all fibrosis samples.</p>
+  </li>
 </ul>
 
 <h3 id="tools-used">
 <a class="anchor" href="#tools-used" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tools used</h3>
-
-<p>Differential expression analysis: tools While there are a large number
-of statistical packages developed for DE analysis, DESeq2 and EdgeR are
-two of the most popular tools. Both tools use the negative binomial
-model to model the raw count data, employ similar methods, and
-typically, yield similar results. Both are pretty stringent and have a
-good balance between sensitivity and specificity. Limma-Voom is another
-set of tools often used together for DE analysis, while also a good
-method, it can be a bit less sensitive for smaller sample sizes. We will
-be using DESeq2 for the DE analysis, which has an extensive vignette
-available to help with questions.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#Load library for DESeq2</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">DESeq2</span><span class="p">)</span><span class="w">
@@ -244,20 +240,27 @@ available to help with questions.</p>
 <h3 id="overview-of-workflow">
 <a class="anchor" href="#overview-of-workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview of workflow</h3>
 
-<p>Differential expression analysis: DESeq2 workflow We will be using the
-DESeq2 tool to perform the differential expression analysis, but what
-are the steps we will need to perform? Displayed in the workflow are the
-steps in the differential expression analysis, separated into quality
-control and DE analysis steps. To start, we will take the count matrix
-containing the raw counts for each sample and perform quality control
-steps. First, the counts will be normalized to account for differences
-in library depth. Then, principal component analysis and hierarchical
-clustering using heatmaps will be performed to identify potential sample
-outliers and major sources of variation in the data. After QC, the DE
-analysis will be performed, including the modeling of counts, shrinking
-the log2 fold changes, and testing for differential expression. We will
-cover each of these steps in more detail as we progress through the
-workflow.</p>
+<p>Differential expression analysis:</p>
+
+<ol>
+  <li>Read in count matrix and create metadata</li>
+  <li>Quality control:
+    <ul>
+      <li>Normalize counts to account for differences in library depth.</li>
+      <li>Perform principal component analysis</li>
+      <li>Perform hierarchical clustering using heatmaps</li>
+      <li>Identify potential sample outliers and major sources of variation in the data</li>
+    </ul>
+  </li>
+  <li>Differential expression analysis:
+    <ul>
+      <li>Run differential expression analysis</li>
+      <li>Modeling counts</li>
+      <li>Shrinking log2 fold change</li>
+      <li>Testing for differential expression</li>
+    </ul>
+  </li>
+</ol>
 
 <h1 id="importing-read-counts-associated-with-genes">
 <a class="anchor" href="#importing-read-counts-associated-with-genes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Importing read counts associated with genes</h1>
@@ -297,16 +300,9 @@ workflow.</p>
 <h3 id="putting-together-the-metadata">
 <a class="anchor" href="#putting-together-the-metadata" aria-hidden="true"><span class="octicon octicon-link"></span></a>Putting together the metadata</h3>
 
-<p>Preparation for differential expression analysis: metadata In addition
-to our raw counts, we require sample metadata. At the very least, we
-need to know which of our samples correspond to each condition. To
-generate our metadata, we create a vector for each column and combine
-the vectors into a data frame. The sample names are added as the row
+<p>Sample metadata is required in addition to the raw count data, data such as which of the samples correspond to each condition. To
+create the metadata, a vector for each column is created and the vectors are combine into a data frame. The sample names are added as the row
 names.</p>
-
-<p>Preparation for differential expression analysis: metadata After we have
-the counts and metadata files, we can start the differential expression
-analysis workflow.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#create genotype vector</span><span class="w">
 </span><span class="n">genotype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">,</span><span class="s1">'smoc2_oe'</span><span class="p">)</span><span class="w">
@@ -319,7 +315,8 @@ analysis workflow.</p>
 </span><span class="n">smoc2_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="n">genotype</span><span class="p">,</span><span class="w"> </span><span class="n">condition</span><span class="p">)</span><span class="w">
 
 </span><span class="c1">#Assign the row names of the data frame</span><span class="w">
-</span><span class="n">rownames</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s1">'smoc2_fibrosis1'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis2'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis3'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis4'</span><span class="p">,</span><span class="w"> </span><span class="s1">'smoc2_normal1'</span><span class="p">,</span><span class="s1">'smoc2_normal3'</span><span class="p">,</span><span class="w"> </span><span class="s1">'smoc2_normal4'</span><span class="w"> </span><span class="p">)</span><span class="w">
+</span><span class="n">rownames</span><span class="p">(</span><span class="n">smoc2_metadata</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s1">'smoc2_fibrosis1'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis2'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis3'</span><span class="p">,</span><span class="s1">'smoc2_fibrosis4'</span><span class="p">,</span><span class="w"> 
+                            </span><span class="s1">'smoc2_normal1'</span><span class="p">,</span><span class="s1">'smoc2_normal3'</span><span class="p">,</span><span class="w"> </span><span class="s1">'smoc2_normal4'</span><span class="w"> </span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <h1 id="normalization">
