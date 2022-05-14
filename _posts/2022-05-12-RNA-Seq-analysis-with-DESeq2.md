@@ -11,111 +11,11 @@ metadata_key1: metadata_value1
 metadata_key2: metadata_value2
 ---
 
-notes:
-Initially, we will
-explore the effect of fibrosis on gene expression using ‘Wild type’
-samples during lectures and ‘Smoc2 over-expression’ data during
-exercises.
-
-In this example, sample A has nearly
-    twice the reads, represented as small rectangles, aligning to each
-    of the genes as sample B only because sample A has nearly twice the
-    number of reads sequenced. 
-
-    In this image, we can see
-    that the green DE gene takes up a large proportion of reads for
-    Sample A. If we just divided our counts by the total number of
-    reads, normalization for the majority of genes would be skewed by
-    the highly expressed DE gene. For this reason, when performing a DE
-    analysis, we need to use a method that is resistant to these outlier
-    genes.
-
-    3.  Principal component analysis (PCA): Theory To understand this a bit
-    better, we can think of a dataset with two samples. We could plot
-    the normalized counts of every gene for one sample on the x-axis and
-    the other sample on the y-axis. In this example, Gene A has four
-    counts for sample 1 plotted on the x-axis and 5 counts for sample 2
-    on the y-axis. We can plot the other genes similarly.
-
-    4.  Principal component analysis (PCA): Theory We can draw a line
-    through the dataset where there exists the most variation, or where
-    there is the largest spread. In this example, the line with largest
-    spread is between genes B and C. This line represents the first
-    principal component. The second most variation in the dataset,
-    represented as PC2, must be perpendicular to PC1, in order to best
-    describe the variance in the dataset not included in PC1. In this
-    example, PC2 is drawn between genes A and D. The spread is much
-    smaller for PC2. In reality, your dataset will have more samples and
-    many more genes. The number of principal components is equal to the
-    number of samples, n, in the dataset, so finding the largest amount
-    of variation, PC1, means plotting a line through n-dimensional
-    space.
-
-    
-5.  Principal component analysis (PCA): Theory The most variant genes
-    for a principal component have the most influence on that principal
-    component’s direction. In our example, the most variant genes for
-    PC1, genes B and C, would affect the direction of the line more than
-    genes A and D.
-
-    Well done! If there is an outlier on the heatmap, then we would want to
-see it with PCA as well. We similarly hope our biological replicates
-cluster together and conditions separate by PC1 and/or PC2. If we don’t
-see this, there may be sources of variation present in our data and if
-these sources are present in our metadata, then we can explore these
-sources of variation by coloring the PCA by these factors.
-Alternatively, we might not see sample groups separate if the condition
-of interest does not cause a big change in gene expression.
-
-Start by fitting the raw counts to
-    the DESeq2 model. To do this, DESeq2 will first need to estimate the
-    size factors, if they haven’t already been estimated, and estimate
-    the variation in expression across replicates for each gene. After
-    these calculations, the data can be fit to the negative binomial
-    model.
-
-5.  DESeq2 workflow: Model To perform these calculations and fit the
-    negative binomial model requires only two functions. The first
-    function creates the DESeq2 object, which is the same function we
-    used previously during count normalization. We wouldn’t need to
-    re-create the object unless we removed samples or found additional
-    sources of variation during QC using PCA and the correlation
-    heatmap. When we created the DESeq2 object, we provided the raw
-    counts, metadata, and design formula. We have explored the raw
-    counts and metadata, but what exactly was specified with 
-
-    6.  DESeq2 workflow: Design formula For example, if this is your
-    metadata and you know that strain, sex, and treatment are major
-    sources of variation in the data as determined by the PCA and
-    heatmap, then all of these factors should be included in the design
-    formula. If my condition of interest is treatment, then it would
-    come last in the formula with the other factors preceding it in any
-    order. Therefore, the design formula would be: tilde, strain plus
-    sex plus treatment. The tilde tells DESeq2 to model the counts using
-    the following formula, so it should always proceed your factors.
-
-    7.  DESeq2 workflow: Design formula DESeq2 also allows for complex
-    designs. For instance, using the same metadata, if we wanted to know
-    the effect of sex on the effect of treatment, we could use an
-    interaction term. In this case, we could regress out the variation
-    due to strain, sex and treatment and test for genes that
-    significantly differ in their treatment effect due to sex using the
-    interaction term, sex colon treatment, as the last term in the
-    formula. For more information about specifying complex designs, I
-    recommend reading through the DESeq2 vignette or the Bioconductor
-    support site.
-
-8.  DESeq2 workflow: Running Once you have the DESeq2 object with the
-    raw counts, metadata, and the appropriate design formula, you can
-    perform model fitting with the function DESeq(). As it runs it will
-    output the completed steps as it fills in the different slots in the
-    DESeq2 object. The final DESeq2 object will contain all of the
-    information needed for performing the differential expression
-    testing between specific sample groups.
-
 # Introduction
 
+
 ### What is smoc2?
+
 
 Secreted modular calcium-binding protein 2 (Smoc2) is an acidic extracellular matrix glycoprotein 
 and plays an important role in bone mineralization, cell-matrix interactions, collagen binding, and 
@@ -125,12 +25,16 @@ which is characterized as an aberrant repair response to chronic tissue injury. 
 of extracellular matrix in the space between tubules and capillaries within the kidney. However, it is 
 unknown how Smoc2 functions in the induction and progression of fibrosis[2].
 
+
 1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
 2. Vannahme C, Gosling S, Paulsson M, Maurer P, Hartmann U. Characterization of SMOC-2, a modular extracellular calcium-binding protein. Biochem J 2003; 373:805–814. doi: 10.1042/bj20030532.
 
+
 ### A look at the dataset
 
+
 This dataset cpmes from the research paper: 
+
 
 **_Silencing SMOC2 ameliorates kidney fibrosis by inhibiting fibroblast to myofibroblast transformation._** 
 
