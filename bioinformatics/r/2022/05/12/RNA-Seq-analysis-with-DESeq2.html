@@ -108,7 +108,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      42 min read
+      41 min read
     
 </span></p>
 
@@ -174,6 +174,20 @@ Initially, we will
 explore the effect of fibrosis on gene expression using ‘Wild type’
 samples during lectures and ‘Smoc2 over-expression’ data during
 exercises.</p>
+
+<p>In this example, sample A has nearly
+    twice the reads, represented as small rectangles, aligning to each
+    of the genes as sample B only because sample A has nearly twice the
+    number of reads sequenced.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In this image, we can see
+that the green DE gene takes up a large proportion of reads for
+Sample A. If we just divided our counts by the total number of
+reads, normalization for the majority of genes would be skewed by
+the highly expressed DE gene. For this reason, when performing a DE
+analysis, we need to use a method that is resistant to these outlier
+genes.
+</code></pre></div></div>
 
 <h1 id="introduction">
 <a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
@@ -248,22 +262,45 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].</p>
   </li>
   <li>
     <p>Quality control:</p>
-
-    <ul>
-      <li>
-        <p>Normalize counts to account for differences in library depth.</p>
-      </li>
-      <li>
-        <p>Perform principal component analysis</p>
-      </li>
-      <li>
-        <p>Perform hierarchical clustering using heatmaps</p>
-      </li>
-      <li>
-        <p>Identify potential sample outliers and major sources of variation in the data</p>
-      </li>
-    </ul>
   </li>
+</ol>
+
+<p>Normalizing the raw counts to assess sample-level quality control is the first step in the workflow. The raw counts 
+represent the number of reads aligning to each gene and should be proportional to the expression of the RNA in
+the sample; however, there are factors other than RNA expression that can influence the number of reads aligning to each gene. 
+The count data can be adjusted to remove the influence of these factors on the overall counts using normalization methods. 
+The main factors often considered during normalization of count data are library depth, gene length, and RNA composition.</p>
+
+<p>Differences in library size between samples can lead to many more reads being aligned to genes in one sample versus another sample.
+Therefore, we need to adjust the counts assigned to each gene based on the size of the library prior to doing differential expression 
+analysis.</p>
+
+<p>Gene length normalization is another normalization factor often adjusted for. A longer gene generates a longer
+transcript, which generates more fragments for sequencing. Therefore, a longer gene will often have more counts than a shorter
+gene with the same level of expression. Since DE analysis compares expression levels of the same genes between conditions, we do 
+not need to normalize for gene length. However, if you were to compare the expression levels of different genes, you would need 
+to account for lengths of the genes.</p>
+
+<p>Library composition effect is the third factor that needs to be taken into account for by adjusting library size, the composition 
+of the library is also important. A few highly differentially expressed genes can skew many normalization methods that are not resistant 
+to these outliers.</p>
+
+<ul>
+  <li>
+    <p>Normalize counts to account for differences in library depth.</p>
+  </li>
+  <li>
+    <p>Perform principal component analysis</p>
+  </li>
+  <li>
+    <p>Perform hierarchical clustering using heatmaps</p>
+  </li>
+  <li>
+    <p>Identify potential sample outliers and major sources of variation in the data</p>
+  </li>
+</ul>
+
+<ol>
   <li>
     <p>Differential expression analysis:</p>
 
@@ -344,6 +381,9 @@ names.</p>
 <h1 id="normalization">
 <a class="anchor" href="#normalization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Normalization</h1>
 
+<p>DESeq2 normalization uses a ‘median of ratios’ method of normalization. This method adjusts the raw counts for library size
+and is resistant to large numbers of differentially expressed genes.</p>
+
 <h3 id="preparing-the-data-for-deseq2">
 <a class="anchor" href="#preparing-the-data-for-deseq2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing the data for DESeq2</h3>
 
@@ -380,24 +420,22 @@ in the same order for both datasets, which can be confirmed by running the all()
 
 </span><span class="c1">#view the new table</span><span class="w">
 </span><span class="n">reordered_smoc2_meta</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##                 genotype condition
-## smoc2_fibrosis1 smoc2_oe  fibrosis
-## smoc2_fibrosis4 smoc2_oe  fibrosis
-## smoc2_normal1   smoc2_oe    normal
-## smoc2_normal3   smoc2_oe    normal
-## smoc2_fibrosis3 smoc2_oe  fibrosis
-## smoc2_normal4   smoc2_oe    normal
-## smoc2_fibrosis2 smoc2_oe  fibrosis
-</code></pre></div></div>
+                     </span><span class="n">genotype</span><span class="w"> </span><span class="n">condition</span><span class="w">
+     </span><span class="n">smoc2_fibrosis1</span><span class="w"> </span><span class="n">smoc2_oe</span><span class="w">  </span><span class="n">fibrosis</span><span class="w">
+     </span><span class="n">smoc2_fibrosis4</span><span class="w"> </span><span class="n">smoc2_oe</span><span class="w">  </span><span class="n">fibrosis</span><span class="w">
+     </span><span class="n">smoc2_normal1</span><span class="w">   </span><span class="n">smoc2_oe</span><span class="w">    </span><span class="n">normal</span><span class="w">
+     </span><span class="n">smoc2_normal3</span><span class="w">   </span><span class="n">smoc2_oe</span><span class="w">    </span><span class="n">normal</span><span class="w">
+     </span><span class="n">smoc2_fibrosis3</span><span class="w"> </span><span class="n">smoc2_oe</span><span class="w">  </span><span class="n">fibrosis</span><span class="w">
+     </span><span class="n">smoc2_normal4</span><span class="w">   </span><span class="n">smoc2_oe</span><span class="w">    </span><span class="n">normal</span><span class="w">
+     </span><span class="n">smoc2_fibrosis2</span><span class="w"> </span><span class="n">smoc2_oe</span><span class="w">  </span><span class="n">fibrosis</span><span class="w">
+</span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#check to see if the column and row names are in the same order</span><span class="w">
 </span><span class="nf">all</span><span class="p">(</span><span class="n">rownames</span><span class="p">(</span><span class="n">reordered_smoc2_meta</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w">  </span><span class="n">colnames</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## [1] TRUE
-</code></pre></div></div>
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="kc">TRUE</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="creating-the-deseq2-dataset-dds">
 <a class="anchor" href="#creating-the-deseq2-dataset-dds" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating the DESeq2 DataSet (DDS)</h3>
@@ -420,130 +458,46 @@ count data, metadata, and design information.</p>
 <h3 id="estimating-size-factors">
 <a class="anchor" href="#estimating-size-factors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Estimating size factors</h3>
 
-<p>Got It! 1. Count normalization Now that we have our DESeq2 object
-created with the raw counts and metadata stored inside, we can start the
-DESeq2 workflow.</p>
-
-<ol>
-  <li>
-    <p>DESeq workflow - normalization The first step in the workflow is to
-normalize the raw counts to assess sample-level quality control
-metrics.</p>
-  </li>
-  <li>
-    <p>Count normalization But what does it mean to normalize the raw
-counts? The raw counts represent the number of reads aligning to
-each gene and should be proportional to the expression of the RNA in
-the sample; however, there are factors other than RNA expression
-that can influence the number of reads aligning to each gene. We can
-adjust the count data to remove the influence of these factors on
-the overall counts using normalization methods. The main factors
-often considered during normalization of count data are library
-depth, gene length, and RNA composition.</p>
-  </li>
-  <li>
-    <p>Library depth normalization Differences in library size between
-samples can lead to many more reads being aligned to genes in one
-sample versus another sample. In this example, sample A has nearly
-twice the reads, represented as small rectangles, aligning to each
-of the genes as sample B only because sample A has nearly twice the
-number of reads sequenced. Therefore, we need to adjust the counts
-assigned to each gene based on the size of the library prior to
-doing differential expression analysis.</p>
-  </li>
-  <li>
-    <p>Gene length normalization Another normalization factor often
-adjusted for is gene length. A longer gene generates a longer
-transcript, which generates more fragments for sequencing.
-Therefore, a longer gene will often have more counts than a shorter
-gene with the same level of expression. In this example, gene X is
-twice as long as gene Y and, due to the difference in length, is
-assigned twice as many reads. Since DE analysis compares expression
-levels of the same genes between conditions, we do not need to
-normalize for gene length. However, if you were to compare the
-expression levels of different genes, you would need to account for
-lengths of the genes.</p>
-  </li>
-  <li>
-    <p>Library composition effect When adjusting for library size, the
-composition of the library is also important. A few highly
-differentially expressed genes can skew many normalization methods
-that are not resistant to these outliers. In this image, we can see
-that the green DE gene takes up a large proportion of reads for
-Sample A. If we just divided our counts by the total number of
-reads, normalization for the majority of genes would be skewed by
-the highly expressed DE gene. For this reason, when performing a DE
-analysis, we need to use a method that is resistant to these outlier
-genes.</p>
-  </li>
-  <li>
-    <p>Normalized counts: calculation To calculate the normalized counts
-with DESeq2, we can use the function estimateSizeFactors() on the
-DESeq2 object, dds_wt, and assign the output to a slot in the DESeq2
-object, by re-assigning to dds_wt. DESeq2 will use these size
-factors to normalize the raw counts. The raw counts for each sample
-are divided by the associated sample-specific size factor for
-normalization. To view the size factors used for normalization, we
-can use the sizeFactors() function.</p>
-  </li>
-</ol>
+<p>The function estimateSizeFactors() can be used on the DESeq2 object to calculate the normalized counts and assign the output to a 
+slot in the DESeq2 object, by re-assigning to DDS. DESeq2 will use these size factors to normalize the raw counts. The raw counts for each 
+sample are divided by the associated sample-specific size factor for normalization. To view the size factors used for normalization, the 
+sizeFactors() function can be used.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#estimating the size factors and feeding them back to the dds object by reassigning to the dds object</span><span class="w">
 </span><span class="n">dds_smoc2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">estimateSizeFactors</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">)</span><span class="w">
 
 </span><span class="c1">#viewing the size factors</span><span class="w">
 </span><span class="n">sizeFactors</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## smoc2_fibrosis1 smoc2_fibrosis4   smoc2_normal1   smoc2_normal3 smoc2_fibrosis3   smoc2_normal4 smoc2_fibrosis2 
-##       1.4319832       1.0826799       0.7106482       0.7989734       1.2480024       0.8482426       1.1189642
-</code></pre></div></div>
+     </span><span class="n">smoc2_fibrosis1</span><span class="w"> </span><span class="n">smoc2_fibrosis4</span><span class="w">   </span><span class="n">smoc2_normal1</span><span class="w">   </span><span class="n">smoc2_normal3</span><span class="w"> </span><span class="n">smoc2_fibrosis3</span><span class="w">   </span><span class="n">smoc2_normal4</span><span class="w"> </span><span class="n">smoc2_fibrosis2</span><span class="w"> 
+           </span><span class="m">1.4319832</span><span class="w">       </span><span class="m">1.0826799</span><span class="w">       </span><span class="m">0.7106482</span><span class="w">       </span><span class="m">0.7989734</span><span class="w">       </span><span class="m">1.2480024</span><span class="w">       </span><span class="m">0.8482426</span><span class="w">       </span><span class="m">1.1189642</span><span class="w">
+</span></code></pre></div></div>
 
 <h2 id="extracting-normalized-counts">
 <a class="anchor" href="#extracting-normalized-counts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extracting normalized counts</h2>
 
-<ol>
-  <li>
-    <p>DESeq2 normalization DESeq2 uses a ‘median of ratios’ method of
-normalization. This method adjusts the raw counts for library size
-and is resistant to large numbers of differentially expressed genes.</p>
-  </li>
-  <li>
-    <p>Normalized counts: extraction Once the size factors have been
-calculated and added to the DESeq2 object, the normalized counts can
-be extracted from it. We can extract the normalized counts from the
-DESeq2 object using the counts() function while specifying that we
-would like the normalized counts with the normalized = TRUE
-argument. If the default was left as normalized = FALSE, then we
-would extract the raw counts from the object.</p>
-  </li>
-</ol>
+<p>Once the size factors have been calculated and added to the DESeq2 object, the normalized counts can be extracted from it. To extract 
+the normalized counts from the DESeq2 object the <code class="language-plaintext highlighter-rouge">counts()</code> function can be used while specifying the normalized counts with the
+<code class="language-plaintext highlighter-rouge">normalized = TRUE</code> argument. If the default was left as <code class="language-plaintext highlighter-rouge">normalized = FALSE</code>, then the raw counts would be extracted from the oject.</p>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#once factors are calculated and reassigned then the normalized counts can be extracted using the counts function with normalized=TRUE argument</span><span class="w">
 </span><span class="n">normalized_smoc2_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">(</span><span class="n">dds_smoc2</span><span class="p">,</span><span class="w"> </span><span class="n">normalized</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">normalized_smoc2_counts</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##      smoc2_fibrosis1 smoc2_fibrosis4 smoc2_normal1 smoc2_normal3 smoc2_fibrosis3 smoc2_normal4 smoc2_fibrosis2
-## [1,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-## [2,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-## [3,]        50.27992        27.70902      0.000000      3.754818         28.8461      1.178908        45.57786
-## [4,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-## [5,]         0.00000         0.00000      1.407166      0.000000          0.0000      0.000000         0.00000
-## [6,]         0.00000         0.00000      0.000000      0.000000          0.0000      0.000000         0.00000
-</code></pre></div></div>
+
+          </span><span class="n">smoc2_fibrosis1</span><span class="w"> </span><span class="n">smoc2_fibrosis4</span><span class="w"> </span><span class="n">smoc2_normal1</span><span class="w"> </span><span class="n">smoc2_normal3</span><span class="w"> </span><span class="n">smoc2_fibrosis3</span><span class="w"> </span><span class="n">smoc2_normal4</span><span class="w"> </span><span class="n">smoc2_fibrosis2</span><span class="w">
+     </span><span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
+     </span><span class="p">[</span><span class="m">2</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
+     </span><span class="p">[</span><span class="m">3</span><span class="p">,]</span><span class="w">        </span><span class="m">50.27992</span><span class="w">        </span><span class="m">27.70902</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">3.754818</span><span class="w">         </span><span class="m">28.8461</span><span class="w">      </span><span class="m">1.178908</span><span class="w">        </span><span class="m">45.57786</span><span class="w">
+     </span><span class="p">[</span><span class="m">4</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
+     </span><span class="p">[</span><span class="m">5</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">1.407166</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
+     </span><span class="p">[</span><span class="m">6</span><span class="p">,]</span><span class="w">         </span><span class="m">0.00000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">          </span><span class="m">0.0000</span><span class="w">      </span><span class="m">0.000000</span><span class="w">         </span><span class="m">0.00000</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="transform-the-normalized-counts">
 <a class="anchor" href="#transform-the-normalized-counts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transform the normalized counts</h3>
-
-<p>Congratulations, we now have our normalized counts, which we can use to
-accurately compare gene expression between samples. We will be using the
-normalized counts to explore similarities in gene expression between
-each of our samples, with the expection that our biological replicates
-are more similar to each other and the different conditions (wild type
-and fibrosis) are more different.</p>
 
 <h1 id="unsupervised-clustering-analysis">
 <a class="anchor" href="#unsupervised-clustering-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unsupervised clustering analysis</h1>
