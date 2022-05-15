@@ -364,8 +364,7 @@ PCA.
 pheatmap(vsd_cor_smoc2, annotation = select(smoc2_metadata, condition))
 ```
 
-![plot the heatmap](images/heatmap.png)
-
+![]({{ site.baseurl }}/images/heatmap.png "plot the heatmap")
 ### Principal component analysis
 
 PCA is a technique used to emphasize the variation present in a dataset. PCA finds the principal components of a dataset, with the first principal
@@ -494,7 +493,8 @@ ggplot(df) +
   ylab("Variance per gene")
 ```
 
-![](images/dispersion.png)
+![]({{ site.baseurl }}/images/dispersion.png "dispersion")
+
 
 The variance in gene expression increases with the mean. This is expected for RNA-Seq data. Also, note how the range in values for variance is greater for 
 lower mean counts than higher mean counts. This is also expected for RNA-Seq count data.
@@ -535,7 +535,8 @@ The dispersion estimates are used to model the raw counts; if the dispersions do
 variation in the data could be poorly estimated and the DE results could be less accurate. The assumptions DESeq2 makes are that the dispersions should generally decrease with increasing mean and that they should more or less follow
 the fitted line.
 
-![](images/shrink.png)
+
+![]({{ site.baseurl }}/images/shrink.png "shrink")
 
 
 ### extracting the results of DE analysis
@@ -601,7 +602,9 @@ such as genes with low numbers of counts or high dispersion values.
 plotMA(smoc2_results, ylim=c(-8,8))
 ```
 
-![](normalized.png)
+
+![]({{ site.baseurl }}/images/normalized.png "normalized")
+
 
 ### LFC shrinkage
 
@@ -713,7 +716,9 @@ ggplot(smoc2_res_all) +
      Warning: Removed 25395 rows containing missing values (geom_point).
 ```
 
-![plot volcano](images/volcano.png)
+![]({{ site.baseurl }}/images/volcano.png "plot volcano")
+
+
 
 # References
 1. Bornstein P, Sage EH. Matricellular proteins: extracellular modulators of cell function. Curr Opin Cell Biol 2002; 14:608–616. doi: 10.1016/S0955-0674(02)00361-7
