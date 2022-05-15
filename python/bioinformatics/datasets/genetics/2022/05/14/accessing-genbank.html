@@ -4,19 +4,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Introduction | Home</title>
+<title>Accessing the NCBI Entrez database using Biopython | Home</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Introduction" />
+<meta property="og:title" content="Accessing the NCBI Entrez database using Biopython" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Notes on machine learning, bioinformatics, and programming." />
-<meta property="og:description" content="Notes on machine learning, bioinformatics, and programming." />
-<link rel="canonical" href="https://www.gurkamal.com//2022/05/14/accessing-genbank.html" />
-<meta property="og:url" content="https://www.gurkamal.com//2022/05/14/accessing-genbank.html" />
+<meta name="description" content="This tutorial uses the NCBI API to interface with Entrez." />
+<meta property="og:description" content="This tutorial uses the NCBI API to interface with Entrez." />
+<link rel="canonical" href="https://www.gurkamal.com//python/bioinformatics/datasets/genetics/2022/05/14/accessing-genbank.html" />
+<meta property="og:url" content="https://www.gurkamal.com//python/bioinformatics/datasets/genetics/2022/05/14/accessing-genbank.html" />
 <meta property="og:site_name" content="Home" />
+<meta property="og:image" content="https://www.gurkamal.com//images/mol.gif" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-05-14T00:00:00-05:00" />
 <script type="application/ld+json">
-{"url":"https://www.gurkamal.com//2022/05/14/accessing-genbank.html","@type":"BlogPosting","headline":"Introduction","dateModified":"2022-05-14T00:00:00-05:00","datePublished":"2022-05-14T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.gurkamal.com//2022/05/14/accessing-genbank.html"},"description":"Notes on machine learning, bioinformatics, and programming.","@context":"https://schema.org"}</script>
+{"url":"https://www.gurkamal.com//python/bioinformatics/datasets/genetics/2022/05/14/accessing-genbank.html","@type":"BlogPosting","headline":"Accessing the NCBI Entrez database using Biopython","dateModified":"2022-05-14T00:00:00-05:00","datePublished":"2022-05-14T00:00:00-05:00","image":"https://www.gurkamal.com//images/mol.gif","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.gurkamal.com//python/bioinformatics/datasets/genetics/2022/05/14/accessing-genbank.html"},"description":"This tutorial uses the NCBI API to interface with Entrez.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://www.gurkamal.com//feed.xml" title="Home" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -102,7 +103,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Introduction</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-05-14T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Accessing the NCBI Entrez database using Biopython</h1><p class="page-description">This tutorial uses the NCBI API to interface with Entrez.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-05-14T00:00:00-05:00" itemprop="datePublished">
         May 14, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -112,6 +113,22 @@ window.onload = wrap_img;
     
 </span></p>
 
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#bioinformatics">bioinformatics</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#datasets">datasets</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#genetics">genetics</a>
+        
+      
+      </p>
     
 
     
@@ -143,6 +160,13 @@ window.onload = wrap_img;
 
 <div class="container" id="notebook-container">
         
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>python   bioinformatics   datasets   genetics</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This tutorial uses the NCBI API to interface with Entrez. To get started, the neccesarry libraries need to be imported and an email needs to be provided (so NCBI can contact you about your query if needed).</p>
@@ -601,37 +625,6 @@ references=[Reference(title=&#39;Versatile control of Plasmodium falciparum gene
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>10000
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span>
 </pre></div>
 
@@ -660,7 +653,15 @@ references=[Reference(title=&#39;Versatile control of Plasmodium falciparum gene
 
 
 
-  </div><a class="u-url" href="/2022/05/14/accessing-genbank.html" hidden></a>
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gdeol4/neongenes"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/python/bioinformatics/datasets/genetics/2022/05/14/accessing-genbank.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
