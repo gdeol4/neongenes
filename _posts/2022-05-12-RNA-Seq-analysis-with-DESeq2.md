@@ -29,7 +29,7 @@ unknown how Smoc2 functions in the induction and progression of fibrosis[2].
 ### A look at the dataset
 
 
-This dataset cpmes from the research paper: 
+This dataset comes from the research paper: 
 
 
 **_Silencing SMOC2 ameliorates kidney fibrosis by inhibiting fibroblast to myofibroblast transformation._** 
