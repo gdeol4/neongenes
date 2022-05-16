@@ -109,7 +109,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      6 min read
+      5 min read
     
 </span></p>
 
@@ -162,9 +162,38 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This tutorial uses the NCBI API to interface with Entrez. To get started, the neccesarry libraries need to be imported and an email needs to be provided (so NCBI can contact you about your query if needed).</p>
+<h4 id="Background">Background<a class="anchor-link" href="#Background"> </a></h4><p>This tutorial uses the NCBI API to interface with Entrez. To get started, the necessary libraries need to be imported and an email needs to be provided (so NCBI can contact you about your query if needed).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">email_address</span> <span class="o">=</span> <span class="s2">&quot;gurkamal.dev@gmail.com&quot;</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>The goal will be to find the chloroquine resistance transporter (CRT) gene in the parasite Plasmodium flaciparum in the nucleotide database.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Loading-Libraries">Loading Libraries<a class="anchor-link" href="#Loading-Libraries"> </a></h4>
 </div>
 </div>
 </div>
@@ -185,30 +214,31 @@ window.onload = wrap_img;
 </div>
     
 
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">email_address</span> <span class="o">=</span> <span class="s2">&quot;gurkamal.dev@gmail.com&quot;</span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Handles are mentioned quite frequently throughout this documentation, and are also fairly confusing (at least to me!). Basically, you can think of a handle as being a “wrapper” around text information.</p>
-<p>Handles provide (at least) two benefits over plain text information:</p>
-<p>They provide a standard way to deal with information stored in different ways. The text information can be in a file, or in a string stored in memory, or the output from a command line program, or at some remote website, but the handle provides a common way of dealing with information in all of these formats.
-They allow text information to be read incrementally, instead of all at once. This is really important when you are dealing with huge text files which would use up all of your memory if you had to load them all.
-Handles can deal with text information that is being read (e. ‍g. ‍reading from a file) or written (e. ‍g. ‍writing information to a file). In the case of a “read” handle, commonly used functions are read(), which reads the entire text information from the handle, and readline(), which reads information one line at a time. For “write” handles, the function write() is regularly used.</p>
+<h4 id="What-is-a-handle?">What is a handle?<a class="anchor-link" href="#What-is-a-handle?"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A handle is essentially a “wrapper” around text information.</p>
+<p>Handles provide two benefits over plain text information:</p>
+<p>They provide a standard way to deal with information stored in different ways. The text information can be in a file, or in a string stored in memory, or the output from a command line program, or at some remote website, but the handle provides a common way of dealing with information in all of these formats.</p>
+<p>They allow text information to be read incrementally, instead of all at once. This is really important when dealing with huge text files which would use up all of the memory if you had to load them all.</p>
+<p>Handles can deal with text information that is being read (reading from a file) or written (writing information to a file). In the case of a “read” handle, commonly used functions are <code>read()</code>, which reads the entire text information from the handle, and <code>readline()</code>, which reads information one line at a time. For “write” handles, the function <code>write()</code> is regularly used.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Retrieving-information">Retrieving information<a class="anchor-link" href="#Retrieving-information"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>To see the available databases:</p>
 
 </div>
@@ -225,7 +255,6 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <span class="c1">#Read and store the Entrez query record returned</span>
 <span class="n">rec</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -249,6 +278,12 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Searching-for-a-specific-gene">Searching for a specific gene<a class="anchor-link" href="#Searching-for-a-specific-gene"> </a></h4>
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -260,23 +295,8 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <span class="c1">#read the result that is returned</span>
 <span class="n">rec_list</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-</pre></div>
 
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rec_list</span>
+<span class="n">rec_list</span>
 </pre></div>
 
     </div>
@@ -304,7 +324,14 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The standard search will limit the number of record references to 20, so if you have more, you may want to repeat the query with an increased maximum limit. In this case, we will actually override the default limit with retmax. The Entrez system provides quite a few sophisticated ways to retrieve large number of results (for more information, check the Biopython or NCBI Entrez documentation). Although you now have the IDs of all of the records, you still need to retrieve the records properly.</p>
+<h4 id="Returning-all-records">Returning all records<a class="anchor-link" href="#Returning-all-records"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The standard search will limit the number of record references to 20, so if you have more, you may want to repeat the query with an increased maximum limit. In this case, we will actually override the default limit with retmax. The Entrez system provides quite a few sophisticated ways to retrieve large number of results.</p>
+<p>Be careful with this technique, because you will retrieve a large amount of complete records, and some of them will have fairly large sequences inside.</p>
 
 </div>
 </div>
@@ -331,7 +358,14 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>be careful with this technique, because you will retrieve a large amount of complete records, and some of them will have fairly large sequences inside.</p>
+<h4 id="Downloading-nucleotide-sequences">Downloading nucleotide sequences<a class="anchor-link" href="#Downloading-nucleotide-sequences"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that we have the IDs of all of the records, you still need to retrieve the records properly.</p>
+<p>This will retrieve a list of records in the GenBank format (including sequences and metadata)</p>
 
 </div>
 </div>
@@ -345,7 +379,9 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">id_list</span> <span class="o">=</span> <span class="n">rec_list</span><span class="p">[</span><span class="s1">&#39;IdList&#39;</span><span class="p">]</span>
 
-<span class="n">handle_2</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s1">&#39;nucleotide&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">id_list</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s1">&#39;gb&#39;</span><span class="p">,</span> <span class="n">retmax</span><span class="o">=</span><span class="n">rec_list</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">])</span>
+<span class="n">handle_2</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s1">&#39;nucleotide&#39;</span><span class="p">,</span> 
+                         <span class="nb">id</span><span class="o">=</span><span class="n">id_list</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s1">&#39;gb&#39;</span><span class="p">,</span> 
+                         <span class="n">retmax</span><span class="o">=</span><span class="n">rec_list</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -357,7 +393,8 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>will retrieve a list of records in the GenBank format (which includessequences, plus a lot of interesting metadata).Let's read and parse the result</p>
+<p>The result of <code>SeqIO.parse</code> is an iterator and is converted to a list. The advantage of doing this is that we can use the result as many times as we want(for example, iterate many times over), without repeating the query on the server.This saves time, bandwidth, and server usage if you plan to iterate many timesover.</p>
+<p>The disadvantage is that it will allocate memory for all records. This will not work for very large datasets</p>
 
 </div>
 </div>
@@ -381,15 +418,13 @@ Handles can deal with text information that is being read (e. ‍g. ‍readi
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that we have converted the result of <code>SeqIO.parse</code>, an iterator, to a list. TheSeqIO.parse advantage of doing this is that we can use the result as many times as we want(for example, iterate many times over), without repeating the query on the server.This saves time, bandwidth, and server usage if you plan to iterate many timesover.</p>
-<p>The disadvantage is that it will allocate memory for all records. This will not work for very large datasets</p>
-
+<h4 id="Reading-a-record">Reading a record<a class="anchor-link" href="#Reading-a-record"> </a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>rec</code>  variable now has our record of interest. The rec.description file will contain its human-readable description.</p>
+<p>The <code>rec</code>  variable now contains the record of interest. The <code>rec.description</code> will contain its human-readable description.</p>
 
 </div>
 </div>
@@ -432,7 +467,13 @@ Plasmodium falciparum clone PF3D7_0709000 chloroquine resistance transporter (CR
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, let's extract some sequence features, which contain information such as gene products and exon positions on the sequence:</p>
+<h4 id="Extracting-sequences-features">Extracting sequences features<a class="anchor-link" href="#Extracting-sequences-features"> </a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Extract sequence features which contain information such as gene products and exon positions on the sequence:</p>
 
 </div>
 </div>
@@ -550,14 +591,13 @@ qualifiers:
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We will also print all the locations of exons. Exons, as withall features, have locations in this sequence: a start, an end, and the strand fromwhere they are read. While all the start and end positions for our exons areExactPosition, note that Biopython supports many other types of positions.One type of position is , which specifies that a location point isBeforePositionbefore a certain sequence position. Another type of position isBetweenPosition, which gives the interval for a certain location start/end. Thereare quite a few more position types; these are just some examples.Coordinates will be specified in such a way that you will be able to retrieve thesequence from a Python array with ranges easily, so generally, the start will beone before the value on the record, and the end will be equal.</p>
-
+<h4 id="Record-annotations">Record annotations<a class="anchor-link" href="#Record-annotations"> </a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We will now look at the annotations on the record, which are mostly metadata that is not related to the sequence position. Note that some values are not strings; they can be numbers or even lists (forexample, the taxonomy annotation is a list)</p>
+<p>We will now look at the annotations on the record, which are mostly metadata that is not related to the sequence position. Note that some values are not strings; they can be numbers or even lists (for example, the taxonomy annotation is a list)</p>
 
 </div>
 </div>
@@ -604,6 +644,12 @@ references=[Reference(title=&#39;Versatile control of Plasmodium falciparum gene
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Accessing-the-sequence-data">Accessing the sequence data<a class="anchor-link" href="#Accessing-the-sequence-data"> </a></h4>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Last but not least, you can access the fundamental piece of information, the sequence</p>
